@@ -173,11 +173,11 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <button class="nl" onclick="showPage('invoice',this)"><i class="ti ti-file-invoice"></i>Invoice</button>
   <button class="nl" onclick="showPage('history',this)"><i class="ti ti-receipt"></i>Riwayat<span class="dp-badge" id="dp-badge"></span></button>
   <div class="sep"></div>
-  <div class="sidebar-section">Master Data</div>
+  <div class="sidebar-section" id="nav-masterdata-sep">Master Data</div>
   <button class="nl" onclick="showPage('frame',this)"><i class="ti ti-glasses"></i>Frame</button>
   <button class="nl" onclick="showPage('lensa',this)"><i class="ti ti-circle"></i>Lensa</button>
   <button class="nl" onclick="showPage('softlens',this)"><i class="ti ti-disc"></i>Softlens</button>
-  <button class="nl" onclick="showPage('aksesoris',this)"><i class="ti ti-eyeglass-2"></i>Aksesoris</button>
+  <button class="nl" onclick="showPage('aksesoris',this)"><i class="ti ti-package"></i>Aksesoris</button>
   <button class="nl" onclick="showPage('customer',this)"><i class="ti ti-users"></i>Customer</button>
   <div class="sep"></div>
   <button class="nl" onclick="showPage('settings',this)"><i class="ti ti-settings"></i>Pengaturan</button>
@@ -192,12 +192,12 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
      ════════════════════════════════════════════════ -->
 <div id="page-dashboard" class="page on">
   <div class="ph"><div class="ph-left"><h2>Dashboard</h2><p id="dash-date">—</p></div>
-  <div class="ph-actions"><select id="dash-period" onchange="renderDashboard()" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;font-weight:600"><option value="all">Semua Waktu</option></select><button class="btn btn-gold" onclick="showPage('invoice',document.querySelectorAll('.nl')[2])"><i class="ti ti-plus"></i> Invoice Baru</button></div></div>
+  <div class="ph-actions"><span id="dash-month-label" style="font-size:14px;font-weight:600;color:var(--muted);padding:8px 0"></span><button class="btn btn-gold" onclick="showPage('invoice',document.querySelectorAll('.nl')[2])"><i class="ti ti-plus"></i> Invoice Baru</button></div></div>
   <div id="siap-alert-area"></div>
   <div id="stok-alert-area"></div>
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-file-invoice stat-icon-bg"></i><div class="stat-label">Total Transaksi</div><div class="stat-value" id="d-tx">0</div><div class="stat-sub" id="d-tx-sub">—</div></div>
-    <div class="stat"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label">Total Omzet</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub up"><i class="ti ti-trending-up"></i>harga jual</div></div>
+    <div class="stat"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label" id="d-omzet-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub" id="d-omzet-sub"><i class="ti ti-trending-up"></i>uang diterima</div></div>
     <div class="stat admin-only"><div class="stat-accent acc-green"></div><i class="ti ti-trending-up stat-icon-bg"></i><div class="stat-label">Total Profit</div><div class="stat-value" style="color:var(--success)" id="d-profit">Rp0</div><div class="stat-sub" id="d-margin-sub">margin —</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-users stat-icon-bg"></i><div class="stat-label">Customer</div><div class="stat-value" id="d-cust">0</div><div class="stat-sub" id="d-prod-sub">—</div></div>
   </div>
@@ -207,17 +207,23 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   </div>
   <div class="grid g2">
     <div class="card"><div class="ct"><i class="ti ti-clock"></i> Transaksi Terakhir</div><div id="d-recent"><div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi</p></div></div></div>
-    <div class="card"><div class="ct"><i class="ti ti-alert-triangle"></i> Stok Menipis</div><div id="d-stok-list"><div class="empty" style="padding:8px"><i class="ti ti-check" style="font-size:24px;opacity:.3"></i><p>Semua stok aman</p></div></div></div>
+    <div class="card admin-only"><div class="ct"><i class="ti ti-alert-triangle"></i> Stok Menipis</div><div id="d-stok-list"><div class="empty" style="padding:8px"><i class="ti ti-check" style="font-size:24px;opacity:.3"></i><p>Semua stok aman</p></div></div></div>
   </div>
 </div>
 
 <!-- REPORTS -->
 <div id="page-reports" class="page">
-  <div class="ph"><div class="ph-left"><h2>Laporan & Analitik</h2><p>Analisis performa penjualan</p></div><div class="ph-actions"><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button></div></div>
-  <div class="grid g3" style="margin-bottom:16px">
-    <div class="stat"><div class="stat-accent acc-gold"></div><div class="stat-label">Rata-rata Transaksi</div><div class="stat-value" style="font-size:22px" id="r-avg">Rp0</div><div class="stat-sub">per invoice</div></div>
-    <div class="stat"><div class="stat-accent acc-green"></div><div class="stat-label">Margin Rata-rata</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="r-margin">0%</div><div class="stat-sub">profit / omzet</div></div>
+  <div class="ph"><div class="ph-left"><h2>Laporan Penjualan</h2><p>Arsip analytics per bulan</p></div>
+  <div class="ph-actions"><select id="report-period" onchange="renderReports()" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;font-weight:600"><option value="all">Semua Waktu</option></select><button class="btn btn-success btn-sm" onclick="exportCSV()" style="margin-left:6px"><i class="ti ti-download"></i> Export CSV</button></div></div>
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Transaksi</div><div class="stat-value" style="font-size:22px" id="rp-tx">0</div><div class="stat-sub" id="rp-tx-sub">invoice</div></div>
+    <div class="stat"><div class="stat-accent acc-gold"></div><div class="stat-label">Kas Masuk</div><div class="stat-value" style="font-size:22px;color:var(--gold)" id="rp-kas">Rp0</div><div class="stat-sub">uang diterima</div></div>
+    <div class="stat"><div class="stat-accent acc-green"></div><div class="stat-label">Total Profit</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="rp-profit">Rp0</div><div class="stat-sub" id="rp-margin-sub">margin 0%</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Total Item Terjual</div><div class="stat-value" style="font-size:22px" id="r-items">0</div><div class="stat-sub">unit produk</div></div>
+  </div>
+  <div class="grid g2" style="margin-bottom:16px">
+    <div class="card"><div class="ct"><i class="ti ti-chart-bar"></i> Kas Masuk Per Hari</div><div class="chart-wrap" id="rp-chart" style="height:120px"><div class="empty" style="padding:10px"><i class="ti ti-chart-bar" style="font-size:28px"></i></div></div></div>
+    <div class="card"><div class="ct"><i class="ti ti-credit-card"></i> Metode Pembayaran</div><div id="rp-pay-methods"></div></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-chart-area-line"></i> Tren Omzet Bulanan</div><div class="chart-wrap" id="monthly-chart" style="height:150px"><div class="empty" style="padding:10px"><i class="ti ti-chart-area-line" style="font-size:28px"></i></div></div></div>
   <div class="grid g2" style="margin-bottom:16px">
@@ -225,7 +231,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
     <div class="card"><div class="ct"><i class="ti ti-crown"></i> Customer Teratas</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Transaksi</th><th>Total</th></tr></thead><tbody id="r-top-cust"></tbody></table><div id="r-cust-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-chart-donut"></i> Kontribusi per Kategori</div><div id="r-cat"><div class="empty" style="padding:20px"><i class="ti ti-chart-donut"></i><p>Belum ada data</p></div></div></div>
-  <div class="card"><div class="ct"><i class="ti ti-calendar-stats"></i> Laporan Per Hari</div><div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Transaksi</th><th>Omzet</th><th>Profit</th><th>Margin</th></tr></thead><tbody id="r-daily"></tbody></table><div id="r-daily-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-calendar-stats"></i> Laporan Per Hari</div><div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Transaksi</th><th>Kas Masuk</th><th>Profit</th><th>Margin</th></tr></thead><tbody id="r-daily"></tbody></table><div id="r-daily-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
 
@@ -240,14 +246,15 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <!-- Customer -->
       <div class="card" style="margin-bottom:14px">
         <div class="ct"><i class="ti ti-user"></i> Data Customer</div>
-        <div class="frow" style="grid-template-columns:1fr 1fr">
+        <div class="frow" style="grid-template-columns:90px 1fr 1fr">
+          <div class="fg"><label>Gelar</label><select id="inv-gelar" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">—</option><option value="Tn.">Tn.</option><option value="Ny.">Ny.</option><option value="Nn.">Nn.</option><option value="An.">An.</option><option value="Dr.">Dr.</option></select></div>
           <div class="fg ac-wrap"><label>Nama Customer <span style="color:var(--danger)">*</span></label><input id="inv-nama" placeholder="Ketik nama..." oninput="autocompleteC(this.value)" autocomplete="off"><div class="ac-drop" id="ac-drop"></div></div>
           <div class="fg"><label>No. HP / Kontak <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></label><input id="inv-hp" placeholder="+628xxx" oninput="updateReceipt()"></div>
         </div>
         <div class="frow" style="grid-template-columns:1fr">
           <div class="fg"><label>Alamat Tempat Tinggal <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></label><input id="inv-alamat" placeholder="Jl. ..." oninput="updateReceipt()"></div>
         </div>
-        <div class="frow" style="grid-template-columns:80px 80px 1fr 1fr 1fr">
+        <div class="frow" style="grid-template-columns:80px 80px 1fr 1fr 1fr;align-items:end">
           <div class="fg"><label>Usia <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></label><input id="inv-usia" type="number" min="1" max="120" placeholder="Thn"></div>
           <div class="fg"><label>Kelamin</label><select id="inv-jk"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></div>
           <div class="fg"><label>Tgl Invoice <span style="color:var(--danger)">*</span></label><input id="inv-tanggal" type="date"></div>
@@ -369,7 +376,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
      ════════════════════════════════════════════════ -->
 <div id="page-customer" class="page">
   <div class="ph"><div class="ph-left"><h2>Data Customer</h2><p>Seluruh customer terdaftar</p></div></div>
-  <div class="card" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Customer</div><div class="frow" style="grid-template-columns:2fr 1fr 1fr 80px 44px"><div class="fg"><label>Nama *</label><input id="cn" placeholder="Nama lengkap"></div><div class="fg"><label>No. HP</label><input id="chp" placeholder="+628xxx"></div><div class="fg"><label>Tempat Tinggal</label><input id="ca" placeholder="Kota / alamat"></div><div class="fg"><label>Usia</label><input id="cu" type="number" min="1" max="120" placeholder="Thn"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addCustomerManual()"><i class="ti ti-plus"></i> Tambah</button></div></div></div>
+  <div class="card" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Customer</div><div class="frow" style="grid-template-columns:80px 2fr 1fr 1fr 80px 44px"><div class="fg"><label>Gelar</label><select id="cg" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">—</option><option value="Tn.">Tn.</option><option value="Ny.">Ny.</option><option value="Nn.">Nn.</option><option value="An.">An.</option><option value="Dr.">Dr.</option></select></div><div class="fg"><label>Nama *</label><input id="cn" placeholder="Nama lengkap"></div><div class="fg"><label>No. HP</label><input id="chp" placeholder="+628xxx"></div><div class="fg"><label>Tempat Tinggal</label><input id="ca" placeholder="Kota / alamat"></div><div class="fg"><label>Usia</label><input id="cu" type="number" min="1" max="120" placeholder="Thn"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addCustomerManual()"><i class="ti ti-plus"></i> Tambah</button></div></div></div>
   <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Customer</div><div style="position:relative;margin-bottom:12px"><i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px"></i><input id="c-q" placeholder="Cari nama..." oninput="renderCustomers()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px 9px 32px;font-size:13px;width:100%;background:var(--card);color:var(--text);outline:none;font-family:inherit"></div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>No. HP</th><th>Tempat Tinggal</th><th>Usia</th><th>Transaksi</th><th>Total Belanja</th><th>Aksi</th></tr></thead><tbody id="cu-tb"></tbody></table><div id="cu-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
@@ -411,195 +418,9 @@ aksesoris:[
   {id:4009,nama:'Nose Pad Silikon (1 pasang)',modal:2000,jual:8000,stok:40,cat:'Lainnya',note:'Universal, anti-selip'},
   {id:4010,nama:'Temple Tip / Ujung Gagang Silikon',modal:2000,jual:8000,stok:35,cat:'Lainnya',note:'Pengganti ujung gagang aus'}
 ],
-customers:[
-  {id:9001,nama:'TN. JONSON',hp:'+6281212011306',alamat:'',usia:55},{id:9002,nama:'TN. ADIT',hp:'+6287852748456',alamat:'',usia:0},{id:9003,nama:'TN. NAJAR SUHERMAN',hp:'+6289644868339',alamat:'',usia:55},{id:9004,nama:'NN. LAILI SOFIATI',hp:'+6281382236273',alamat:'',usia:0},{id:9005,nama:'TN. TAUFIK',hp:'+6282112830303',alamat:'',usia:43},{id:9006,nama:'NN. SARI',hp:'+6281374464953',alamat:'',usia:25},{id:9007,nama:'TN. SUBIYANTO',hp:'+6281382885379',alamat:'',usia:56},{id:9008,nama:'NN. INDAH',hp:'+6281315107120',alamat:'',usia:26},{id:9009,nama:'NN. IDA',hp:'+628988962781',alamat:'',usia:25},{id:9010,nama:'NN. LINTANG',hp:'+6287864820010',alamat:'',usia:18},{id:9011,nama:'NY. IMSA',hp:'+6281211692139',alamat:'',usia:49},{id:9012,nama:'NY. NUNI',hp:'+628121917053',alamat:'',usia:41},{id:9013,nama:'TN. AHMAD HANAFI',hp:'+6285883152648',alamat:'',usia:0},{id:9014,nama:'NN. HANUM',hp:'+6281283101076',alamat:'',usia:0},{id:9015,nama:'NN. KEKEH',hp:'+6282111019400',alamat:'',usia:30},{id:9016,nama:'NN. VELANINDITA',hp:'+6281311002619',alamat:'',usia:0},{id:9017,nama:'TN. RENANTO HASIBUAN',hp:'+62817713434',alamat:'',usia:57},{id:9018,nama:'NN. MARYAM',hp:'+62895333029359',alamat:'',usia:22},{id:9019,nama:'NY. MARIA',hp:'+62856921309911',alamat:'',usia:49},{id:9020,nama:'TN. NARTO',hp:'+6281381947827',alamat:'',usia:0},{id:9021,nama:'NY. AMANDA',hp:'+6289655997395',alamat:'',usia:25},{id:9022,nama:'TN. SUMADI',hp:'+6283872086027',alamat:'',usia:51},{id:9023,nama:'NN. SYIFA',hp:'+6285715388144',alamat:'',usia:20},{id:9024,nama:'TN. SIGIT',hp:'+628980899035',alamat:'',usia:24},{id:9025,nama:'TN. MUHIDIN',hp:'+628110137627',alamat:'',usia:51},{id:9026,nama:'NY. ERLIN',hp:'+6281293935670',alamat:'',usia:48},{id:9027,nama:'NY. AMINA',hp:'+6281290065150',alamat:'',usia:43},{id:9028,nama:'TN. JALALUDIN',hp:'+6282260755958',alamat:'',usia:52},{id:9029,nama:'NY. YUYUK',hp:'+6281211752990',alamat:'',usia:57},{id:9030,nama:'AN. AQUINA',hp:'+6281246560745',alamat:'',usia:6}
-],
+customers:[],
 invoices:[
-  {id:7001,no:'INV-0001',tanggal:'02 Mei 2026',ts:1746115200000,customer:'TN. JONSON',hp:'+6281212011306',usia:55,tipe:'Kacamata',
-   rx:{rs:'-2.50',rc:'-0.75',ra:'180',ls:'-2.75',lc:'-0.50',la:'175',pd:'64',add:''},
-   frameDetail:{brand:'Ray-Ban',mat:'Asetat',code:'RB2140',color:'Havana'},
-   lensDetail:{brand:'Essilor',focus:'SV',type:'1.56 Blueguard',color:'Clear'},
-   items:{
-     frame:[{id:81001,nama:'Ray-Ban RB2140 Wayfarer Classic',qty:1,jual:650000,modal:350000}],
-     lensa:[{id:81002,nama:'Lensa SV 1.56 Blueguard',qty:2,jual:250000,modal:110000}],
-     softlens:[]
-   },
-   sub:1150000,disc:50000,tot:1100000,mod:570000,profit:530000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:1100000,sisa:0,catatan:'Kacamata untuk kerja, minta tipis'},
-
-  {id:7002,no:'INV-0002',tanggal:'03 Mei 2026',ts:1746201600000,customer:'NN. LAILI SOFIATI',hp:'+6281382236273',usia:0,tipe:'Kacamata',
-   rx:{rs:'-1.25',rc:'',ra:'',ls:'-1.50',lc:'',la:'',pd:'62',add:''},
-   frameDetail:{brand:'Fossil',mat:'Stainless',code:'FOS3084',color:'Brown Havana'},
-   lensDetail:{brand:'Hoya',focus:'SV',type:'1.56 Biasa',color:'Clear'},
-   items:{
-     frame:[{id:82001,nama:'Fossil FOS 3084 Brown Havana',qty:1,jual:520000,modal:280000}],
-     lensa:[{id:82002,nama:'Lensa SV 1.56 Biasa',qty:2,jual:180000,modal:80000}],
-     softlens:[]
-   },
-   sub:880000,disc:0,tot:880000,mod:440000,profit:440000,
-   pay:'QRIS – BCA',payStatus:'lunas',dpAmount:880000,sisa:0,catatan:''},
-
-  {id:7003,no:'INV-0003',tanggal:'05 Mei 2026',ts:1746374400000,customer:'TN. TAUFIK',hp:'+6282112830303',usia:43,tipe:'Kacamata',
-   rx:{rs:'-3.00',rc:'-1.25',ra:'90',ls:'-3.25',lc:'-1.00',la:'85',pd:'66',add:''},
-   frameDetail:{brand:'Oakley',mat:'Nylon',code:'Holbrook',color:'Matte Black'},
-   lensDetail:{brand:'Zeiss',focus:'SV',type:'1.67 Tipis',color:'Clear'},
-   items:{
-     frame:[{id:83001,nama:'Oakley Holbrook Matte Black',qty:1,jual:850000,modal:420000}],
-     lensa:[{id:83002,nama:'Lensa SV 1.67 Tipis',qty:2,jual:350000,modal:160000}],
-     softlens:[]
-   },
-   sub:1550000,disc:100000,tot:1450000,mod:740000,profit:710000,
-   pay:'Transfer – BCA',payStatus:'lunas',dpAmount:1450000,sisa:0,catatan:'Customer minta lensa setipis mungkin'},
-
-  {id:7004,no:'INV-0004',tanggal:'06 Mei 2026',ts:1746460800000,customer:'NN. SARI',hp:'+6281374464953',usia:25,tipe:'Softlens',
-   rx:{rs:'-2.00',rc:'',ra:'',ls:'-1.75',lc:'',la:'',pd:'60',add:''},
-   frameDetail:{},
-   lensDetail:{},
-   items:{
-     frame:[],
-     lensa:[],
-     softlens:[
-       {id:84001,nama:'Freshlook Colorblends Blue',qty:2,jual:120000,modal:55000},
-       {id:84002,nama:'Air Mata Buatan Refresh Tears',qty:1,jual:90000,modal:40000}
-     ]
-   },
-   sub:330000,disc:0,tot:330000,mod:150000,profit:180000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:330000,sisa:0,catatan:'Langganan setiap bulan'},
-
-  {id:7005,no:'INV-0005',tanggal:'07 Mei 2026',ts:1746547200000,customer:'TN. SUBIYANTO',hp:'+6281382885379',usia:56,tipe:'Kacamata Baca',
-   rx:{rs:'',rc:'',ra:'',ls:'',lc:'',la:'',pd:'63',add:'+2.00'},
-   frameDetail:{brand:'Kacamata Bulat',mat:'Alloy',code:'KBV-Gold',color:'Gold'},
-   lensDetail:{brand:'Essilor',focus:'FT',type:'1.56 Biasa',color:'Clear'},
-   items:{
-     frame:[{id:85001,nama:'Kacamata Bulat Vintage Gold',qty:1,jual:220000,modal:95000}],
-     lensa:[{id:85002,nama:'Lensa Baca Plus 1.56',qty:2,jual:200000,modal:90000}],
-     softlens:[]
-   },
-   sub:620000,disc:0,tot:620000,mod:275000,profit:345000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:620000,sisa:0,catatan:'Untuk baca Al-Quran dan baca koran'},
-
-  {id:7006,no:'INV-0006',tanggal:'08 Mei 2026',ts:1746633600000,customer:'NY. IMSA',hp:'+6281211692139',usia:49,tipe:'Kacamata',
-   rx:{rs:'-4.50',rc:'-0.75',ra:'170',ls:'-5.00',lc:'-1.00',la:'165',pd:'62',add:''},
-   frameDetail:{brand:'Kacamata Kotak',mat:'TR90',code:'KKM-BLK',color:'Hitam'},
-   lensDetail:{brand:'Hoya',focus:'SV',type:'1.67 Blueguard',color:'Clear'},
-   items:{
-     frame:[{id:86001,nama:'Kacamata Kotak Minimalis Hitam',qty:1,jual:180000,modal:80000}],
-     lensa:[{id:86002,nama:'Lensa SV 1.67 Blueguard',qty:2,jual:420000,modal:190000}],
-     softlens:[]
-   },
-   sub:1020000,disc:20000,tot:1000000,mod:460000,profit:540000,
-   pay:'QRIS – Mandiri',payStatus:'lunas',dpAmount:1000000,sisa:0,catatan:'Minus tebal, prioritas kenyamanan'},
-
-  {id:7007,no:'INV-0007',tanggal:'09 Mei 2026',ts:1746720000000,customer:'NY. NUNI',hp:'+628121917053',usia:41,tipe:'Kacamata',
-   rx:{rs:'-1.00',rc:'-0.50',ra:'180',ls:'-1.25',lc:'-0.75',la:'175',pd:'61',add:''},
-   frameDetail:{brand:'Police',mat:'Asetat',code:'VPL993',color:'Gunmetal'},
-   lensDetail:{brand:'Essilor',focus:'SV',type:'Photochromic 1.56',color:'Gray'},
-   items:{
-     frame:[{id:87001,nama:'Police VPL993 Gunmetal',qty:1,jual:600000,modal:320000}],
-     lensa:[{id:87002,nama:'Lensa Photochromic 1.56',qty:2,jual:480000,modal:200000}],
-     softlens:[]
-   },
-   sub:1560000,disc:60000,tot:1500000,mod:720000,profit:780000,
-   pay:'Transfer – BNI',payStatus:'dp',dpAmount:750000,sisa:750000,catatan:'Photochromic buat aktivitas luar ruangan, sisa bayar minggu depan'},
-
-  {id:7008,no:'INV-0008',tanggal:'10 Mei 2026',ts:1746806400000,customer:'TN. NAJAR SUHERMAN',hp:'+6289644868339',usia:55,tipe:'Kacamata',
-   rx:{rs:'-5.50',rc:'-1.50',ra:'90',ls:'-5.75',lc:'-1.25',la:'85',pd:'68',add:''},
-   frameDetail:{brand:'Frame Half-Rim',mat:'Titanium',code:'HRT-SLV',color:'Silver'},
-   lensDetail:{brand:'Zeiss',focus:'SV',type:'1.67 Blueguard',color:'Clear'},
-   items:{
-     frame:[{id:88001,nama:'Frame Half-Rim Titan Silver',qty:1,jual:380000,modal:180000}],
-     lensa:[{id:88002,nama:'Lensa SV 1.67 Blueguard',qty:2,jual:420000,modal:190000}],
-     softlens:[]
-   },
-   sub:1220000,disc:0,tot:1220000,mod:560000,profit:660000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:1220000,sisa:0,catatan:''},
-
-  {id:7009,no:'INV-0009',tanggal:'12 Mei 2026',ts:1746979200000,customer:'NN. INDAH',hp:'+6281315107120',usia:26,tipe:'Softlens + Kacamata',
-   rx:{rs:'-3.00',rc:'',ra:'',ls:'-2.75',lc:'',la:'',pd:'60',add:''},
-   frameDetail:{brand:'Kacamata Sporty',mat:'Nylon',code:'SWR-BLK',color:'Hitam'},
-   lensDetail:{brand:'Hoya',focus:'SV',type:'1.56 Biasa',color:'Clear'},
-   items:{
-     frame:[{id:89001,nama:'Kacamata Sporty Wraparound Hitam',qty:1,jual:320000,modal:150000}],
-     lensa:[{id:89002,nama:'Lensa SV 1.56 Biasa',qty:2,jual:180000,modal:80000}],
-     softlens:[{id:89003,nama:'Freshlook Colorblends Gray',qty:1,jual:120000,modal:55000}]
-   },
-   sub:800000,disc:0,tot:800000,mod:365000,profit:435000,
-   pay:'QRIS – BCA',payStatus:'lunas',dpAmount:800000,sisa:0,catatan:'Sehari-hari pakai softlens, kacamata untuk di rumah'},
-
-  {id:7010,no:'INV-0010',tanggal:'13 Mei 2026',ts:1747065600000,customer:'TN. ADIT',hp:'+6287852748456',usia:0,tipe:'Kacamata',
-   rx:{rs:'-6.00',rc:'-2.00',ra:'180',ls:'-6.25',lc:'-1.75',la:'175',pd:'67',add:''},
-   frameDetail:{brand:'Ray-Ban',mat:'Metal',code:'RB3025',color:'Gold'},
-   lensDetail:{brand:'Zeiss',focus:'SV',type:'1.67 Blueguard',color:'Clear'},
-   items:{
-     frame:[{id:810001,nama:'Ray-Ban RB3025 Aviator Gold',qty:1,jual:720000,modal:380000}],
-     lensa:[{id:810002,nama:'Lensa SV 1.67 Blueguard',qty:2,jual:420000,modal:190000}],
-     softlens:[]
-   },
-   sub:1560000,disc:60000,tot:1500000,mod:760000,profit:740000,
-   pay:'Transfer – BCA',payStatus:'lunas',dpAmount:1500000,sisa:0,catatan:'Pelanggan lama, minta diskon'},
-
-  {id:7011,no:'INV-0011',tanggal:'14 Mei 2026',ts:1747152000000,customer:'NN. LINTANG',hp:'+6287864820010',usia:18,tipe:'Kacamata',
-   rx:{rs:'-1.75',rc:'-0.25',ra:'90',ls:'-2.00',lc:'-0.50',la:'85',pd:'59',add:''},
-   frameDetail:{brand:'Frame Rimless',mat:'Titanium',code:'RLS-TIT',color:'Silver'},
-   lensDetail:{brand:'Hoya',focus:'SV',type:'1.56 Blueguard',color:'Clear'},
-   items:{
-     frame:[{id:811001,nama:'Frame Rimless Titanium',qty:1,jual:450000,modal:220000}],
-     lensa:[{id:811002,nama:'Lensa SV 1.56 Blueguard',qty:2,jual:250000,modal:110000}],
-     softlens:[]
-   },
-   sub:950000,disc:0,tot:950000,mod:440000,profit:510000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:950000,sisa:0,catatan:'Pelajar, kacamata untuk sekolah'},
-
-  {id:7012,no:'INV-0012',tanggal:'15 Mei 2026',ts:1747238400000,customer:'TN. MUHIDIN',hp:'+628110137627',usia:51,tipe:'Kacamata Progresif',
-   rx:{rs:'-2.00',rc:'-0.75',ra:'180',ls:'-2.25',lc:'-0.50',la:'175',pd:'64',add:'+1.75'},
-   frameDetail:{brand:'Fossil',mat:'Stainless',code:'FOS3084',color:'Brown'},
-   lensDetail:{brand:'Essilor',focus:'Prog',type:'1.67 Premium',color:'Clear'},
-   items:{
-     frame:[{id:812001,nama:'Fossil FOS 3084 Brown Havana',qty:1,jual:520000,modal:280000}],
-     lensa:[{id:812002,nama:'Lensa Progresif 1.67 Premium',qty:1,jual:950000,modal:420000}],
-     softlens:[]
-   },
-   sub:1470000,disc:0,tot:1470000,mod:700000,profit:770000,
-   pay:'Transfer – Mandiri',payStatus:'dp',dpAmount:800000,sisa:670000,catatan:'Progresif pertama, perlu adaptasi 2-4 minggu'},
-
-  {id:7013,no:'INV-0013',tanggal:'17 Mei 2026',ts:1747411200000,customer:'NY. AMANDA',hp:'+6289655997395',usia:25,tipe:'Softlens',
-   rx:{rs:'-1.50',rc:'',ra:'',ls:'-1.50',lc:'',la:'',pd:'60',add:''},
-   frameDetail:{},lensDetail:{},
-   items:{
-     frame:[],lensa:[],
-     softlens:[
-       {id:813001,nama:'Acuvue Moist 1-Day (30pcs)',qty:2,jual:280000,modal:130000},
-       {id:813002,nama:'Air Mata Buatan Refresh Tears',qty:2,jual:90000,modal:40000}
-     ]
-   },
-   sub:740000,disc:0,tot:740000,mod:340000,profit:400000,
-   pay:'QRIS – BCA',payStatus:'lunas',dpAmount:740000,sisa:0,catatan:'Stok 2 bulan sekaligus'},
-
-  {id:7014,no:'INV-0014',tanggal:'19 Mei 2026',ts:1747584000000,customer:'TN. RENANTO HASIBUAN',hp:'+62817713434',usia:57,tipe:'Kacamata',
-   rx:{rs:'-1.00',rc:'',ra:'',ls:'-1.25',lc:'',la:'',pd:'65',add:'+2.25'},
-   frameDetail:{brand:'Ray-Ban',mat:'Metal',code:'RB3025',color:'Gold'},
-   lensDetail:{brand:'Essilor',focus:'Prog',type:'1.56 Standard',color:'Clear'},
-   items:{
-     frame:[{id:814001,nama:'Ray-Ban RB3025 Aviator Gold',qty:1,jual:720000,modal:380000}],
-     lensa:[{id:814002,nama:'Lensa Progresif 1.56 Standard',qty:1,jual:650000,modal:300000}],
-     softlens:[]
-   },
-   sub:1370000,disc:70000,tot:1300000,mod:680000,profit:620000,
-   pay:'Tunai',payStatus:'lunas',dpAmount:1300000,sisa:0,catatan:'Pensiunan, butuh progresif untuk baca dan jauh'},
-
-  {id:7015,no:'INV-0015',tanggal:'21 Mei 2026',ts:1747756800000,customer:'NN. SYIFA',hp:'+6285715388144',usia:20,tipe:'Kacamata + Softlens',
-   rx:{rs:'-4.00',rc:'-0.75',ra:'90',ls:'-3.75',lc:'-0.50',la:'85',pd:'60',add:''},
-   frameDetail:{brand:'Kacamata Bulat',mat:'Alloy',code:'KBV-Gold',color:'Gold'},
-   lensDetail:{brand:'Hoya',focus:'SV',type:'Polarized UV400',color:'Brown'},
-   items:{
-     frame:[{id:815001,nama:'Kacamata Bulat Vintage Gold',qty:1,jual:220000,modal:95000}],
-     lensa:[{id:815002,nama:'Lensa Polarized UV400',qty:2,jual:500000,modal:220000}],
-     softlens:[{id:815003,nama:'Softlens X2',qty:2,jual:110000,modal:50000}]
-   },
-   sub:1440000,disc:40000,tot:1400000,mod:585000,profit:815000,
-   pay:'Transfer – BCA',payStatus:'lunas',dpAmount:1400000,sisa:0,catatan:'Mahasiswi aktif, pakai kacamata & softlens bergantian'}
-]
-};
+]};
 
 
 // ════════════════════════════════════════════════
@@ -630,9 +451,9 @@ let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeo
 // ════════════════════════════════════════════════
 (async function init(){
   let had=false;try{had=await Store.init(()=>{const a=document.querySelector('.page.on');const id=a?a.id.replace('page-',''):'dashboard';const m={dashboard:renderDashboard,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,reports:renderReports};if(m[id])m[id]();toast('Data diperbarui dari perangkat lain','i',2200);});}catch(e){db=Store.seedDB();}
-  if(!db.aksesoris)db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));
+  if(!db.aksesoris)db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.invoices.forEach(inv=>{if(inv.items&&!inv.items.aksesoris)inv.items.aksesoris=[];});
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  genInvNo();renderDashboard();renderCart();initSidebar();updateDPBadge();
+  genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');if(_t==='dark'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
   window.addEventListener('scroll',()=>{document.getElementById('scrtop').style.display=window.scrollY>300?'flex':'none';});
   document.addEventListener('click',e=>{if(!e.target.closest('.ac-wrap'))document.getElementById('ac-drop').style.display='none';if(!e.target.closest('.top-search'))document.getElementById('gs-drop').style.display='none';});
   toast((had?'Data dimuat':'Data awal disiapkan')+' · '+(Store.mode==='firebase'?'Cloud':'Lokal'),'i',2800);
@@ -693,6 +514,7 @@ function login(role){
   showPage(r.home,btn);
   updateDPBadge();
   toast('Masuk sebagai '+r.label,'s');
+  renderFabForRole();
 }
 
 function logout(){
@@ -709,7 +531,7 @@ function applyPermissions(){
     const pid=m?m[1]:null;
     btn.style.display=(pid&&allowed.includes(pid))?'':'none';
   });
-  document.querySelectorAll('.admin-only').forEach(el=>{el.style.display=isAdmin?'':'none';});
+  document.querySelectorAll('.admin-only').forEach(el=>{el.style.display=isAdmin?'':'none';});const _mds=document.getElementById('nav-masterdata-sep');if(_mds)_mds.textContent=isAdmin?'Master Data':'Data';
 }
 
 // ════════════════════════════════════════════════
@@ -765,7 +587,7 @@ function showPage(id,el){
   if(currentRole&&!ROLES[currentRole].pages.includes(id)){toast('Menu ini tidak tersedia untuk peran '+ROLES[currentRole].label,'e');return;}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));document.getElementById('page-'+id).classList.add('on');if(el)el.classList.add('on');const m={dashboard:renderDashboard,reports:renderReports,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,invoice:()=>{if(!document.getElementById('inv-no').value)genInvNo();const tgl=document.getElementById('inv-tanggal');if(tgl&&!tgl.value){const now=new Date();tgl.value=now.toISOString().slice(0,10);}renderCart();updateReceipt();}};if(m[id])m[id]();window.scrollTo({top:0,behavior:'smooth'});
 }
-function toggleDark(){darkMode=!darkMode;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';}
+function toggleDark(){darkMode=!darkMode;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';try{localStorage.setItem('optik_zada_theme',darkMode?'dark':'light');}catch(e){}}
 function toast(msg,type='s',dur=3000){const icons={s:'circle-check',e:'circle-x',w:'alert-triangle',i:'info-circle'};const el=document.createElement('div');el.className=`toast toast-${type}`;el.innerHTML=`<i class="ti ti-${icons[type]}"></i><span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;document.getElementById('toast-wrap').appendChild(el);setTimeout(()=>{el.style.animation='toastOut .3s ease forwards';setTimeout(()=>el.remove(),300)},dur);}
 function fmt(n){return'Rp'+Math.round(n||0).toLocaleString('id-ID')}
 function deriveTipe(){const hasF=cart.frame.some(x=>x.nama),hasL=cart.lensa.some(x=>x.nama),hasS=cart.softlens.some(x=>x.nama),hasA=(cart.aksesoris||[]).some(x=>x.nama);const parts=[];if(hasF&&hasL)parts.push('Kacamata');else{if(hasF)parts.push('Frame');if(hasL)parts.push('Lensa');}if(hasS)parts.push('Softlens');if(hasA)parts.push('Aksesoris');return parts.length?parts.join(' + '):'Lainnya';}
@@ -800,7 +622,7 @@ function renderProds(t){const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[
 // addCustomerManual(), saveCustomer(), renderCustomers()
 // ════════════════════════════════════════════════
 // CUSTOMERS
-function addCustomerManual(){const n=document.getElementById('cn').value.trim();if(!n){toast('Nama kosong','e');return;}saveCustomer(n,document.getElementById('chp').value.trim(),document.getElementById('ca').value.trim(),parseInt(document.getElementById('cu').value)||0);['cn','chp','ca','cu'].forEach(id=>document.getElementById(id).value='');renderCustomers();persist();toast('Customer ditambahkan');}
+function addCustomerManual(){const n=document.getElementById('cn').value.trim();if(!n){toast('Nama kosong','e');return;}const g=document.getElementById('cg')?.value||'';const fullNama=g&&!n.match(/^(Tn\.|Ny\.|Nn\.|An\.|Dr\.)/i)?g+' '+n:n;saveCustomer(fullNama,document.getElementById('chp').value.trim(),document.getElementById('ca').value.trim(),parseInt(document.getElementById('cu').value)||0);['cn','chp','ca','cu'].forEach(id=>document.getElementById(id).value='');const cgEl=document.getElementById('cg');if(cgEl)cgEl.value='';renderCustomers();persist();toast('Customer '+fullNama+' ditambahkan');}
 function saveCustomer(nama,hp,alamat,usia,jk){const ex=db.customers.find(c=>c.nama.toLowerCase()===nama.toLowerCase());if(!ex)db.customers.push({id:Date.now(),nama,hp:hp||'',alamat:alamat||'',usia:usia||0,jk:jk||''});else{if(hp&&!ex.hp)ex.hp=hp;if(alamat&&!ex.alamat)ex.alamat=alamat;if(usia&&!ex.usia)ex.usia=usia;if(jk&&!ex.jk)ex.jk=jk;}}
 function delCustomer(id){if(!confirm('Hapus?'))return;db.customers=db.customers.filter(x=>x.id!==id);renderCustomers();persist();}
 function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').toLowerCase();const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));document.getElementById('cu-emp').style.display=arr.length?'none':'block';document.getElementById('cu-tb').innerHTML=arr.map((c,i)=>{const txs=db.invoices.filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase());const totalBelanja=txs.reduce((s,x)=>s+x.tot,0);return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${c.nama}</strong></td><td>${c.hp||'—'}</td><td>${c.alamat||'—'}</td><td>${c.usia||'—'}</td><td><span class="badge bblue">${txs.length} txn</span></td><td><strong>${txs.length?fmt(totalBelanja):'—'}</strong></td><td style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="rxHistory(${c.id})" title="Riwayat Rx"><i class="ti ti-eye-chart"></i></button><button class="btn btn-danger btn-xs" onclick="delCustomer(${c.id})"><i class="ti ti-trash"></i></button></td></tr>`;}).join('');}
@@ -813,7 +635,7 @@ function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').t
 // ════════════════════════════════════════════════
 // AUTOCOMPLETE
 function autocompleteC(q){const drop=document.getElementById('ac-drop');if(!q.trim()){drop.style.display='none';return;}const m=db.customers.filter(c=>c.nama.toLowerCase().includes(q.toLowerCase()));if(!m.length){drop.style.display='none';return;}drop.style.display='block';drop.innerHTML=m.map(c=>`<div class="ac-item" onmousedown="fillC(${c.id})"><i class="ti ti-user"></i><div><strong>${c.nama}</strong><div style="font-size:11px;color:var(--muted)">${c.hp||''}</div></div></div>`).join('');}
-function fillC(id){const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('inv-nama').value=c.nama;document.getElementById('inv-hp').value=c.hp||'';document.getElementById('inv-usia').value=c.usia||'';document.getElementById('inv-alamat').value=c.alamat||'';document.getElementById('inv-jk').value=c.jk||'';document.getElementById('ac-drop').style.display='none';updateReceipt();}
+function fillC(id){const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('inv-nama').value=c.nama;const gEl=document.getElementById('inv-gelar');if(gEl){const m=c.nama.match(/^(Tn\.|Ny\.|Nn\.|An\.|Dr\.|TN\.|NY\.|NN\.|AN\.|DR\.)\s/i);const MAP={'TN.':'Tn.','NY.':'Ny.','NN.':'Nn.','AN.':'An.','DR.':'Dr.'};gEl.value=m?(MAP[m[1].toUpperCase()]||m[1]):''}document.getElementById('inv-hp').value=c.hp||'';document.getElementById('inv-usia').value=c.usia||'';document.getElementById('inv-alamat').value=c.alamat||'';document.getElementById('inv-jk').value=c.jk||'';document.getElementById('ac-drop').style.display='none';updateReceipt();}
 function globalSearch(q){const drop=document.getElementById('gs-drop');if(!q.trim()){drop.style.display='none';return;}const ql=q.toLowerCase();const r=[];allProds().forEach(p=>{if(p.nama.toLowerCase().includes(ql))r.push({icon:'ti-tag',label:p.nama,sub:p.cat+' · '+fmt(p.jual)})});db.customers.forEach(c=>{if(c.nama.toLowerCase().includes(ql))r.push({icon:'ti-user',label:c.nama,sub:c.hp||'customer'})});db.invoices.forEach(inv=>{if(inv.customer.toLowerCase().includes(ql)||inv.no.toLowerCase().includes(ql))r.push({icon:'ti-receipt',label:inv.no+' – '+inv.customer,sub:fmt(inv.tot)})});drop.innerHTML=r.length?r.slice(0,8).map(x=>`<div class="gs-item"><i class="ti ${x.icon}"></i><div><div style="font-weight:600">${x.label}</div><div style="font-size:11px;color:var(--muted)">${x.sub}</div></div></div>`).join(''):'<div class="gs-item" style="color:var(--muted)">Tidak ditemukan</div>';drop.style.display='block';}
 
 
@@ -872,8 +694,8 @@ document.getElementById('live-tape').innerHTML=`<div class="rh"><h3>OPTIK ZADA</
 // resetInvoice() → bersihkan form setelah simpan
 // ════════════════════════════════════════════════
 // SAVE
-function resetInvoice(){cart={frame:[],lensa:[],softlens:[],aksesoris:[]};pay='';bank='';isDP=false;['inv-nama','inv-hp','inv-catatan','rx-rs','rx-rc','rx-ra','rx-rv','rx-ls','rx-lc','rx-la','rx-lv','rx-pd','rx-add','inv-alamat','inv-ro-nama','inv-ro-siro'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('inv-usia').value='';document.getElementById('inv-jk').value='';const tglSiapEl=document.getElementById('inv-tgl-siap');if(tglSiapEl)tglSiapEl.value='';document.getElementById('inv-dp').value='';document.getElementById('inv-diskon').value='';document.getElementById('inv-diskon2').value='';const tgl=document.getElementById('inv-tanggal');if(tgl){const now=new Date();tgl.value=now.toISOString().slice(0,10);}setDP(false);document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('on'));document.querySelectorAll('.bk-btn').forEach(b=>b.classList.remove('on'));document.getElementById('bank-wrap').style.display='none';document.getElementById('qris-wrap').style.display='none';genInvNo();renderCart();}
-function simpanInvoice(){const nama=document.getElementById('inv-nama').value.trim();if(!nama){toast('Nama customer wajib diisi','e');return;}const tglCheck=document.getElementById('inv-tanggal').value;if(!tglCheck){toast('Tanggal invoice wajib diisi','e');return;}if(!pay){toast('Pilih metode pembayaran','e');return;}if((pay==='Transfer'||pay==='QRIS')&&!bank){toast('Pilih bank','e');return;}const all=[...cart.frame,...cart.lensa,...cart.softlens,...(cart.aksesoris||[])];if(!all.length){toast('Minimal 1 item','e');return;}if(all.some(x=>!x.nama)){toast('Ada item nama kosong','e');return;}const t=cartTotals();
+function resetInvoice(){cart={frame:[],lensa:[],softlens:[],aksesoris:[]};pay='';bank='';isDP=false;['inv-nama','inv-hp','inv-catatan','rx-rs','rx-rc','rx-ra','rx-rv','rx-ls','rx-lc','rx-la','rx-lv','rx-pd','rx-add','inv-alamat','inv-ro-nama','inv-ro-siro'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('inv-usia').value='';document.getElementById('inv-jk').value='';const _gReset=document.getElementById('inv-gelar');if(_gReset)_gReset.value='';const tglSiapEl=document.getElementById('inv-tgl-siap');if(tglSiapEl)tglSiapEl.value='';document.getElementById('inv-dp').value='';document.getElementById('inv-diskon').value='';document.getElementById('inv-diskon2').value='';const tgl=document.getElementById('inv-tanggal');if(tgl){const now=new Date();tgl.value=now.toISOString().slice(0,10);}setDP(false);document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('on'));document.querySelectorAll('.bk-btn').forEach(b=>b.classList.remove('on'));document.getElementById('bank-wrap').style.display='none';document.getElementById('qris-wrap').style.display='none';genInvNo();renderCart();}
+function simpanInvoice(){const _rawNama=document.getElementById('inv-nama').value.trim();const _gelarVal=document.getElementById('inv-gelar')?.value||'';const _hasGelar=/^(Tn\.|Ny\.|Nn\.|An\.|Dr\.|TN\.|NY\.|NN\.|AN\.|DR\.)\s/i.test(_rawNama);const nama=(!_hasGelar&&_gelarVal)?_gelarVal+' '+_rawNama:_rawNama;if(!nama){toast('Nama customer wajib diisi','e');return;}const tglCheck=document.getElementById('inv-tanggal').value;if(!tglCheck){toast('Tanggal invoice wajib diisi','e');return;}if(!pay){toast('Pilih metode pembayaran','e');return;}if((pay==='Transfer'||pay==='QRIS')&&!bank){toast('Pilih bank','e');return;}const all=[...cart.frame,...cart.lensa,...cart.softlens,...(cart.aksesoris||[])];if(!all.length){toast('Minimal 1 item','e');return;}if(all.some(x=>!x.nama)){toast('Ada item nama kosong','e');return;}const t=cartTotals();
 if(all.some(x=>x.jual<=0)){toast('Harga jual semua item harus lebih dari 0','e');return;}
 if(t.disc>0&&t.disc>=t.sub){toast(`Diskon (${fmt(t.disc)}) tidak boleh melebihi subtotal (${fmt(t.sub)})`,'e');return;}
 if(isDP){if(t.dp<=0){toast('Jumlah DP harus lebih dari 0','e');return;}if(t.dp>=t.tot){toast(`DP (${fmt(t.dp)}) tidak boleh melebihi total (${fmt(t.tot)})`,'e');return;}}
@@ -935,9 +757,9 @@ function doLunas(id){
   const tglVal=tglInput?tglInput.value:'';
   const lunasDateFormatted=tglVal?(()=>{const d=new Date(tglVal);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});})():today();
   const payLunas=_lunasBankMethod?`${_lunasPayMethod} – ${_lunasBankMethod.replace(/ QRIS$/,'')}`:_lunasPayMethod;
-  inv.payStatus='lunas';inv.dpAmount=inv.tot;inv.sisa=0;
-  inv.lunasDate=lunasDateFormatted;inv.lunasPay=payLunas;
-  closeModal();renderHistory();persist();updateDPBadge();toast('Invoice '+inv.no+' LUNAS via '+payLunas+'!','s');
+  inv.lunasAmount=inv.sisa;inv.payStatus='lunas';inv.sisa=0;
+  inv.lunasDate=lunasDateFormatted;inv.lunasPay=payLunas;inv.lunasTs=Date.now();
+  closeModal();renderHistory();renderDashboard();persist();updateDPBadge();toast('Invoice '+inv.no+' LUNAS via '+payLunas+'!','s');
 }
 
 
@@ -949,10 +771,10 @@ function doLunas(id){
 // ════════════════════════════════════════════════
 // RECEIPT
 function buildReceipt(inv){const all=[...inv.items.frame,...inv.items.lensa,...inv.items.softlens,...(inv.items.aksesoris||[])];const rxS=inv.rx?rxStr(inv.rx):'';const fd=inv.frameDetail;const ld=inv.lensDetail;const fdStr=(fd&&fd.brand)?`Frame: ${fd.brand} ${fd.mat||''} ${fd.code||''} ${fd.color||''}`:'';const ldStr=(ld&&ld.brand)?`Lensa: ${ld.brand} ${ld.focus||''} ${ld.type||''} ${ld.color||''}`:'';
-return`<div class="modal-title"><i class="ti ti-receipt"></i> Struk Invoice</div><div style="font-family:'Courier New',monospace;font-size:12.5px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;background:var(--bg)"><div style="text-align:center;margin-bottom:12px"><strong style="font-size:16px;letter-spacing:2px">OPTIK ZADA</strong><br><span style="font-size:10px;color:var(--muted)">Struk Pembelian</span></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">No.</span><strong>${inv.no}</strong></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tanggal</span>${inv.tanggal}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Customer</span>${inv.customer}</div>${inv.hp?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">HP</span>${inv.hp}</div>`:''}${(()=>{const c=db.customers.find(x=>x.nama.toLowerCase()===inv.customer.toLowerCase());return c&&c.alamat?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Alamat</span>${c.alamat}</div>`:''})()}<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tipe</span>${inv.tipe||'-'}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Bayar</span>${inv.pay}</div>${inv.tglSiap?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Siap Ambil</span><strong>${fmtDate(inv.tglSiap)}</strong></div>`:''} ${rxS?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${rxS}</div>`:''}${fdStr||ldStr?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${fdStr}${fdStr&&ldStr?'<br>':''}${ldStr}</div>`:''}
-<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${all.map(x=>`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>${x.nama}${x.qty>1?' x'+x.qty:''}</span>${fmt(x.jual*x.qty)}</div>`).join('')}<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${inv.disc>0?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Subtotal</span>${fmt(inv.sub)}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px;color:var(--gold4)"><span>Diskon</span>−${fmt(inv.disc)}</div>`:''}<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:700"><span>TOTAL</span>${fmt(inv.tot)}</div>${inv.payStatus==='dp'?`<div style="display:flex;justify-content:space-between;margin-top:4px;color:var(--warn)"><span>DP Dibayar</span>${fmt(inv.dpAmount)}</div><div style="display:flex;justify-content:space-between;color:var(--danger)"><span>SISA</span>${fmt(inv.sisa)}</div>`:''}<div style="text-align:center;margin-top:8px"><span class="badge ${inv.payStatus==='lunas'?'bgreen':'borange'}" style="font-size:12px">${inv.payStatus==='lunas'?'✓ LUNAS':'⏳ DP — BELUM LUNAS'}</span></div>${inv.lunasDate?`<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px"><span style="color:var(--muted)">Tgl Lunas</span><span>${inv.lunasDate}</span></div>`:''} ${inv.lunasPay?`<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--muted)">Bayar Lunas</span><span>${inv.lunasPay}</span></div>`:''}${inv.ro&&inv.ro.nama?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;margin-top:8px;font-size:11px"><span style="color:var(--muted)">Pemeriksa (RO)</span><strong>${inv.ro.nama}</strong></div>${inv.ro.siro?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px"><span style="color:var(--muted)">No. SIRO</span>${inv.ro.siro}</div>`:''}`:''}<div style="text-align:center;margin-top:12px;font-size:10px;color:var(--muted);border-top:1px dashed var(--border2);padding-top:8px">Terima kasih · Optik ZADA</div></div>`;}
-function previewInvoice(){const t=cartTotals();const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}` :(pay||'-');const fakeInv={no:document.getElementById('inv-no').value,tanggal:today(),customer:document.getElementById('inv-nama').value||'(belum diisi)',tipe:deriveTipe(),ro:getRO(),rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value};document.getElementById('modal-content').innerHTML=buildReceipt(fakeInv);document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button><button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
-function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;document.getElementById('modal-content').innerHTML=buildReceipt(inv);const delBtnHtml=currentRole==='admin'?`<button class="btn btn-danger btn-sm" onclick="closeModal();delInvoice(${inv.id})" style="margin-right:auto"><i class="ti ti-trash"></i> Hapus</button>`:'';const waBtnV=inv.hp?`<button class="btn btn-success btn-sm" onclick="btnWA(${inv.id})"><i class="ti ti-brand-whatsapp"></i> WA</button>`:'';document.getElementById('modal-actions').innerHTML=`${delBtnHtml}<button class="btn btn-outline" onclick="closeModal()">Tutup</button>${waBtnV}${inv.payStatus==='dp'?`<button class="btn btn-gold" onclick="closeModal();lunaskan(${inv.id})"><i class="ti ti-check"></i> Lunaskan</button>`:''}<button class="btn btn-xs btn-outline" onclick="buildThermalReceipt(db.invoices.find(x=>x.id===${inv.id}))" title="Cetak Thermal 80mm" style="padding:6px 10px"><i class="ti ti-device-mobile"></i> Thermal</button><button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
+return`<div class="modal-title"><i class="ti ti-receipt"></i> Struk Invoice</div><div style="font-family:'Courier New',monospace;font-size:12.5px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;background:var(--bg)"><div style="text-align:center;margin-bottom:12px"><strong style="font-size:16px;letter-spacing:2px">OPTIK ZADA</strong><br><span style="font-size:10px;color:var(--muted)">Struk Pembelian</span><br><span style="font-size:9px;color:var(--muted)">Jl. Raya Mangun Jaya No.03C, Tambun, Bekasi</span><br><span style="font-size:9px;color:var(--muted)">🕐 09.00 – 21.00 WIB</span></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">No.</span><strong>${inv.no}</strong></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tanggal</span>${inv.tanggal}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Customer</span>${inv.customer}</div>${inv.hp?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">HP</span>${inv.hp}</div>`:''}${(inv.alamat?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Alamat</span>${inv.alamat}</div>`:'')}<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tipe</span>${inv.tipe||'-'}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Bayar</span>${inv.pay}</div>${inv.tglSiap?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Siap Ambil</span><strong>${fmtDate(inv.tglSiap)}</strong></div>`:''} ${rxS?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${rxS}</div>`:''}${fdStr||ldStr?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${fdStr}${fdStr&&ldStr?'<br>':''}${ldStr}</div>`:''}
+<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${all.map(x=>`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>${x.nama}${x.qty>1?' x'+x.qty:''}</span>${fmt(x.jual*x.qty)}</div>`).join('')}<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${inv.disc>0?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Subtotal</span>${fmt(inv.sub)}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px;color:var(--gold4)"><span>Diskon</span>−${fmt(inv.disc)}</div>`:''}<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:700"><span>TOTAL</span>${fmt(inv.tot)}</div>${inv.payStatus==='dp'?`<div style="display:flex;justify-content:space-between;margin-top:4px;color:var(--warn)"><span>DP Dibayar</span>${fmt(inv.dpAmount)}</div><div style="display:flex;justify-content:space-between;color:var(--danger)"><span>SISA</span>${fmt(inv.sisa)}</div>`:''}<div style="text-align:center;margin-top:8px"><span class="badge ${inv.payStatus==='lunas'?'bgreen':'borange'}" style="font-size:12px">${inv.payStatus==='lunas'?'✓ LUNAS':'⏳ DP — BELUM LUNAS'}</span></div>${inv.lunasDate?`<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px"><span style="color:var(--muted)">Tgl Lunas</span><span>${inv.lunasDate}</span></div>`:''} ${inv.lunasPay?`<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--muted)">Bayar Lunas</span><span>${inv.lunasPay}</span></div>`:''}${inv.ro&&inv.ro.nama?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;margin-top:8px;font-size:11px"><span style="color:var(--muted)">Pemeriksa (RO)</span><strong>${inv.ro.nama}</strong></div>${inv.ro.siro?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px"><span style="color:var(--muted)">No. SIRO</span>${inv.ro.siro}</div>`:''}`:''}<div style="text-align:center;margin-top:12px;font-size:10px;color:var(--muted);border-top:1px dashed var(--border2);padding-top:8px"><div style="font-weight:700;font-size:11px;letter-spacing:1px">OPTIK ZADA</div><div style="margin-top:2px">Jl. Raya Mangun Jaya No.03C, Tambun</div><div>Kab. Bekasi, Jawa Barat 17510</div><div style="margin-top:3px">🕐 Layanan: 09.00 – 21.00 WIB</div><div style="margin-top:5px;font-style:italic">Terima kasih atas kepercayaan Anda 🙏</div></div></div>`;}
+function previewInvoice(){const t=cartTotals();const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}` :(pay||'-');const fakeInv={no:document.getElementById('inv-no').value,tanggal:today(),customer:document.getElementById('inv-nama').value||'(belum diisi)',tipe:deriveTipe(),ro:getRO(),rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value};document.getElementById('modal-content').innerHTML=buildReceipt(fakeInv);document.getElementById('modal-actions').innerHTML=`<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
+function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;document.getElementById('modal-content').innerHTML=buildReceipt(inv);const delBtnHtml=currentRole==='admin'?`<button class="btn btn-danger btn-sm" onclick="closeModal();delInvoice(${inv.id})" style="margin-right:auto"><i class="ti ti-trash"></i> Hapus</button>`:'';const waBtnV=inv.hp?`<button class="btn btn-success btn-sm" onclick="btnWA(${inv.id})"><i class="ti ti-brand-whatsapp"></i> WA</button>`:'';document.getElementById('modal-actions').innerHTML=`${delBtnHtml}${waBtnV}<button class="btn btn-outline btn-sm" onclick="buildThermalReceipt(db.invoices.find(x=>x.id===${inv.id}))" title="Cetak Thermal 80mm" style="padding:8px 10px;min-width:36px"><i class="ti ti-device-mobile"></i></button>${inv.payStatus==='dp'?`<button class="btn btn-gold" onclick="closeModal();lunaskan(${inv.id})"><i class="ti ti-check"></i> Lunaskan</button>`:''}<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
 
 
 // ════════════════════════════════════════════════
@@ -962,7 +784,7 @@ function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return
 // ════════════════════════════════════════════════
 // HISTORY
 function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';let arr=db.invoices.filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp)));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);document.getElementById('h-empty').style.display=arr.length?'none':'block';
-document.getElementById('h-tbody').innerHTML=arr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?'<span class="badge bgreen">Lunas</span>':`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span>`;const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong></td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
+document.getElementById('h-tbody').innerHTML=arr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong></td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
 const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=currentRole==='admin'?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
 function delInvoice(id){if(!confirm('Hapus invoice?'))return;db.invoices=db.invoices.filter(x=>x.id!==id);renderHistory();persist();updateDPBadge();toast('Invoice dihapus','w');}
 
@@ -973,12 +795,28 @@ function delInvoice(id){if(!confirm('Hapus invoice?'))return;db.invoices=db.invo
 // Filter berdasarkan periode bulan
 // ════════════════════════════════════════════════
 // DASHBOARD
-function monthKeyOf(inv){const d=new Date(inv.ts||Date.now());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
-function renderDashboard(){const sel=document.getElementById('dash-period');const prev=sel.value||'all';const months={};db.invoices.forEach(inv=>{months[monthKeyOf(inv)]=new Date(inv.ts||Date.now()).toLocaleDateString('id-ID',{month:'long',year:'numeric'});});const keys=Object.keys(months).sort().reverse();sel.innerHTML='<option value="all">Semua Waktu</option>'+keys.map(k=>`<option value="${k}">${months[k]}</option>`).join('');sel.value=(prev==='all'||keys.includes(prev))?prev:'all';const period=sel.value;const inv=period==='all'?db.invoices:db.invoices.filter(x=>monthKeyOf(x)===period);
-const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);document.getElementById('d-tx').textContent=inv.length;document.getElementById('d-omzet').textContent=fmt(tot);document.getElementById('d-profit').textContent=fmt(profit);document.getElementById('d-cust').textContent=db.customers.length;document.getElementById('d-margin-sub').textContent=`margin ${pct(profit,tot)}%`;document.getElementById('d-prod-sub').textContent=`${db.frames.length+db.lensas.length+db.softlens.length} produk`;document.getElementById('d-tx-sub').textContent=period==='all'?(inv.length?`terakhir: ${inv[0].tanggal}`:'belum ada'):(months[period]);
+function monthKeyOf(inv){const parts=(inv.tanggal||'').split('/');if(parts.length===3){const m=parts[1],y=parts[2];return y+'-'+m.padStart(2,'0');}const d=new Date(inv.ts||Date.now());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function renderDashboard(){const now=new Date();const currentMK=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');const currentMLabel=now.toLocaleDateString('id-ID',{month:'long',year:'numeric'});const lbl=document.getElementById('dash-month-label');if(lbl)lbl.textContent=currentMLabel;const inv=db.invoices.filter(x=>monthKeyOf(x)===currentMK);const period=currentMK;
+const kas=inv.reduce((s,x)=>s+(x.dpAmount||0)+(x.lunasAmount||0),0);const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);document.getElementById('d-tx').textContent=inv.length;if(currentRole==='admin'){document.getElementById('d-omzet').textContent=fmt(kas);document.getElementById('d-omzet').style.color='var(--gold)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Kas Masuk';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML='<i class="ti ti-trending-up"></i>uang diterima';}else{const _tod=new Date().toISOString().slice(0,10);const _tc=db.invoices.filter(x=>new Date(x.ts||0).toISOString().slice(0,10)===_tod).length;document.getElementById('d-omzet').textContent=_tc+' txn';document.getElementById('d-omzet').style.color='var(--info)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Transaksi Hari Ini';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML='<i class="ti ti-calendar-check"></i>hari ini';}document.getElementById('d-profit').textContent=fmt(profit);document.getElementById('d-cust').textContent=db.customers.length;document.getElementById('d-margin-sub').textContent=`margin ${pct(profit,tot)}%`;document.getElementById('d-prod-sub').textContent=`${db.frames.length+db.lensas.length+db.softlens.length} produk`;document.getElementById('d-tx-sub').textContent=currentMLabel;
 const statGrid=document.querySelector('#page-dashboard .grid.g4');if(statGrid)statGrid.className=`grid ${currentRole==='admin'?'g4':'g3'}`;
-const rec=db.invoices.slice(0,5);document.getElementById('d-recent').innerHTML=rec.length?rec.map(x=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="viewInvoice(${x.id})"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--navy3);flex-shrink:0">${x.customer.charAt(0).toUpperCase()}</div><div><div style="font-weight:600;font-size:13px">${x.customer}</div><div style="font-size:11px;color:var(--muted)">${x.no} · ${x.tanggal} <span class="badge ${x.payStatus==='dp'?'borange':'bgreen'}" style="font-size:10px">${x.payStatus==='dp'?'DP':'✓'}</span></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700">${fmt(x.tot)}</div></div></div>`).join(''):'<div class="empty" style="padding:24px 0"><i class="ti ti-inbox"></i><p>Belum ada transaksi</p></div>';
-const chartEl=document.getElementById('omzet-chart');if(!inv.length){chartEl.innerHTML='<div class="empty" style="padding:10px"><i class="ti ti-chart-bar" style="font-size:28px"></i></div>';}else{const byDate={};[...inv].reverse().forEach(x=>{byDate[x.tanggal]=(byDate[x.tanggal]||0)+x.tot;});const dates=Object.keys(byDate).slice(-7);const vals=dates.map(d=>byDate[d]);const mx=Math.max(...vals)||1;chartEl.innerHTML=dates.map((d,i)=>`<div class="chart-col"><div class="chart-bar" data-val="${fmt(vals[i])}" style="height:${Math.max(8,Math.round(vals[i]/mx*100))}%;background:${i===dates.length-1?'var(--gold)':'var(--navy2)'}"></div><div class="chart-lbl">${d.split(' ').slice(0,2).join(' ')}</div></div>`).join('');}
+// Parse tanggal format DD/MM/YYYY ke timestamp untuk sorting
+const _parseD=s=>{const p=(s||'').split('/');if(p.length===3)return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0])).getTime();return 0;};
+const _cashEvents=[];
+db.invoices.forEach(x=>{
+  // Event DP / bayar pertama — pakai ts invoice sebagai sort key
+  _cashEvents.push({id:x.id,c:x.customer,no:x.no,d:x.tanggal,amt:x.dpAmount||0,
+    bg:x.payStatus==='dp'?'borange':(x.lunasAmount?'bblue':'bgreen'),
+    lbl:x.payStatus==='dp'?'DP':(x.lunasAmount?'DP':'\u2713'),
+    _ts:x.ts||_parseD(x.tanggal)});
+  // Event pelunasan — pakai lunasTs jika ada, atau parse lunasDate
+  if(x.lunasDate&&x.lunasAmount){
+    const _lts=x.lunasTs||_parseD(x.lunasDate);
+    _cashEvents.push({id:x.id,c:x.customer,no:x.no,d:x.lunasDate,amt:x.lunasAmount,bg:'bgreen',lbl:'Pelunasan',_ts:_lts});
+  }
+});
+_cashEvents.sort((a,b)=>b._ts-a._ts);
+const rec=_cashEvents.slice(0,5);document.getElementById('d-recent').innerHTML=rec.length?rec.map(x=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="viewInvoice(${x.id})"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--navy3);flex-shrink:0">${x.c.charAt(0).toUpperCase()}</div><div><div style="font-weight:600;font-size:13px">${x.c}</div><div style="font-size:11px;color:var(--muted)">${x.no} \u00B7 ${x.d} <span class="badge ${x.bg}" style="font-size:10px">${x.lbl}</span></div></div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700">${fmt(x.amt)}</div></div></div>`).join(''):'<div class="empty" style="padding:24px 0"><i class="ti ti-inbox"></i><p>Belum ada transaksi</p></div>';
+const chartEl=document.getElementById('omzet-chart');if(!inv.length){chartEl.innerHTML='<div class="empty" style="padding:10px"><i class="ti ti-chart-bar" style="font-size:28px"></i></div>';}else{const byDate={};[...inv].reverse().forEach(x=>{byDate[x.tanggal]=(byDate[x.tanggal]||0)+(x.dpAmount||0);if(x.lunasDate&&x.lunasAmount)byDate[x.lunasDate]=(byDate[x.lunasDate]||0)+x.lunasAmount;});const dates=Object.keys(byDate).slice(-7);const vals=dates.map(d=>byDate[d]);const mx=Math.max(...vals)||1;chartEl.innerHTML=dates.map((d,i)=>`<div class="chart-col"><div class="chart-bar" data-val="${fmt(vals[i])}" style="height:${Math.max(8,Math.round(vals[i]/mx*100))}%;background:${i===dates.length-1?'var(--gold)':'var(--navy2)'}"></div><div class="chart-lbl">${d.split(' ').slice(0,2).join(' ')}</div></div>`).join('');}
 const payCount={};inv.forEach(x=>{const k=x.pay.split(' – ')[0];payCount[k]=(payCount[k]||0)+1;});const entries=Object.entries(payCount);const ptotal=entries.reduce((s,[,v])=>s+v,0)||1;document.getElementById('pay-breakdown').innerHTML=entries.length?entries.map(([k,v])=>`<div class="prog-row"><div class="prog-label"><span>${k}</span><strong>${v} txn · ${pct(v,ptotal)}%</strong></div><div class="prog-bar"><div class="prog-fill" style="width:${pct(v,ptotal)}%;background:${k==='Tunai'?'var(--success)':k==='QRIS'?'var(--gold)':'var(--info)'}"></div></div></div>`).join(''):'<div class="empty" style="padding:10px"><i class="ti ti-chart-pie" style="font-size:28px"></i></div>';
 renderSiapAlert();renderDashboardStokAlert();}
 
@@ -988,11 +826,47 @@ renderSiapAlert();renderDashboardStokAlert();}
 // renderDashboardStokAlert() → update stok banner & list di dashboard
 // ════════════════════════════════════════════════
 function renderDashboardStokAlert(){
+  if(currentRole&&currentRole!=='admin'){const _ae=document.getElementById('stok-alert-area');if(_ae)_ae.innerHTML='';return;}
   const low=allProds().filter(p=>(p.stok||0)<=3);
   const alertEl=document.getElementById('stok-alert-area');
-  if(alertEl)alertEl.innerHTML=low.length?`<div class="stok-banner" onclick="(function(){const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes(\"'frame'\"));showPage('frame',btn);})()" style="cursor:pointer"><i class="ti ti-alert-triangle"></i><span><strong>${low.length} produk</strong> stok menipis / habis — klik untuk cek</span></div>`:'';
+  if(alertEl)alertEl.innerHTML=low.length?`<div class="stok-banner" onclick="showStokAlertModal()"><i class="ti ti-alert-triangle"></i><span><strong>${low.length} produk</strong> stok menipis / habis \u2014 klik untuk cek</span></div>`:'';
   const sl=document.getElementById('d-stok-list');
-  if(sl)sl.innerHTML=low.length?low.slice(0,5).map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${p.nama}</span><span class="badge ${p.stok<=0?'bred':'borange'}">${p.stok<=0?'Habis':p.stok+' sisa'}</span></div>`).join(''):'<div class="empty" style="padding:8px"><i class="ti ti-check" style="font-size:24px;opacity:.3"></i><p>Stok aman</p></div>';
+  if(sl)sl.innerHTML=low.length?low.slice(0,5).map(p=>{
+    const kat=db.frames.find(x=>x.id===p.id)?'frame':db.lensas.find(x=>x.id===p.id)?'lensa':db.softlens.find(x=>x.id===p.id)?'softlens':'aksesoris';
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer" onclick="navigateToStok('${kat}')"><span>${p.nama}</span><span class="badge ${p.stok<=0?'bred':'borange'}">${p.stok<=0?'Habis':p.stok+' sisa'}</span></div>`;
+  }).join(''):'<div class="empty" style="padding:8px"><i class="ti ti-check" style="font-size:24px;opacity:.3"></i><p>Stok aman</p></div>';
+}
+
+function navigateToStok(kat){
+  const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+kat+"'"));
+  showPage(kat,btn);
+}
+
+function showStokAlertModal(){
+  const low=allProds().filter(p=>(p.stok||0)<=3);
+  if(!low.length)return;
+  function getKat(p){
+    if(db.frames.find(x=>x.id===p.id))return{kat:'frame',label:'Frame'};
+    if(db.lensas.find(x=>x.id===p.id))return{kat:'lensa',label:'Lensa'};
+    if(db.softlens.find(x=>x.id===p.id))return{kat:'softlens',label:'Softlens'};
+    return{kat:'aksesoris',label:'Aksesoris'};
+  }
+  const rows=low.map(p=>{
+    const {kat,label}=getKat(p);
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);gap:10px">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${p.nama}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px"><span class="badge bg">${label}</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span class="badge ${p.stok<=0?'bred':'borange'}">${p.stok<=0?'Habis':p.stok+' sisa'}</span>
+        <button class="btn btn-outline btn-xs" onclick="closeModal();navigateToStok('${kat}')" title="Kelola ${label}"><i class="ti ti-arrow-right"></i> Kelola</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-alert-triangle" style="color:var(--warn)"></i> Stok Menipis / Habis</div>${rows}`;
+  document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
+  document.getElementById('modal').style.display='flex';
 }
 
 
@@ -1001,11 +875,36 @@ function renderDashboardStokAlert(){
 // renderReports() → top produk, top customer, breakdown kategori
 // ════════════════════════════════════════════════
 // REPORTS
-function renderReports(){const tot=db.invoices.reduce((s,x)=>s+x.tot,0);const profit=db.invoices.reduce((s,x)=>s+x.profit,0);document.getElementById('r-avg').textContent=fmt(db.invoices.length?tot/db.invoices.length:0);document.getElementById('r-margin').textContent=pct(profit,tot)+'%';renderMonthlyChart();const prodCount={};let itemTotal=0;const catTotal={Frame:0,Lensa:0,Softlens:0,Aksesoris:0};db.invoices.forEach(inv=>{inv.items.frame.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Frame+=x.jual*x.qty;});inv.items.lensa.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Lensa+=x.jual*x.qty;});inv.items.softlens.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Softlens+=x.jual*x.qty;});(inv.items.aksesoris||[]).forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Aksesoris+=x.jual*x.qty;});});document.getElementById('r-items').textContent=itemTotal;
+function renderReports(){
+  const sel=document.getElementById('report-period');const prev=sel?sel.value||'all':'all';
+  const months={};db.invoices.forEach(inv=>{const k=monthKeyOf(inv);if(!months[k]){const[y,m]=k.split('-');months[k]=new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});
+  const keys=Object.keys(months).sort().reverse();
+  if(sel){sel.innerHTML='<option value="all">Semua Waktu</option>'+keys.map(k=>`<option value="${k}">${months[k]}</option>`).join('');sel.value=(prev==='all'||keys.includes(prev))?prev:'all';}
+  const period=sel?sel.value:'all';
+  const inv=period==='all'?db.invoices:db.invoices.filter(x=>monthKeyOf(x)===period);
+  const kas=inv.reduce((s,x)=>s+(x.dpAmount||0)+(x.lunasAmount||0),0);
+  const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);
+  document.getElementById('rp-tx').textContent=inv.length;
+  document.getElementById('rp-tx-sub').textContent=period==='all'?'semua waktu':(months[period]||'');
+  document.getElementById('rp-kas').textContent=fmt(kas);
+  document.getElementById('rp-profit').textContent=fmt(profit);
+  document.getElementById('rp-margin-sub').textContent='margin '+pct(profit,tot)+'%';
+  const _parseD=s=>{const p=(s||'').split('/');return p.length===3?new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0])):new Date(0);};
+  const byDate={};[...inv].forEach(x=>{byDate[x.tanggal]=(byDate[x.tanggal]||0)+(x.dpAmount||0);if(x.lunasDate&&x.lunasAmount)byDate[x.lunasDate]=(byDate[x.lunasDate]||0)+x.lunasAmount;});
+  const sortedDates=Object.keys(byDate).sort((a,b)=>_parseD(a)-_parseD(b)).slice(-10);
+  const vals=sortedDates.map(d=>byDate[d]);const mx=Math.max(...vals)||1;
+  const chartEl=document.getElementById('rp-chart');
+  chartEl.innerHTML=sortedDates.length?sortedDates.map((d,i)=>`<div class="chart-col"><div class="chart-bar" data-val="${fmt(vals[i])}" style="height:${Math.max(8,Math.round(vals[i]/mx*100))}%;background:${i===sortedDates.length-1?'var(--gold)':'var(--navy2)'}"></div><div class="chart-lbl">${d}</div></div>`).join(''):'<div class="empty" style="padding:10px"><i class="ti ti-chart-bar" style="font-size:28px"></i></div>';
+  const payC={};inv.forEach(x=>{const k=x.pay.split(' – ')[0]||x.pay;payC[k]=(payC[k]||0)+1;});const payT=Object.values(payC).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('rp-pay-methods').innerHTML=Object.entries(payC).length?Object.entries(payC).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="prog-row"><div class="prog-label"><span>${k}</span><strong>${v} txn · ${pct(v,payT)}%</strong></div><div class="prog-bar"><div class="prog-fill" style="width:${pct(v,payT)}%;background:${k==='Tunai'?'var(--success)':k==='QRIS'?'var(--gold)':'var(--info)'}"></div></div></div>`).join(''):'<div class="empty" style="padding:16px"><p>Belum ada data</p></div>';
+  renderMonthlyChart();
+  const prodCount={};let itemTotal=0;const catTotal={Frame:0,Lensa:0,Softlens:0,Aksesoris:0};
+  inv.forEach(inv2=>{inv2.items.frame.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Frame+=x.jual*x.qty;});inv2.items.lensa.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Lensa+=x.jual*x.qty;});inv2.items.softlens.forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Softlens+=x.jual*x.qty;});(inv2.items.aksesoris||[]).forEach(x=>{prodCount[x.nama]=(prodCount[x.nama]||0)+x.qty;itemTotal+=x.qty;catTotal.Aksesoris+=x.jual*x.qty;});});
+  document.getElementById('r-items').textContent=itemTotal;
 const topProd=Object.entries(prodCount).sort((a,b)=>b[1]-a[1]).slice(0,5);document.getElementById('r-top-prod').innerHTML=topProd.length?topProd.map(([n,q],i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span class="medal ${i<3?'medal-'+(i+1):''}" style="${i>=3?'background:var(--bg2);color:var(--muted)':''}">${i+1}</span><span style="flex:1;font-size:13px;font-weight:500">${n}</span><span class="badge bgold">${q} terjual</span></div>`).join(''):'<div class="empty" style="padding:20px"><i class="ti ti-trophy"></i><p>Belum ada data</p></div>';
-const custTot={};db.invoices.forEach(inv=>{if(!custTot[inv.customer])custTot[inv.customer]={count:0,total:0};custTot[inv.customer].count++;custTot[inv.customer].total+=inv.tot;});const topCust=Object.entries(custTot).sort((a,b)=>b[1].total-a[1].total).slice(0,8);document.getElementById('r-cust-emp').style.display=topCust.length?'none':'block';document.getElementById('r-top-cust').innerHTML=topCust.map(([n,d],i)=>`<tr><td><span class="medal ${i<3?'medal-'+(i+1):''}" style="${i>=3?'background:var(--bg2);color:var(--muted)':''}">${i+1}</span></td><td><strong>${n}</strong></td><td><span class="badge bblue">${d.count} txn</span></td><td><strong>${fmt(d.total)}</strong></td></tr>`).join('');
+const custTot={};inv.forEach(inv2=>{if(!custTot[inv2.customer])custTot[inv2.customer]={count:0,total:0};custTot[inv2.customer].count++;custTot[inv2.customer].total+=inv2.tot;});const topCust=Object.entries(custTot).sort((a,b)=>b[1].total-a[1].total).slice(0,8);document.getElementById('r-cust-emp').style.display=topCust.length?'none':'block';document.getElementById('r-top-cust').innerHTML=topCust.map(([n,d],i)=>`<tr><td><span class="medal ${i<3?'medal-'+(i+1):''}" style="${i>=3?'background:var(--bg2);color:var(--muted)':''}">${i+1}</span></td><td><strong>${n}</strong></td><td><span class="badge bblue">${d.count} txn</span></td><td><strong>${fmt(d.total)}</strong></td></tr>`).join('');
 const catTot=catTotal.Frame+catTotal.Lensa+catTotal.Softlens+catTotal.Aksesoris;document.getElementById('r-cat').innerHTML=catTot>0?Object.entries(catTotal).filter(([,v])=>v>0).map(([k,v])=>`<div class="prog-row"><div class="prog-label"><span style="font-size:13px;font-weight:500">${k}</span><strong>${fmt(v)} · ${pct(v,catTot)}%</strong></div><div class="prog-bar"><div class="prog-fill" style="width:${pct(v,catTot)}%;background:${k==='Frame'?'var(--navy2)':k==='Lensa'?'var(--gold)':k==='Softlens'?'var(--info)':'var(--success)'}"></div></div></div>`).join(''):'<div class="empty" style="padding:20px"><i class="ti ti-chart-donut"></i><p>Belum ada data</p></div>';
-const daily={};db.invoices.forEach(inv=>{if(!daily[inv.tanggal])daily[inv.tanggal]={count:0,omzet:0,profit:0};daily[inv.tanggal].count++;daily[inv.tanggal].omzet+=inv.tot;daily[inv.tanggal].profit+=inv.profit;});const dailyArr=Object.entries(daily);document.getElementById('r-daily-emp').style.display=dailyArr.length?'none':'block';document.getElementById('r-daily').innerHTML=dailyArr.map(([d,v])=>`<tr><td><strong>${d}</strong></td><td><span class="badge bblue">${v.count} txn</span></td><td>${fmt(v.omzet)}</td><td style="color:var(--success)">+${fmt(v.profit)}</td><td><span class="badge bgreen">${pct(v.profit,v.omzet)}%</span></td></tr>`).join('');}
+const daily={};inv.forEach(inv2=>{if(!daily[inv2.tanggal])daily[inv2.tanggal]={count:0,kas:0,profit:0};daily[inv2.tanggal].count++;daily[inv2.tanggal].kas+=(inv2.dpAmount||0);daily[inv2.tanggal].profit+=inv2.profit;if(inv2.lunasDate&&inv2.lunasAmount){if(!daily[inv2.lunasDate])daily[inv2.lunasDate]={count:0,kas:0,profit:0};daily[inv2.lunasDate].kas+=inv2.lunasAmount;}});const dailyArr=Object.entries(daily).sort((a,b)=>{const pd=s=>{const p=s.split('/');return new Date(p[2],p[1]-1,p[0]);};return pd(b[0])-pd(a[0]);});document.getElementById('r-daily-emp').style.display=dailyArr.length?'none':'block';document.getElementById('r-daily').innerHTML=dailyArr.map(([d,v])=>`<tr><td><strong>${d}</strong></td><td><span class="badge bblue">${v.count} txn</span></td><td><strong>${fmt(v.kas)}</strong></td><td style="color:var(--success)">+${fmt(v.profit)}</td></tr>`).join('');}
 
 
 // ════════════════════════════════════════════════
@@ -1038,6 +937,7 @@ const daily={};db.invoices.forEach(inv=>{if(!daily[inv.tanggal])daily[inv.tangga
   document.addEventListener('click',e=>{if(!e.target.closest('#fab-wrap')){const m=document.getElementById('fab-menu');if(m&&m.classList.contains('open')){m.classList.remove('open');document.getElementById('fab-icon').className='ti ti-plus';}}});
 })();
 function toggleFab(){const m=document.getElementById('fab-menu');const open=m.classList.toggle('open');document.getElementById('fab-icon').className=open?'ti ti-x':'ti ti-plus';}
+function renderFabForRole(){const m=document.getElementById('fab-menu');if(!m||!currentRole)return;const isAdmin=currentRole==='admin';const adminOnly=['frame','reports','backup'];m.querySelectorAll('button').forEach(btn=>{const a=btn.getAttribute('onclick')?.match(/fabAction\('([^']+)'\)/)?.[1];if(a)btn.style.display=(!adminOnly.includes(a)||isAdmin)?'':'none';});}
 function fabAction(type){const m=document.getElementById('fab-menu');m.classList.remove('open');document.getElementById('fab-icon').className='ti ti-plus';if(type==='export')return exportCSV();if(type==='backup')return backupData();if(currentRole&&!ROLES[currentRole].pages.includes(type)){toast('Menu ini tidak tersedia untuk peran '+ROLES[currentRole].label,'e');return;}const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+type+"'"));showPage(type,btn);}
 
 
@@ -1052,7 +952,7 @@ function backupData(){const a=document.createElement('a');a.href='data:applicati
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
 function clearTransactions(){if(!confirm('Hapus SEMUA transaksi?'))return;db.invoices=[];db.counter=1;persist();renderSettings();renderDashboard();toast('Transaksi dihapus','w');}
 function resetAll(){if(!confirm('RESET SEMUA DATA?'))return;db=Store.seedDB();persist();renderSettings();renderDashboard();toast('Data direset','w');}
-function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Frame','Lensa','Total','Status','Pembayaran','DP','Sisa']];db.invoices.forEach(inv=>{const rx=inv.rx||{};rows.push([inv.no,inv.tanggal,inv.tglSiap?fmtDate(inv.tglSiap):'',inv.customer,inv.hp||'',inv.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',(inv.frameDetail?.brand||'')+' '+(inv.frameDetail?.code||''),(inv.lensDetail?.brand||'')+' '+(inv.lensDetail?.type||''),inv.tot,inv.payStatus,inv.pay,inv.dpAmount||'',inv.sisa||'']);});const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`optik-zada-${today().replace(/ /g,'-')}.csv`;a.click();toast('CSV diekspor');}
+function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];inv.forEach(inv2=>{const rx=inv.rx||{};rows.push([inv.no,inv.tanggal,inv.tglSiap?fmtDate(inv.tglSiap):'',inv.customer,inv.hp||'',inv.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',[...inv.items.frame,...inv.items.lensa,...inv.items.softlens,...(inv.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join('; '),inv.sub,inv.disc||0,inv.tot,inv.payStatus,inv.pay,inv.dpAmount||'',inv.sisa||'']);});const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`optik-zada-${today().replace(/ /g,'-')}.csv`;a.click();toast('CSV diekspor');}
 
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1063,12 +963,39 @@ function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;
 
 function btnWA(invId){
   const inv=db.invoices.find(x=>x.id===invId);
-  if(!inv||!inv.hp){toast('Nomor HP tidak tersedia','e');return;}
+  if(!inv)return;
+  if(!inv.hp){toast('Nomor HP customer tidak tersedia','e');return;}
   const hp=inv.hp.replace(/[^0-9]/g,'').replace(/^(0|62)/,'');
   if(!hp||hp.length<8){toast('Format nomor HP tidak valid','e');return;}
-  const siap=inv.tglSiap?`\n\uD83D\uDCC5 Siap diambil: *${fmtDate(inv.tglSiap)}*`:'';
-  const bayar=inv.payStatus==='dp'?`\n\u23F3 Sisa pembayaran: *${fmt(inv.sisa)}*`:'\n\u2705 Pembayaran: *Lunas*';
-  const msg=`Halo *${inv.customer}*,\n\nTerima kasih telah berbelanja di *Optik ZADA* \uD83D\uDE4F\n\n\uD83D\uDCCB Invoice *${inv.no}*\n\uD83D\uDCB5 Total: *${fmt(inv.tot)}*${bayar}${siap}\n\nSalam hangat,\n*Optik ZADA*`;
+  const divider='────────────────────────';
+  const status=inv.payStatus==='dp'
+    ?'DP — Sisa : *'+fmt(inv.sisa)+'*'
+    :'*Lunas*';
+  const siapLine=inv.tglSiap?'\n  Siap Diambil : *'+fmtDate(inv.tglSiap)+'*':'';
+  const msg=[
+    'Assalamualaikum / Halo *'+inv.customer+'*,',
+    '',
+    'Terima kasih telah mempercayakan kebutuhan optik Anda kepada kami.',
+    '',
+    divider,
+    '*KONFIRMASI TRANSAKSI*',
+    divider,
+    '  No. Invoice  : *'+inv.no+'*',
+    '  Tanggal      : '+inv.tanggal,
+    '  Total        : *'+fmt(inv.tot)+'*',
+    '  Status       : '+status+siapLine,
+    divider,
+    '',
+    '*Optik ZADA*',
+    'Jl. Raya Mangun Jaya No.03C, Tambun',
+    'Kab. Bekasi, Jawa Barat 17510',
+    'Layanan: 09.00 - 21.00 WIB',
+    '',
+    'Untuk pertanyaan, silakan balas pesan ini.',
+    '',
+    '_Salam hangat,_',
+    '*Tim Optik ZADA*'
+  ].join('\n');
   window.open('https://wa.me/62'+hp+'?text='+encodeURIComponent(msg),'_blank');
 }
 
@@ -1082,7 +1009,7 @@ function rxHistory(custId){
 }
 
 function updateDPBadge(){
-  const count=(db.invoices||[]).filter(x=>x.payStatus==='dp').length;
+  const count=(db.invoices||[]).filter(x=>x.payStatus==='dp'&&!x.lunasAmount).length;
   const badge=document.getElementById('dp-badge');
   if(!badge)return;
   if(count>0){badge.textContent=count>9?'9+':String(count);badge.style.display='inline-flex';}
@@ -1091,11 +1018,17 @@ function updateDPBadge(){
 
 function renderSiapAlert(){
   const today=new Date().toISOString().slice(0,10);
-  const siap=db.invoices.filter(x=>x.tglSiap&&x.tglSiap<=today);
+  // Hanya tampilkan jika: ada tglSiap, sudah lewat/hari ini, DAN masih berstatus DP (belum dilunasi)
+  const siap=db.invoices.filter(x=>
+    x.tglSiap &&
+    x.tglSiap<=today &&
+    x.payStatus==='dp' &&
+    !x.lunasAmount
+  );
   const el=document.getElementById('siap-alert-area');
   if(!el)return;
   if(siap.length){
-    const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'history'"));
+    const navBtn=document.querySelector('.nl[onclick*="\'history\'"]');
     el.innerHTML=`<div class="siap-banner" onclick="showPage('history',document.querySelector('.nl[onclick*=history]'))"><i class="ti ti-clock-check"></i><span><strong>${siap.length} pesanan</strong> siap diambil hari ini atau sebelumnya \u2014 klik untuk lihat riwayat</span></div>`;
   } else {
     el.innerHTML='';
@@ -1126,7 +1059,7 @@ function buildThermalReceipt(inv){
   const w=window.open('','_blank','width=340,height=680,scrollbars=yes');
   if(!w){toast('Popup diblokir browser. Izinkan popup untuk fitur ini.','w',4000);return;}
   const rx=inv.rx?rxStr(inv.rx):'';
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${inv.no}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;font-size:11px;width:280px;margin:0 auto;padding:8px;color:#000;background:#fff}.c{text-align:center}.b{font-weight:bold}.line{border-top:1px dashed #000;margin:5px 0}.row{display:flex;justify-content:space-between;margin-bottom:2px;gap:4px}.row span:first-child{flex-shrink:0;color:#555;min-width:70px}.row span:last-child{text-align:right}.tot{display:flex;justify-content:space-between;font-weight:bold;font-size:13px;border-top:1px solid #000;padding-top:4px;margin-top:2px}.badge-s{text-align:center;border:1px solid #000;border-radius:3px;padding:2px 8px;display:inline-block;font-weight:bold;font-size:12px;margin-top:4px}.print-btn{width:100%;padding:8px;background:#0f1f3d;color:#fff;border:none;cursor:pointer;font-size:12px;margin-top:10px;border-radius:3px;font-family:inherit}@media print{.print-btn{display:none!important}}</style></head><body><div class="c b" style="font-size:14px;letter-spacing:2px">OPTIK ZADA</div><div class="c" style="font-size:10px;margin-bottom:5px">Struk Pembelian</div><div class="line"></div><div class="row"><span>No.</span><span>${inv.no}</span></div><div class="row"><span>Tanggal</span><span>${inv.tanggal}</span></div><div class="row"><span>Customer</span><span>${inv.customer}</span></div>${inv.hp?`<div class="row"><span>HP</span><span>${inv.hp}</span></div>`:''}${inv.tglSiap?`<div class="row"><span>Siap Ambil</span><b>${fmtDate(inv.tglSiap)}</b></div>`:''}<div class="row"><span>Bayar</span><span>${inv.pay}</span></div>${rx?`<div class="line"></div><div style="font-size:10px;word-break:break-word">${rx}</div>`:''}<div class="line"></div>${all.map(x=>`<div class="row"><span style="min-width:auto;flex:1;margin-right:4px">${x.nama}${x.qty>1?' x'+x.qty:''}</span><span style="flex-shrink:0">${fmt(x.jual*x.qty)}</span></div>`).join('')}${inv.disc>0?`<div class="line"></div><div class="row"><span>Subtotal</span><span>${fmt(inv.sub)}</span></div><div class="row"><span>Diskon</span><span>-${fmt(inv.disc)}</span></div>`:''}<div class="tot"><span>TOTAL</span><span>${fmt(inv.tot)}</span></div>${inv.payStatus==='dp'?`<div class="row" style="margin-top:3px"><span>DP Bayar</span><span>${fmt(inv.dpAmount)}</span></div><div class="row b" style="color:#c00"><span>SISA</span><span>${fmt(inv.sisa)}</span></div>`:''}<div class="c" style="margin-top:5px"><div class="badge-s">${inv.payStatus==='lunas'?'LUNAS':'DP - BELUM LUNAS'}</div></div>${inv.ro&&inv.ro.nama?`<div class="line"></div><div class="row"><span>Pemeriksa</span><span>${inv.ro.nama}</span></div>`:''}<div class="line"></div><div class="c" style="font-size:10px">Terima kasih \u00B7 Optik ZADA</div><button class="print-btn" onclick="window.print()">&#128424; Print Thermal</button></body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${inv.no}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace;font-size:11px;width:280px;margin:0 auto;padding:8px;color:#000;background:#fff}.c{text-align:center}.b{font-weight:bold}.line{border-top:1px dashed #000;margin:5px 0}.row{display:flex;justify-content:space-between;margin-bottom:2px;gap:4px}.row span:first-child{flex-shrink:0;color:#555;min-width:70px}.row span:last-child{text-align:right}.tot{display:flex;justify-content:space-between;font-weight:bold;font-size:13px;border-top:1px solid #000;padding-top:4px;margin-top:2px}.badge-s{text-align:center;border:1px solid #000;border-radius:3px;padding:2px 8px;display:inline-block;font-weight:bold;font-size:12px;margin-top:4px}.print-btn{width:100%;padding:8px;background:#0f1f3d;color:#fff;border:none;cursor:pointer;font-size:12px;margin-top:10px;border-radius:3px;font-family:inherit}@media print{.print-btn{display:none!important}}</style></head><body><div class="c b" style="font-size:14px;letter-spacing:2px">OPTIK ZADA</div><div class="c" style="font-size:10px">Struk Pembelian</div><div class="c" style="font-size:9px;margin-bottom:2px">Jl. Raya Mangun Jaya No.03C, Tambun</div><div class="c" style="font-size:9px;margin-bottom:5px">Kab. Bekasi 17510 | 09.00-21.00 WIB</div><div class="line"></div><div class="row"><span>No.</span><span>${inv.no}</span></div><div class="row"><span>Tanggal</span><span>${inv.tanggal}</span></div><div class="row"><span>Customer</span><span>${inv.customer}</span></div>${inv.hp?`<div class="row"><span>HP</span><span>${inv.hp}</span></div>`:''}${inv.tglSiap?`<div class="row"><span>Siap Ambil</span><b>${fmtDate(inv.tglSiap)}</b></div>`:''}<div class="row"><span>Bayar</span><span>${inv.pay}</span></div>${rx?`<div class="line"></div><div style="font-size:10px;word-break:break-word">${rx}</div>`:''}<div class="line"></div>${all.map(x=>`<div class="row"><span style="min-width:auto;flex:1;margin-right:4px">${x.nama}${x.qty>1?' x'+x.qty:''}</span><span style="flex-shrink:0">${fmt(x.jual*x.qty)}</span></div>`).join('')}${inv.disc>0?`<div class="line"></div><div class="row"><span>Subtotal</span><span>${fmt(inv.sub)}</span></div><div class="row"><span>Diskon</span><span>-${fmt(inv.disc)}</span></div>`:''}<div class="tot"><span>TOTAL</span><span>${fmt(inv.tot)}</span></div>${inv.payStatus==='dp'?`<div class="row" style="margin-top:3px"><span>DP Bayar</span><span>${fmt(inv.dpAmount)}</span></div><div class="row b" style="color:#c00"><span>SISA</span><span>${fmt(inv.sisa)}</span></div>`:''}<div class="c" style="margin-top:5px"><div class="badge-s">${inv.payStatus==='lunas'?'LUNAS':'DP - BELUM LUNAS'}</div></div>${inv.ro&&inv.ro.nama?`<div class="line"></div><div class="row"><span>Pemeriksa</span><span>${inv.ro.nama}</span></div>`:''}<div class="line"></div><div class="line"></div><div class="c b" style="font-size:10px">OPTIK ZADA</div><div class="c" style="font-size:9px">Jl. Raya Mangun Jaya No.03C, Tambun</div><div class="c" style="font-size:9px">Kab. Bekasi, Jawa Barat 17510</div><div class="c" style="font-size:9px">🕐 09.00 - 21.00 WIB</div><div class="c" style="font-size:10px;margin-top:4px">Terima kasih atas kepercayaan Anda 🙏</div><button class="print-btn" onclick="window.print()">&#128424; Print Thermal</button></body></html>`);
   w.document.close();
 }
 </script>
