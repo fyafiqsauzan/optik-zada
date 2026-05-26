@@ -197,8 +197,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div id="stok-alert-area"></div>
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-file-invoice stat-icon-bg"></i><div class="stat-label">Total Transaksi</div><div class="stat-value" id="d-tx">0</div><div class="stat-sub" id="d-tx-sub">—</div></div>
-    <div class="stat"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label" id="d-omzet-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub" id="d-omzet-sub"><i class="ti ti-trending-up"></i>uang diterima</div></div>
-    <div class="stat admin-only"><div class="stat-accent acc-green"></div><i class="ti ti-trending-up stat-icon-bg"></i><div class="stat-label">Total Profit</div><div class="stat-value" style="color:var(--success)" id="d-profit">Rp0</div><div class="stat-sub" id="d-margin-sub">margin —</div></div>
+    <div class="stat" onclick="showKasMasukModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label" id="d-omzet-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub" id="d-omzet-sub"><i class="ti ti-trending-up"></i>uang diterima</div></div>
+    <div class="stat admin-only" onclick="showProfitModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><i class="ti ti-trending-up stat-icon-bg"></i><div class="stat-label">Total Profit</div><div class="stat-value" style="color:var(--success)" id="d-profit">Rp0</div><div class="stat-sub" id="d-margin-sub">margin —</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-users stat-icon-bg"></i><div class="stat-label">Customer</div><div class="stat-value" id="d-cust">0</div><div class="stat-sub" id="d-prod-sub">—</div></div>
   </div>
   <div class="grid g2" style="margin-bottom:16px">
@@ -217,8 +217,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="ph-actions"><select id="report-period" onchange="renderReports()" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;font-weight:600"><option value="all">Semua Waktu</option></select><button class="btn btn-success btn-sm" onclick="exportCSV()" style="margin-left:6px"><i class="ti ti-download"></i> Export CSV</button></div></div>
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Transaksi</div><div class="stat-value" style="font-size:22px" id="rp-tx">0</div><div class="stat-sub" id="rp-tx-sub">invoice</div></div>
-    <div class="stat"><div class="stat-accent acc-gold"></div><div class="stat-label">Kas Masuk</div><div class="stat-value" style="font-size:22px;color:var(--gold)" id="rp-kas">Rp0</div><div class="stat-sub">uang diterima</div></div>
-    <div class="stat"><div class="stat-accent acc-green"></div><div class="stat-label">Total Profit</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="rp-profit">Rp0</div><div class="stat-sub" id="rp-margin-sub">margin 0%</div></div>
+    <div class="stat" onclick="showKasMasukModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><div class="stat-label">Kas Masuk</div><div class="stat-value" style="font-size:22px;color:var(--gold)" id="rp-kas">Rp0</div><div class="stat-sub">uang diterima</div></div>
+    <div class="stat admin-only" onclick="showProfitModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><div class="stat-label">Total Profit</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="rp-profit">Rp0</div><div class="stat-sub" id="rp-margin-sub">margin 0%</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Total Item Terjual</div><div class="stat-value" style="font-size:22px" id="r-items">0</div><div class="stat-sub">unit produk</div></div>
   </div>
   <div class="grid g2" style="margin-bottom:16px">
@@ -904,7 +904,7 @@ function renderReports(){
 const topProd=Object.entries(prodCount).sort((a,b)=>b[1]-a[1]).slice(0,5);document.getElementById('r-top-prod').innerHTML=topProd.length?topProd.map(([n,q],i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span class="medal ${i<3?'medal-'+(i+1):''}" style="${i>=3?'background:var(--bg2);color:var(--muted)':''}">${i+1}</span><span style="flex:1;font-size:13px;font-weight:500">${n}</span><span class="badge bgold">${q} terjual</span></div>`).join(''):'<div class="empty" style="padding:20px"><i class="ti ti-trophy"></i><p>Belum ada data</p></div>';
 const custTot={};inv.forEach(inv2=>{if(!custTot[inv2.customer])custTot[inv2.customer]={count:0,total:0};custTot[inv2.customer].count++;custTot[inv2.customer].total+=inv2.tot;});const topCust=Object.entries(custTot).sort((a,b)=>b[1].total-a[1].total).slice(0,8);document.getElementById('r-cust-emp').style.display=topCust.length?'none':'block';document.getElementById('r-top-cust').innerHTML=topCust.map(([n,d],i)=>`<tr><td><span class="medal ${i<3?'medal-'+(i+1):''}" style="${i>=3?'background:var(--bg2);color:var(--muted)':''}">${i+1}</span></td><td><strong>${n}</strong></td><td><span class="badge bblue">${d.count} txn</span></td><td><strong>${fmt(d.total)}</strong></td></tr>`).join('');
 const catTot=catTotal.Frame+catTotal.Lensa+catTotal.Softlens+catTotal.Aksesoris;document.getElementById('r-cat').innerHTML=catTot>0?Object.entries(catTotal).filter(([,v])=>v>0).map(([k,v])=>`<div class="prog-row"><div class="prog-label"><span style="font-size:13px;font-weight:500">${k}</span><strong>${fmt(v)} · ${pct(v,catTot)}%</strong></div><div class="prog-bar"><div class="prog-fill" style="width:${pct(v,catTot)}%;background:${k==='Frame'?'var(--navy2)':k==='Lensa'?'var(--gold)':k==='Softlens'?'var(--info)':'var(--success)'}"></div></div></div>`).join(''):'<div class="empty" style="padding:20px"><i class="ti ti-chart-donut"></i><p>Belum ada data</p></div>';
-const daily={};inv.forEach(inv2=>{if(!daily[inv2.tanggal])daily[inv2.tanggal]={count:0,kas:0,profit:0};daily[inv2.tanggal].count++;daily[inv2.tanggal].kas+=(inv2.dpAmount||0);daily[inv2.tanggal].profit+=inv2.profit;if(inv2.lunasDate&&inv2.lunasAmount){if(!daily[inv2.lunasDate])daily[inv2.lunasDate]={count:0,kas:0,profit:0};daily[inv2.lunasDate].kas+=inv2.lunasAmount;}});const dailyArr=Object.entries(daily).sort((a,b)=>{const pd=s=>{const p=s.split('/');return new Date(p[2],p[1]-1,p[0]);};return pd(b[0])-pd(a[0]);});document.getElementById('r-daily-emp').style.display=dailyArr.length?'none':'block';document.getElementById('r-daily').innerHTML=dailyArr.map(([d,v])=>`<tr><td><strong>${d}</strong></td><td><span class="badge bblue">${v.count} txn</span></td><td><strong>${fmt(v.kas)}</strong></td><td style="color:var(--success)">+${fmt(v.profit)}</td></tr>`).join('');}
+const daily={};inv.forEach(inv2=>{if(!daily[inv2.tanggal])daily[inv2.tanggal]={count:0,kas:0,profit:0};daily[inv2.tanggal].count++;daily[inv2.tanggal].kas+=(inv2.dpAmount||0);daily[inv2.tanggal].profit+=inv2.profit;if(inv2.lunasDate&&inv2.lunasAmount){if(!daily[inv2.lunasDate])daily[inv2.lunasDate]={count:0,kas:0,profit:0};daily[inv2.lunasDate].kas+=inv2.lunasAmount;}});const dailyArr=Object.entries(daily).sort((a,b)=>{const pd=s=>{const p=s.split('/');return new Date(p[2],p[1]-1,p[0]);};return pd(b[0])-pd(a[0]);});document.getElementById('r-daily-emp').style.display=dailyArr.length?'none':'block';document.getElementById('r-daily').innerHTML=dailyArr.map(([d,v])=>`<tr><td><strong>${d}</strong></td><td><span class="badge bblue">${v.count} txn</span></td><td><strong>${fmt(v.kas)}</strong></td><td style="color:var(--success)">+${fmt(v.profit)}</td><td><span class="badge bgreen">${pct(v.profit,v.kas)}%</span></td></tr>`).join('');}
 
 
 // ════════════════════════════════════════════════
@@ -952,7 +952,7 @@ function backupData(){const a=document.createElement('a');a.href='data:applicati
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
 function clearTransactions(){if(!confirm('Hapus SEMUA transaksi?'))return;db.invoices=[];db.counter=1;persist();renderSettings();renderDashboard();toast('Transaksi dihapus','w');}
 function resetAll(){if(!confirm('RESET SEMUA DATA?'))return;db=Store.seedDB();persist();renderSettings();renderDashboard();toast('Data direset','w');}
-function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];inv.forEach(inv2=>{const rx=inv.rx||{};rows.push([inv.no,inv.tanggal,inv.tglSiap?fmtDate(inv.tglSiap):'',inv.customer,inv.hp||'',inv.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',[...inv.items.frame,...inv.items.lensa,...inv.items.softlens,...(inv.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join('; '),inv.sub,inv.disc||0,inv.tot,inv.payStatus,inv.pay,inv.dpAmount||'',inv.sisa||'']);});const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`optik-zada-${today().replace(/ /g,'-')}.csv`;a.click();toast('CSV diekspor');}
+function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];db.invoices.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join('; '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`optik-zada-${today().replace(/ /g,'-')}.csv`;a.click();toast('CSV diekspor');}
 
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -1051,6 +1051,67 @@ function renderMonthlyChart(){
     const lbl=mn[mo]+" '"+yr.slice(2);
     return`<div class="chart-col"><div class="chart-bar" data-val="${fmt(vals[i])}" style="height:${Math.max(8,Math.round(vals[i]/mx*100))}%;background:${i===last12.length-1?'var(--gold)':'var(--navy2)'}"></div><div class="chart-lbl">${lbl}</div></div>`;
   }).join('');
+}
+
+// ════════════════════════════════════════════════
+// SECTION 22 · MODAL BREAKDOWN KAS & PROFIT
+// ════════════════════════════════════════════════
+
+function _getFilteredInv(source){
+  if(source==='dashboard'){
+    const now=new Date();
+    const mk=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+    return db.invoices.filter(x=>monthKeyOf(x)===mk);
+  }
+  const sel=document.getElementById('report-period');
+  const period=sel?sel.value:'all';
+  return period==='all'?db.invoices:db.invoices.filter(x=>monthKeyOf(x)===period);
+}
+
+function showKasMasukModal(source){
+  const inv=_getFilteredInv(source);
+  const cats={Frame:{kas:0,qty:0,items:{}},Lensa:{kas:0,qty:0,items:{}},Softlens:{kas:0,qty:0,items:{}},Aksesoris:{kas:0,qty:0,items:{}}};
+  inv.forEach(x=>{
+    x.items.frame.forEach(i=>{if(!i.nama)return;cats.Frame.kas+=i.jual*i.qty;cats.Frame.qty+=i.qty;cats.Frame.items[i.nama]=(cats.Frame.items[i.nama]||0)+i.jual*i.qty;});
+    x.items.lensa.forEach(i=>{if(!i.nama)return;cats.Lensa.kas+=i.jual*i.qty;cats.Lensa.qty+=i.qty;cats.Lensa.items[i.nama]=(cats.Lensa.items[i.nama]||0)+i.jual*i.qty;});
+    x.items.softlens.forEach(i=>{if(!i.nama)return;cats.Softlens.kas+=i.jual*i.qty;cats.Softlens.qty+=i.qty;cats.Softlens.items[i.nama]=(cats.Softlens.items[i.nama]||0)+i.jual*i.qty;});
+    (x.items.aksesoris||[]).forEach(i=>{if(!i.nama)return;cats.Aksesoris.kas+=i.jual*i.qty;cats.Aksesoris.qty+=i.qty;cats.Aksesoris.items[i.nama]=(cats.Aksesoris.items[i.nama]||0)+i.jual*i.qty;});
+  });
+  const totalKas=Object.values(cats).reduce((s,c)=>s+c.kas,0)||1;
+  const catColors={Frame:'var(--navy2)',Lensa:'var(--gold)',Softlens:'var(--info)',Aksesoris:'var(--success)'};
+  const catIcons={Frame:'ti-glasses',Lensa:'ti-circle',Softlens:'ti-disc',Aksesoris:'ti-package'};
+  const label=source==='dashboard'?(new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'})):(()=>{const sel=document.getElementById('report-period');const v=sel?sel.value:'all';if(v==='all')return'Semua Waktu';const[y,m]=v.split('-');return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});})();
+  const rows=Object.entries(cats).filter(([,c])=>c.kas>0).map(([k,c])=>{
+    const top3=Object.entries(c.items).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:${catColors[k]}">${fmt(c.kas)}</span><span class="badge bg" style="margin-left:4px">${pct(c.kas,totalKas)}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${pct(c.kas,totalKas)}%;background:${catColors[k]};border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">${c.qty} unit terjual</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;flex-shrink:0">${fmt(v)}</span></div>`).join('')}</div>`;
+  }).join('');
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-cash" style="color:var(--gold)"></i> Kas Masuk per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:var(--text)">${fmt(totalKas)}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
+  document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+function showProfitModal(source){
+  if(currentRole&&currentRole!=='admin'){toast('Fitur ini hanya untuk Admin','e');return;}
+  const inv=_getFilteredInv(source);
+  const cats={Frame:{profit:0,kas:0,items:{}},Lensa:{profit:0,kas:0,items:{}},Softlens:{profit:0,kas:0,items:{}},Aksesoris:{profit:0,kas:0,items:{}}};
+  inv.forEach(x=>{
+    x.items.frame.forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Frame.profit+=p;cats.Frame.kas+=i.jual*i.qty;cats.Frame.items[i.nama]=(cats.Frame.items[i.nama]||0)+p;});
+    x.items.lensa.forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Lensa.profit+=p;cats.Lensa.kas+=i.jual*i.qty;cats.Lensa.items[i.nama]=(cats.Lensa.items[i.nama]||0)+p;});
+    x.items.softlens.forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Softlens.profit+=p;cats.Softlens.kas+=i.jual*i.qty;cats.Softlens.items[i.nama]=(cats.Softlens.items[i.nama]||0)+p;});
+    (x.items.aksesoris||[]).forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Aksesoris.profit+=p;cats.Aksesoris.kas+=i.jual*i.qty;cats.Aksesoris.items[i.nama]=(cats.Aksesoris.items[i.nama]||0)+p;});
+  });
+  const totalProfit=Object.values(cats).reduce((s,c)=>s+c.profit,0)||1;
+  const catColors={Frame:'var(--navy2)',Lensa:'var(--gold)',Softlens:'var(--info)',Aksesoris:'var(--success)'};
+  const catIcons={Frame:'ti-glasses',Lensa:'ti-circle',Softlens:'ti-disc',Aksesoris:'ti-package'};
+  const label=source==='dashboard'?(new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'})):(()=>{const sel=document.getElementById('report-period');const v=sel?sel.value:'all';if(v==='all')return'Semua Waktu';const[y,m]=v.split('-');return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});})();
+  const rows=Object.entries(cats).filter(([,c])=>c.kas>0).map(([k,c])=>{
+    const margin=c.kas>0?Math.round(c.profit/c.kas*100):0;
+    const top3=Object.entries(c.items).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:var(--success)">+${fmt(c.profit)}</span><span class="badge bgreen" style="margin-left:4px">margin ${margin}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${Math.max(1,pct(c.profit,totalProfit))}%;background:var(--success);border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Omzet ${fmt(c.kas)} · Kontribusi ${pct(c.profit,totalProfit)}% dari total profit</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;color:var(--success);flex-shrink:0">+${fmt(v)}</span></div>`).join('')}</div>`;
+  }).join('');
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trending-up" style="color:var(--success)"></i> Profit per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:var(--success)">+${fmt(totalProfit)}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
+  document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
+  document.getElementById('modal').style.display='flex';
 }
 
 function buildThermalReceipt(inv){
