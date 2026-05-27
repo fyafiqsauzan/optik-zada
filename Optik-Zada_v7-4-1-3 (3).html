@@ -474,29 +474,56 @@ let currentRole=null;
 
 function injectAuthUI(){
   const css=`
-  .login-ov{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy),#08152e);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
-  .login-card{background:var(--card);border-radius:16px;padding:32px;width:440px;max-width:100%;box-shadow:0 20px 60px rgba(0,0,0,.4);text-align:center;animation:fadeUp .3s ease}
-  .login-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--navy);margin:0 auto 14px}
-  .login-card h2{font-size:20px;color:var(--text);margin-bottom:4px;letter-spacing:.5px}
-  .login-card .sub{font-size:13px;color:var(--muted);margin-bottom:22px}
-  .role-card{display:flex;align-items:center;gap:14px;padding:15px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;margin-bottom:10px;text-align:left}
-  .role-card:hover{border-color:var(--gold);background:var(--gold3);transform:translateY(-2px)}
-  .role-card .ri{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;flex-shrink:0}
+  .login-ov{position:fixed;inset:0;background:linear-gradient(135deg,var(--navy),#08152e);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px}
+  .login-split{display:flex;width:840px;max-width:100%;border-radius:20px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.55);animation:fadeUp .4s ease}
+  .login-brand{flex:1.1;background:linear-gradient(155deg,#162a50 0%,#0a1628 100%);padding:52px 44px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .lb-orb{position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;border:1.5px solid rgba(201,149,42,.12);pointer-events:none}
+  .lb-orb::after{content:'';position:absolute;inset:36px;border-radius:50%;border:1.5px solid rgba(201,149,42,.08)}
+  .lb-orb::before{content:'';position:absolute;inset:-36px;border-radius:50%;border:1px solid rgba(201,149,42,.06)}
+  .lb-logo{width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--navy);margin-bottom:24px;box-shadow:0 8px 28px rgba(201,149,42,.35);flex-shrink:0}
+  .lb-name{font-size:30px;font-weight:800;color:#fff;letter-spacing:4px;margin-bottom:8px;line-height:1.15}
+  .lb-tagline{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:auto}
+  .lb-divider{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:28px 0 20px;flex-shrink:0}
+  .lb-info{display:flex;flex-direction:column;gap:10px}
+  .lb-info-row{display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.45)}
+  .lb-info-row i{font-size:14px;color:var(--gold);opacity:.8;flex-shrink:0}
+  .login-panel{flex:1;background:var(--card);padding:52px 44px;display:flex;flex-direction:column;justify-content:center}
+  .lp-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .lp-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:28px;line-height:1.3}
+  .role-card{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;margin-bottom:10px;text-align:left}
+  .role-card:hover{border-color:var(--gold);background:var(--gold3);transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,149,42,.12)}
+  .role-card .ri{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;flex-shrink:0}
   .role-card .rt{flex:1}
-  .role-card .rt b{display:block;font-size:15px;color:var(--text)}
+  .role-card .rt b{display:block;font-size:14px;font-weight:700;color:var(--text)}
   .role-card .rt span{font-size:12px;color:var(--muted)}
+  .lp-footer{font-size:11px;color:var(--muted);margin-top:20px;text-align:center;line-height:1.5}
   .role-badge{display:none;align-items:center;gap:7px;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 10px 5px 6px;color:#fff;font-size:12px;font-weight:600;white-space:nowrap}
   .role-badge .rdot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
   .role-badge button{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:15px;padding:0;display:flex}
-  .role-badge button:hover{color:#fff}`;
+  .role-badge button:hover{color:#fff}
+  @media(max-width:640px){.login-split{flex-direction:column;max-height:95vh;overflow-y:auto}.login-brand{padding:32px 28px}.lb-name{font-size:22px;letter-spacing:2px}.lb-tagline,.lb-divider,.lb-info{display:none}.login-panel{padding:32px 28px}}`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
   const ov=document.createElement('div');ov.id='login-ov';ov.className='login-ov';
-  ov.innerHTML=`<div class="login-card">
-    <div class="login-logo"><i class="ti ti-eye"></i></div>
-    <h2>OPTIK ZADA</h2><div class="sub">Pilih peran untuk masuk ke sistem</div>
-    <div class="role-card" onclick="login('admin')"><div class="ri" style="background:var(--gold)"><i class="ti ti-crown"></i></div><div class="rt"><b>Admin / Pemilik</b><span>Akses penuh — semua menu &amp; pengaturan</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-    <div class="role-card" onclick="login('karyawan')"><div class="ri" style="background:var(--success)"><i class="ti ti-user-check"></i></div><div class="rt"><b>Karyawan</b><span>Buat invoice, riwayat, &amp; data customer</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-    <div class="sub" style="margin-top:14px;margin-bottom:0;font-size:11px">Mode demo · di versi cloud peran ditentukan oleh akun login</div>
+  ov.innerHTML=`<div class="login-split">
+    <div class="login-brand">
+      <div class="lb-orb"></div>
+      <div class="lb-logo"><i class="ti ti-eye"></i></div>
+      <div class="lb-name">OPTIK<br>ZADA</div>
+      <div class="lb-tagline">Sistem Manajemen Toko Optik<br>yang cepat, rapi, dan efisien</div>
+      <div class="lb-divider"></div>
+      <div class="lb-info">
+        <div class="lb-info-row"><i class="ti ti-map-pin"></i><span>Jl. Raya Mangun Jaya No.03C, Tambun</span></div>
+        <div class="lb-info-row"><i class="ti ti-map"></i><span>Kab. Bekasi, Jawa Barat 17510</span></div>
+        <div class="lb-info-row"><i class="ti ti-clock"></i><span>Layanan 09.00 – 21.00 WIB</span></div>
+      </div>
+    </div>
+    <div class="login-panel">
+      <div class="lp-eyebrow">Selamat Datang</div>
+      <div class="lp-title">Pilih peran<br>untuk masuk</div>
+      <div class="role-card" onclick="login('admin')"><div class="ri" style="background:var(--gold)"><i class="ti ti-crown"></i></div><div class="rt"><b>Admin / Pemilik</b><span>Akses penuh — semua menu &amp; pengaturan</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
+      <div class="role-card" onclick="login('karyawan')"><div class="ri" style="background:var(--success)"><i class="ti ti-user-check"></i></div><div class="rt"><b>Karyawan</b><span>Buat invoice, riwayat, &amp; data customer</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
+      <div class="lp-footer">Mode demo · di versi cloud peran ditentukan oleh akun login</div>
+    </div>
   </div>`;
   document.body.appendChild(ov);
   const badge=document.createElement('div');badge.id='role-badge';badge.className='role-badge';
@@ -626,7 +653,7 @@ function renderProds(t){const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[
 function addCustomerManual(){const n=document.getElementById('cn').value.trim();if(!n){toast('Nama kosong','e');return;}const g=document.getElementById('cg')?.value||'';const fullNama=g&&!n.match(/^(Tn\.|Ny\.|Nn\.|An\.|Dr\.)/i)?g+' '+n:n;saveCustomer(fullNama,document.getElementById('chp').value.trim(),document.getElementById('ca').value.trim(),parseInt(document.getElementById('cu').value)||0);['cn','chp','ca','cu'].forEach(id=>document.getElementById(id).value='');const cgEl=document.getElementById('cg');if(cgEl)cgEl.value='';renderCustomers();persist();toast('Customer '+fullNama+' ditambahkan');}
 function saveCustomer(nama,hp,alamat,usia,jk){const ex=db.customers.find(c=>c.nama.toLowerCase()===nama.toLowerCase());if(!ex)db.customers.push({id:Date.now(),nama,hp:hp||'',alamat:alamat||'',usia:usia||0,jk:jk||''});else{if(hp&&!ex.hp)ex.hp=hp;if(alamat&&!ex.alamat)ex.alamat=alamat;if(usia&&!ex.usia)ex.usia=usia;if(jk&&!ex.jk)ex.jk=jk;}}
 function delCustomer(id){if(!confirm('Hapus?'))return;db.customers=db.customers.filter(x=>x.id!==id);renderCustomers();persist();}
-function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').toLowerCase();const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));document.getElementById('cu-emp').style.display=arr.length?'none':'block';document.getElementById('cu-tb').innerHTML=arr.map((c,i)=>{const txs=db.invoices.filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase());const totalBelanja=txs.reduce((s,x)=>s+x.tot,0);return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${c.nama}</strong></td><td>${c.hp||'—'}</td><td>${c.alamat||'—'}</td><td>${c.usia||'—'}</td><td><span class="badge bblue">${txs.length} txn</span></td><td><strong>${txs.length?fmt(totalBelanja):'—'}</strong></td><td style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="rxHistory(${c.id})" title="Riwayat Rx"><i class="ti ti-eye-chart"></i></button><button class="btn btn-danger btn-xs" onclick="delCustomer(${c.id})"><i class="ti ti-trash"></i></button></td></tr>`;}).join('');}
+function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').toLowerCase();const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));document.getElementById('cu-emp').style.display=arr.length?'none':'block';document.getElementById('cu-tb').innerHTML=arr.map((c,i)=>{const txs=db.invoices.filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase());const totalBelanja=txs.reduce((s,x)=>s+x.tot,0);return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${c.nama}</strong></td><td>${c.hp||'—'}</td><td>${c.alamat||'—'}</td><td>${c.usia||'—'}</td><td><span class="badge bblue">${txs.length} txn</span></td><td><strong>${txs.length?fmt(totalBelanja):'—'}</strong></td><td style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="rxHistory(${c.id})" title="Riwayat Rx"><i class="ti ti-eye-chart"></i></button>${currentRole==='admin'?`<button class="btn btn-danger btn-xs" onclick="delCustomer(${c.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join('');}
 
 
 // ════════════════════════════════════════════════
@@ -776,7 +803,7 @@ function buildReceipt(inv){const all=[...inv.items.frame,...inv.items.lensa,...i
 return`<div class="modal-title"><i class="ti ti-receipt"></i> Struk Invoice</div><div style="font-family:'Courier New',monospace;font-size:12.5px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;background:var(--bg)"><div style="text-align:center;margin-bottom:12px"><strong style="font-size:16px;letter-spacing:2px">OPTIK ZADA</strong><br><span style="font-size:10px;color:var(--muted)">Struk Pembelian</span><br><span style="font-size:9px;color:var(--muted)">Jl. Raya Mangun Jaya No.03C, Tambun, Bekasi</span><br><span style="font-size:9px;color:var(--muted)">🕐 09.00 – 21.00 WIB</span></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">No.</span><strong>${inv.no}</strong></div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tanggal</span>${inv.tanggal}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Customer</span>${inv.customer}</div>${inv.hp?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">HP</span>${inv.hp}</div>`:''}${(inv.alamat?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Alamat</span>${inv.alamat}</div>`:'')}<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Tipe</span>${inv.tipe||'-'}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Bayar</span>${inv.pay}</div>${inv.tglSiap?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="color:var(--muted)">Siap Ambil</span><strong>${fmtDate(inv.tglSiap)}</strong></div>`:''} ${rxS?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${rxS}</div>`:''}${fdStr||ldStr?`<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0"><div style="font-size:11px;color:var(--muted)">${fdStr}${fdStr&&ldStr?'<br>':''}${ldStr}</div>`:''}
 <hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${all.map(x=>`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>${x.nama}${x.qty>1?' x'+x.qty:''}</span>${fmt(x.jual*x.qty)}</div>`).join('')}<hr style="border:none;border-top:1px dashed var(--border2);margin:8px 0">${inv.disc>0?`<div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>Subtotal</span>${fmt(inv.sub)}</div><div style="display:flex;justify-content:space-between;margin-bottom:3px;color:var(--gold4)"><span>Diskon</span>−${fmt(inv.disc)}</div>`:''}<div style="display:flex;justify-content:space-between;font-size:15px;font-weight:700"><span>TOTAL</span>${fmt(inv.tot)}</div>${inv.payStatus==='dp'?`<div style="display:flex;justify-content:space-between;margin-top:4px;color:var(--warn)"><span>DP Dibayar</span>${fmt(inv.dpAmount)}</div><div style="display:flex;justify-content:space-between;color:var(--danger)"><span>SISA</span>${fmt(inv.sisa)}</div>`:''}<div style="text-align:center;margin-top:8px"><span class="badge ${inv.payStatus==='lunas'?'bgreen':'borange'}" style="font-size:12px">${inv.payStatus==='lunas'?'✓ LUNAS':'⏳ DP — BELUM LUNAS'}</span></div>${inv.lunasDate?`<div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px"><span style="color:var(--muted)">Tgl Lunas</span><span>${inv.lunasDate}</span></div>`:''} ${inv.lunasPay?`<div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:var(--muted)">Bayar Lunas</span><span>${inv.lunasPay}</span></div>`:''}${inv.ro&&inv.ro.nama?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;margin-top:8px;font-size:11px"><span style="color:var(--muted)">Pemeriksa (RO)</span><strong>${inv.ro.nama}</strong></div>${inv.ro.siro?`<div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:11px"><span style="color:var(--muted)">No. SIRO</span>${inv.ro.siro}</div>`:''}`:''}<div style="text-align:center;margin-top:12px;font-size:10px;color:var(--muted);border-top:1px dashed var(--border2);padding-top:8px"><div style="font-weight:700;font-size:11px;letter-spacing:1px">OPTIK ZADA</div><div style="margin-top:2px">Jl. Raya Mangun Jaya No.03C, Tambun</div><div>Kab. Bekasi, Jawa Barat 17510</div><div style="margin-top:3px">🕐 Layanan: 09.00 – 21.00 WIB</div><div style="margin-top:5px;font-style:italic">Terima kasih atas kepercayaan Anda 🙏</div></div></div>`;}
 function previewInvoice(){const t=cartTotals();const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}` :(pay||'-');const fakeInv={no:document.getElementById('inv-no').value,tanggal:today(),customer:document.getElementById('inv-nama').value||'(belum diisi)',tipe:deriveTipe(),ro:getRO(),rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value};document.getElementById('modal-content').innerHTML=buildReceipt(fakeInv);document.getElementById('modal-actions').innerHTML=`<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
-function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;document.getElementById('modal-content').innerHTML=buildReceipt(inv);const delBtnHtml=currentRole==='admin'?`<button class="btn btn-danger btn-sm" onclick="closeModal();delInvoice(${inv.id})" style="margin-right:auto"><i class="ti ti-trash"></i> Hapus</button>`:'';const waBtnV=inv.hp?`<button class="btn btn-success btn-sm" onclick="btnWA(${inv.id})"><i class="ti ti-brand-whatsapp"></i> WA</button>`:'';document.getElementById('modal-actions').innerHTML=`${delBtnHtml}${waBtnV}<button class="btn btn-outline btn-sm" onclick="buildThermalReceipt(db.invoices.find(x=>x.id===${inv.id}))" title="Cetak Thermal 80mm" style="padding:8px 10px;min-width:36px"><i class="ti ti-device-mobile"></i></button>${inv.payStatus==='dp'?`<button class="btn btn-gold" onclick="closeModal();lunaskan(${inv.id})"><i class="ti ti-check"></i> Lunaskan</button>`:''}<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
+function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;document.getElementById('modal-content').innerHTML=buildReceipt(inv);const delBtnHtml=currentRole==='admin'?`<button class="btn btn-danger btn-sm" onclick="closeModal();delInvoice(${inv.id})" style="margin-right:auto"><i class="ti ti-trash"></i> Hapus</button>`:'';const waBtnV=inv.hp?`<button class="btn btn-success btn-sm" onclick="btnWA(${inv.id})"><i class="ti ti-brand-whatsapp"></i> WA</button>`:'';document.getElementById('modal-actions').innerHTML=`${delBtnHtml}${waBtnV}<button class="btn btn-outline btn-sm" onclick="buildThermalReceipt(db.invoices.find(x=>x.id===${inv.id}))" title="Cetak Thermal 80mm" style="padding:8px 10px;min-width:36px"><i class="ti ti-device-mobile"></i></button>${inv.payStatus==='dp'&&currentRole==='admin'?`<button class="btn btn-gold" onclick="closeModal();lunaskan(${inv.id})"><i class="ti ti-check"></i> Lunaskan</button>`:''}<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
 
 
 // ════════════════════════════════════════════════
@@ -1073,6 +1100,7 @@ function _getFilteredInv(source){
 }
 
 function showKasMasukModal(source){
+  if(currentRole&&currentRole!=='admin'){return;}
   const inv=_getFilteredInv(source);
   const cats={Frame:{kas:0,qty:0,items:{}},Lensa:{kas:0,qty:0,items:{}},Softlens:{kas:0,qty:0,items:{}},Aksesoris:{kas:0,qty:0,items:{}}};
   inv.forEach(x=>{
