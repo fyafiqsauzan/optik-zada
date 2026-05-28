@@ -1,9 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TEST MODE: open access — ganti ke auth-based rules sebelum production
+
+    // Main app data — authenticated users only
     match /optik-zada/{document=**} {
-      allow read, write: if true;
+      allow read, write: if request.auth != null;
+    }
+
+    // User profiles — authenticated users only
+    // admin-only management enforced client-side
+    match /users/{userId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Pre-registered karyawan waiting for first login
+    match /pendingUsers/{email} {
+      allow read, write: if request.auth != null;
     }
   }
 }
