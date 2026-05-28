@@ -27,9 +27,12 @@ jobs:
           channelId: live
           projectId: optik-zada1127
 
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OPTIK_ZADA1127 }}
+
       - name: Deploy Firestore Rules
         run: |
           npm install -g firebase-tools
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_OPTIK_ZADA1127 }}' > /tmp/sa.json
-          GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json firebase deploy --only firestore:rules --project optik-zada1127
-          rm -f /tmp/sa.json
+          firebase deploy --only firestore:rules --project optik-zada1127
