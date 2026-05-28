@@ -433,15 +433,15 @@ let db={frames:[],lensas:[],softlens:[],aksesoris:[],customers:[],invoices:[],co
 let cart={frame:[],lensa:[],softlens:[],aksesoris:[]};
 let pay='',bank='',darkMode=false,isDP=false;
 const STORAGE_KEY='optik_zada_db';
-const USE_FIREBASE=false;
-const FIREBASE_CONFIG={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
+const USE_FIREBASE=true;
+const FIREBASE_CONFIG={apiKey:"AIzaSyDEIar7pSANo_09J1AiDENxNDxzB3dSMA4",authDomain:"optik-zada1127.firebaseapp.com",projectId:"optik-zada1127",storageBucket:"optik-zada1127.firebasestorage.app",messagingSenderId:"65150928401",appId:"1:65150928401:web:2abaf2fd2b22b4407fd3b0"};
 const Store={
   mode:USE_FIREBASE?'firebase':'local',_docRef:null,_setDoc:null,_serverTs:null,_onRemote:null,
   seedDB(){return{frames:JSON.parse(JSON.stringify(SEED.frames)),lensas:JSON.parse(JSON.stringify(SEED.lensas)),softlens:JSON.parse(JSON.stringify(SEED.softlens)),aksesoris:JSON.parse(JSON.stringify(SEED.aksesoris)),customers:JSON.parse(JSON.stringify(SEED.customers)),invoices:JSON.parse(JSON.stringify(SEED.invoices)),counter:SEED.invoices.length+1}},
   async init(onRemote){this._onRemote=onRemote;return this.mode==='firebase'?await this._initFB():await this._initLocal()},
-  async _initLocal(){try{const r=await window.storage.get(STORAGE_KEY);if(r&&r.value){db=JSON.parse(r.value);return true;}}catch(e){}db=this.seedDB();await this.save();return false},
+  async _initLocal(){try{const v=localStorage.getItem(STORAGE_KEY);if(v){db=JSON.parse(v);return true;}}catch(e){}db=this.seedDB();await this.save();return false},
   async _initFB(){const a=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');const f=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;return await new Promise(res=>{let first=true;f.onSnapshot(this._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(first){first=false;res(true);}else if(this._onRemote)this._onRemote();}else{db=this.seedDB();this.save();if(first){first=false;res(false);}}},err=>{if(first){first=false;db=this.seedDB();res(false);}});})},
-  async save(){if(this.mode==='firebase'&&this._docRef){try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}}else{try{await window.storage.set(STORAGE_KEY,JSON.stringify(db));}catch(e){}}}
+  async save(){if(this.mode==='firebase'&&this._docRef){try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}}else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}}
 };
 let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
 

@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // TEST MODE: open access — ganti ke auth-based rules sebelum production
+    match /optik-zada/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
