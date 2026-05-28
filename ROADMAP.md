@@ -78,24 +78,25 @@
 | # | Item | Tipe | Detail |
 |---|------|------|--------|
 | 20 | **Multi-User Concurrent Edit Safety** | Major | Saat admin dan karyawan edit data bersamaan, ada risiko salah satu overwrite data yang lain. Implementasi optimistic locking dengan Firestore transactions untuk operasi kritis (simpan invoice, update stok). |
+| 21 | **Cashflow & Pengeluaran Toko** | **Major / New Module** | Modul baru khusus role Admin untuk monitoring keuangan toko secara menyeluruh. Lihat detail di bawah. |
 
 ### 🟡 MEDIUM
 
 | # | Item | Tipe | Detail |
 |---|------|------|--------|
-| 21 | Custom Domain Setup | Infrastructure | Ganti URL Firebase default (`optik-zada1127.web.app`) ke domain sendiri (misal `optikzada.com`). Lebih profesional untuk client. |
-| 22 | Mobile Responsive Audit | Polish | Pastikan semua halaman — terutama Invoice form dan Riwayat — dapat digunakan nyaman di layar HP/tablet (karyawan jaga sendiri). |
-| 23 | Kompresi Aset | Performance | `assets/logo.png` ~1MB → target <100KB. Gunakan [squoosh.app](https://squoosh.app) untuk kompresi manual. Percepat loading awal. |
-| 24 | Konfirmasi Email Akun Baru | Security | Saat ini karyawan bisa daftar dengan email apapun tanpa verifikasi. Tambah email verification sebelum akun aktif. |
+| 22 | Custom Domain Setup | Infrastructure | Ganti URL Firebase default (`optik-zada1127.web.app`) ke domain sendiri (misal `optikzada.com`). Lebih profesional untuk client. |
+| 23 | Mobile Responsive Audit | Polish | Pastikan semua halaman — terutama Invoice form dan Riwayat — dapat digunakan nyaman di layar HP/tablet (karyawan jaga sendiri). |
+| 24 | Kompresi Aset | Performance | `assets/logo.png` ~1MB → target <100KB. Gunakan [squoosh.app](https://squoosh.app) untuk kompresi manual. Percepat loading awal. |
+| 25 | Konfirmasi Email Akun Baru | Security | Saat ini karyawan bisa daftar dengan email apapun tanpa verifikasi. Tambah email verification sebelum akun aktif. |
 
 ### 🟢 NICE TO HAVE
 
 | # | Item | Tipe | Detail |
 |---|------|------|--------|
-| 25 | Laporan Profit per Produk | Feature | Di halaman Laporan: breakdown margin keuntungan per kategori produk (frame, lensa, softlens). |
-| 26 | Diskon Global / Promo | Feature | Setting diskon persentase global yang bisa diaktifkan sementara (misal promo Lebaran). |
-| 27 | Dark/Light Mode Toggle Otomatis | Enhancement | Ikuti preferensi sistem (prefers-color-scheme) secara default. |
-| 28 | Tooltip / Help Onboarding | UX | Tooltip singkat di setiap field kompleks (Rx, DP amount) untuk bantu user baru. |
+| 26 | Laporan Profit per Produk | Feature | Di halaman Laporan: breakdown margin keuntungan per kategori produk (frame, lensa, softlens). |
+| 27 | Diskon Global / Promo | Feature | Setting diskon persentase global yang bisa diaktifkan sementara (misal promo Lebaran). |
+| 28 | Dark/Light Mode Toggle Otomatis | Enhancement | Ikuti preferensi sistem (prefers-color-scheme) secara default. |
+| 29 | Tooltip / Help Onboarding | UX | Tooltip singkat di setiap field kompleks (Rx, DP amount) untuk bantu user baru. |
 
 ---
 
@@ -108,6 +109,53 @@
 | L3 | Onboarding Client | Buat akun admin + karyawan untuk client; demo singkat alur kerja utama |
 | L4 | Monitor Firebase Usage 24 jam | Pantau Firestore reads/writes, hosting bandwidth di Firebase Console |
 | L5 | Hotfix Standby | Siap deploy fix darurat jika ada bug yang ditemukan saat pertama kali dipakai |
+
+---
+
+---
+
+## 💰 Detail: Modul Cashflow & Pengeluaran Toko (Item #21)
+> Status: **Planned — Menunggu detail lengkap dari client**
+> Scope: Major new module, admin-only
+
+### Latar Belakang
+Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memonitor tidak hanya pemasukan dari penjualan, tapi juga seluruh pengeluaran operasional toko — agar angka profit yang terlihat di dashboard benar-benar mencerminkan kondisi keuangan toko secara keseluruhan.
+
+### Fitur yang Direncanakan
+
+#### Catat Pengeluaran
+- Input manual pengeluaran dengan kategori (contoh awal):
+  - 🍱 Makan karyawan / konsumsi
+  - 👤 Gaji karyawan tetap
+  - 👨‍👩‍👧 Gaji anggota keluarga / staff keluarga
+  - 📦 Restok produk / modal barang
+  - 🔧 Operasional (listrik, air, sewa, dll.)
+  - ⚡ Pengeluaran tak terduga / lain-lain
+- Field: tanggal, kategori, nominal, keterangan (opsional), dicatat oleh siapa
+
+#### Dashboard Cashflow (Admin Only)
+- **Ringkasan bulan ini**: Kas Masuk (omzet) vs Total Pengeluaran → **Net Cash / Profit Bersih**
+- Grafik bar/line: pemasukan vs pengeluaran per hari atau per minggu
+- Tabel pengeluaran terbaru (bisa filter by kategori & periode)
+- Breakdown pengeluaran per kategori (pie chart atau list dengan persentase)
+
+#### Integrasi dengan Laporan Existing
+- Halaman Laporan saat ini menampilkan Omzet & Profit kotor (dari selisih harga jual - modal produk)
+- Setelah modul ini: tambah kolom **"Pengeluaran Operasional"** dan **"Profit Bersih"** yang sudah dikurangi semua pengeluaran
+- Export CSV laporan bisa include data pengeluaran
+
+### Hal yang Perlu Dikonfirmasi ke Client
+- [ ] Kategori pengeluaran apa saja yang dipakai (list lengkap)?
+- [ ] Apakah karyawan bisa lihat pengeluaran, atau admin-only?
+- [ ] Apakah perlu fitur "tutup buku" per bulan?
+- [ ] Apakah nominal gaji bersifat tetap (bisa preset) atau selalu input manual?
+- [ ] Apakah perlu riwayat gajian per karyawan, atau cukup total saja?
+
+### Estimasi Kompleksitas
+- UI: halaman baru "Cashflow" di sidebar (admin only) + integrasi ke Laporan
+- Data: kolom baru `db.expenses[]` dengan struktur `{id, tanggal, kategori, nominal, ket, createdBy}`
+- Setelah Firestore restructure (#15), expenses juga jadi collection terpisah `expenses/{id}`
+- Estimasi waktu pengerjaan setelah detail dari client lengkap: **3–5 hari kerja**
 
 ---
 
@@ -132,3 +180,11 @@ Setiap ada tambahan request dari client atau kebutuhan baru:
 ---
 
 *Last updated: 28 Mei 2026 · Optik Zada Management System v7.7 Beta*
+
+---
+
+### Changelog
+| Tanggal | Perubahan |
+|---------|-----------|
+| 28 Mei 2026 | Roadmap dibuat — 28 item + 5 launch checklist |
+| 28 Mei 2026 | Tambah item #21 Cashflow & Pengeluaran Toko (request client) |
