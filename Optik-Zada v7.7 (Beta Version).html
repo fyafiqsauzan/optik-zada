@@ -410,7 +410,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       </div>
     </div>
   </div>
-  <div class="card" style="border-color:#f5d782"><div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Hapus transaksi atau reset semua data. Backup dulu!</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-danger btn-sm" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Semua Transaksi</button><button class="btn btn-danger btn-sm" onclick="resetAll()"><i class="ti ti-alert-octagon"></i> Reset Semua Data</button></div></div>
+  <div class="card" style="border-color:#f5d782"><div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Hapus transaksi atau reset semua data. Backup dulu!</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm admin-only" onclick="seedMasterData()" style="border-color:var(--warn);color:var(--warn)"><i class="ti ti-database-import"></i> Reset Master Data & Customer</button><button class="btn btn-danger btn-sm" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Semua Transaksi</button><button class="btn btn-danger btn-sm" onclick="resetAll()"><i class="ti ti-alert-octagon"></i> Reset Semua Data</button></div></div>
 </div>
 </div>
 <div class="modal-ov" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button><div id="modal-content"></div><div id="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px" class="no-print"></div></div></div>
@@ -422,9 +422,46 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 // Reset Semua Data di Settings akan kembali ke sini
 // ════════════════════════════════════════════════
 const SEED={
-frames:[{id:1001,nama:'Ray-Ban RB2140 Wayfarer Classic',modal:350000,jual:650000,stok:5},{id:1002,nama:'Ray-Ban RB3025 Aviator Gold',modal:380000,jual:720000,stok:4},{id:1003,nama:'Oakley Holbrook Matte Black',modal:420000,jual:850000,stok:3},{id:1004,nama:'Fossil FOS 3084 Brown Havana',modal:280000,jual:520000,stok:6},{id:1005,nama:'Police VPL993 Gunmetal',modal:320000,jual:600000,stok:4},{id:1006,nama:'Kacamata Bulat Vintage Gold',modal:95000,jual:220000,stok:8},{id:1007,nama:'Kacamata Kotak Minimalis Hitam',modal:80000,jual:180000,stok:10},{id:1008,nama:'Frame Half-Rim Titan Silver',modal:180000,jual:380000,stok:5},{id:1009,nama:'Frame Rimless Titanium',modal:220000,jual:450000,stok:3},{id:1010,nama:'Kacamata Anak Oval Biru',modal:70000,jual:150000,stok:9},{id:1011,nama:'Kacamata Sporty Wraparound Hitam',modal:150000,jual:320000,stok:4}],
-lensas:[{id:2001,nama:'Lensa SV 1.56 Biasa',modal:80000,jual:180000,stok:20},{id:2002,nama:'Lensa SV 1.56 Blueguard',modal:110000,jual:250000,stok:18},{id:2003,nama:'Lensa SV 1.67 Tipis',modal:160000,jual:350000,stok:12},{id:2004,nama:'Lensa SV 1.67 Blueguard',modal:190000,jual:420000,stok:10},{id:2005,nama:'Lensa Progresif 1.56 Standard',modal:300000,jual:650000,stok:8},{id:2006,nama:'Lensa Progresif 1.67 Premium',modal:420000,jual:950000,stok:5},{id:2007,nama:'Lensa Photochromic 1.56',modal:200000,jual:480000,stok:10},{id:2008,nama:'Lensa Polarized UV400',modal:220000,jual:500000,stok:8},{id:2009,nama:'Lensa Baca Plus 1.56',modal:90000,jual:200000,stok:14}],
-softlens:[{id:3001,nama:'Freshlook Colorblends Blue',modal:55000,jual:120000,stok:15,brand:'Alcon',type:'Monthly',color:'Blue',dia:'14.0mm'},{id:3002,nama:'Freshlook Colorblends Gray',modal:55000,jual:120000,stok:14,brand:'Alcon',type:'Monthly',color:'Gray',dia:'14.0mm'},{id:3003,nama:'Acuvue Moist 1-Day (30pcs)',modal:130000,jual:280000,stok:12,brand:'J&J',type:'Daily',color:'Clear',dia:'14.2mm'},{id:3004,nama:'Softlens X2',modal:50000,jual:110000,stok:20,brand:'X2',type:'Monthly',color:'Clear',dia:'14.0mm'},{id:3005,nama:'Air Mata Buatan Refresh Tears',modal:40000,jual:90000,stok:25,brand:'Allergan',type:'-',color:'-',dia:'-'}],
+frames:[
+  {id:1001,nama:'Ray-Ban RB5154 Clubmaster Black/Gold',modal:430000,jual:820000,stok:3},
+  {id:1002,nama:'Ray-Ban RB3025 Aviator Gold/Crystal Green',modal:390000,jual:740000,stok:4},
+  {id:1003,nama:'Ray-Ban RB2132 New Wayfarer Tortoise',modal:370000,jual:700000,stok:3},
+  {id:1004,nama:'Oakley OX8046 Litebeam Satin Black',modal:480000,jual:950000,stok:2},
+  {id:1005,nama:'Police VPLA34 Dark Gunmetal',modal:295000,jual:560000,stok:5},
+  {id:1006,nama:'Fossil FOS 2093 Brown Havana Acetate',modal:260000,jual:490000,stok:6},
+  {id:1007,nama:'Frame Bulat Retro Metal Gold',modal:85000,jual:195000,stok:12},
+  {id:1008,nama:'Frame Cat Eye Acetate Tortoise',modal:90000,jual:210000,stok:8},
+  {id:1009,nama:'Frame Kotak Minimalis TR90 Matte Black',modal:75000,jual:165000,stok:15},
+  {id:1010,nama:'Frame Sporty Wraparound TR90 Red/Black',modal:130000,jual:295000,stok:5},
+  {id:1011,nama:'Frame Half-Rim Titanium Silver',modal:165000,jual:360000,stok:7},
+  {id:1012,nama:'Frame Half-Rim Business Gunmetal',modal:145000,jual:310000,stok:6},
+  {id:1013,nama:'Frame Rimless Titanium Oval Silver',modal:225000,jual:490000,stok:4},
+  {id:1014,nama:'Frame Anak Oval Blue TR90 Fleksibel',modal:65000,jual:150000,stok:10},
+  {id:1015,nama:'Frame Anak Full-Rim Flex Red/Black',modal:70000,jual:160000,stok:8}
+],
+lensas:[
+  {id:2001,nama:'Lensa SV 1.56 Clear (Basic)',modal:75000,jual:175000,stok:30},
+  {id:2002,nama:'Lensa SV 1.56 Blueguard Anti-Radiasi',modal:110000,jual:255000,stok:25},
+  {id:2003,nama:'Lensa SV 1.56 Multi-Coating Anti-Glare',modal:95000,jual:215000,stok:20},
+  {id:2004,nama:'Lensa SV 1.67 Tipis Clear',modal:155000,jual:345000,stok:15},
+  {id:2005,nama:'Lensa SV 1.67 Blueguard Tipis',modal:185000,jual:415000,stok:12},
+  {id:2006,nama:'Lensa SV 1.74 Super Tipis Premium',modal:280000,jual:640000,stok:8},
+  {id:2007,nama:'Lensa Progresif 1.56 Standard',modal:300000,jual:660000,stok:8},
+  {id:2008,nama:'Lensa Progresif 1.67 Premium',modal:420000,jual:980000,stok:5},
+  {id:2009,nama:'Lensa Photochromic Transitions 1.56',modal:200000,jual:475000,stok:10},
+  {id:2010,nama:'Lensa Baca Plus 1.56 (+1.00 s/d +3.50)',modal:90000,jual:195000,stok:18}
+],
+softlens:[
+  {id:3001,nama:'Freshlook Colorblends Blue',modal:55000,jual:125000,stok:20,brand:'Alcon',type:'Monthly',color:'Blue',dia:'14.0mm'},
+  {id:3002,nama:'Freshlook Colorblends Honey',modal:55000,jual:125000,stok:18,brand:'Alcon',type:'Monthly',color:'Honey',dia:'14.0mm'},
+  {id:3003,nama:'Freshlook Colorblends Brown',modal:55000,jual:125000,stok:16,brand:'Alcon',type:'Monthly',color:'Brown',dia:'14.0mm'},
+  {id:3004,nama:'Freshlook Colorblends Green',modal:55000,jual:125000,stok:14,brand:'Alcon',type:'Monthly',color:'Green',dia:'14.0mm'},
+  {id:3005,nama:'Acuvue Moist 1-Day (30pcs)',modal:130000,jual:285000,stok:15,brand:'J&J',type:'Daily',color:'Clear',dia:'14.2mm'},
+  {id:3006,nama:'Acuvue Oasys 2-Week (6pcs)',modal:115000,jual:255000,stok:12,brand:'J&J',type:'2-Week',color:'Clear',dia:'14.3mm'},
+  {id:3007,nama:'Softlens X2 Clear Monthly',modal:45000,jual:105000,stok:25,brand:'X2',type:'Monthly',color:'Clear',dia:'14.0mm'},
+  {id:3008,nama:'Bausch+Lomb SofLens Monthly Clear',modal:90000,jual:210000,stok:10,brand:'B+L',type:'Monthly',color:'Clear',dia:'14.0mm'},
+  {id:3009,nama:'Air Mata Buatan Refresh Tears 15ml',modal:38000,jual:85000,stok:30,brand:'Allergan',type:'-',color:'-',dia:'-'}
+],
 aksesoris:[
   {id:4001,nama:'Cairan Pembersih Kacamata 30ml',modal:8000,jual:20000,stok:30,cat:'Cairan Pembersih',note:'Spray cleaner'},
   {id:4002,nama:'Cairan Pembersih Kacamata 100ml',modal:15000,jual:35000,stok:20,cat:'Cairan Pembersih',note:'Spray cleaner botol besar'},
@@ -437,7 +474,16 @@ aksesoris:[
   {id:4009,nama:'Nose Pad Silikon (1 pasang)',modal:2000,jual:8000,stok:40,cat:'Lainnya',note:'Universal, anti-selip'},
   {id:4010,nama:'Temple Tip / Ujung Gagang Silikon',modal:2000,jual:8000,stok:35,cat:'Lainnya',note:'Pengganti ujung gagang aus'}
 ],
-customers:[],
+customers:[
+  {id:101,nama:'Budi Santoso',hp:'081234567890',alamat:'Jl. Mangga Raya No.12, Tambun',usia:'35'},
+  {id:102,nama:'Siti Rahayu Putri',hp:'082345678901',alamat:'Perum Griya Asri Blok B-2, Bekasi Timur',usia:'28'},
+  {id:103,nama:'Ahmad Fauzi',hp:'083456789012',alamat:'Jl. Cikarang Baru No.45, Cikarang',usia:'42'},
+  {id:104,nama:'Rina Kusumawati',hp:'085678901234',alamat:'Jl. Mangun Jaya No.18, Tambun Sel.',usia:'31'},
+  {id:105,nama:'Hendra Gunawan',hp:'081987654321',alamat:'Jl. Kranji Raya No.7, Bekasi Barat',usia:'46'},
+  {id:106,nama:'Dewi Susanti',hp:'082198765432',alamat:'Perum Cibitung Baru Blok D-5, Cibitung',usia:'25'},
+  {id:107,nama:'Yusuf Prasetyo',hp:'083219876543',alamat:'Jl. Tambun Raya No.33, Tambun',usia:'38'},
+  {id:108,nama:'Maya Anggraini',hp:'081321987654',alamat:'Jl. Cikarang–Bekasi No.22, Cikarang Barat',usia:'29'}
+],
 invoices:[
 ]};
 
@@ -1036,6 +1082,16 @@ function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Sto
   if(currentRole==='admin')loadUserList();}
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.click();toast('Backup diunduh');}
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
+function seedMasterData(){
+  if(!confirm('Reset data master produk & customer ke data demo?\n\nTransaksi (invoice) tidak akan dihapus.'))return;
+  db.frames=JSON.parse(JSON.stringify(SEED.frames));
+  db.lensas=JSON.parse(JSON.stringify(SEED.lensas));
+  db.softlens=JSON.parse(JSON.stringify(SEED.softlens));
+  db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));
+  db.customers=JSON.parse(JSON.stringify(SEED.customers));
+  persist();renderSettings();
+  toast('Master data & customer berhasil direset ke data demo','s',3000);
+}
 function clearTransactions(){if(!confirm('Hapus SEMUA transaksi?'))return;db.invoices=[];db.counter=1;persist();renderSettings();renderDashboard();toast('Transaksi dihapus','w');}
 function resetAll(){if(!confirm('RESET SEMUA DATA?'))return;db=Store.seedDB();persist();renderSettings();renderDashboard();toast('Data direset','w');}
 function exportCSV(){if(!db.invoices.length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?db.invoices:db.invoices.filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join('; '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.click();toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
