@@ -393,6 +393,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v7.7</button></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
   <div class="card admin-only" id="user-mgmt-card" style="margin-bottom:16px">
@@ -416,6 +417,78 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 </div>
 </div>
 <div class="modal-ov" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal-box"><button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button><div id="modal-content"></div><div id="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px" class="no-print"></div></div></div>
+
+<!-- Release Notes Modal -->
+<div id="rn-modal" style="display:none;position:fixed;inset:0;background:rgba(5,15,35,.7);z-index:1500;align-items:center;justify-content:center;padding:16px" class="no-print">
+  <div style="background:var(--card);border-radius:var(--radius-md);max-width:540px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.5);border:1px solid var(--border)">
+    <div style="padding:18px 22px 14px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px;flex-shrink:0">
+      <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
+      <div style="flex:1">
+        <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v7.7 Beta</div>
+      </div>
+      <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="overflow-y:auto;padding:18px 22px;flex:1;display:flex;flex-direction:column;gap:18px">
+
+      <!-- Caution -->
+      <div style="background:var(--bg);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:13px 15px;display:flex;gap:11px;align-items:flex-start">
+        <i class="ti ti-shield-check" style="color:var(--gold);font-size:20px;flex-shrink:0;margin-top:1px"></i>
+        <div>
+          <div style="font-weight:700;color:var(--gold);font-size:12.5px;margin-bottom:5px">⚠️ Perhatian — Beta Version</div>
+          <div style="font-size:12px;line-height:1.65;color:var(--text)">Aplikasi ini masih dalam tahap <strong>Beta</strong> dan aktif dikembangkan. Beberapa hal yang perlu diperhatikan:<br>
+          <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
+          <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
+          <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v7.7 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v7.7 Beta</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Resep Mata Lengkap</strong> — Tambah kolom Dm.A(T), Dm.B(L), DBL, TP di bawah PD/Add pada form invoice &amp; struk</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Audit Log Invoice</strong> — Setiap invoice mencatat siapa yang membuatnya (nama user)</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Karyawan Bisa Lunaskan DP</strong> — Tidak perlu admin untuk proses pelunasan sisa pembayaran</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-key" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Reset Password</strong> — Tombol "Lupa password?" di halaman login untuk kirim email reset</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-archive" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Soft Delete / Arsip Invoice</strong> — Hapus invoice tidak permanen; bisa dipulihkan dari Pengaturan → Invoice Diarsipkan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-list-numbers" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Pagination Riwayat</strong> — Riwayat transaksi dibagi 25 per halaman agar lebih ringan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Export CSV Perbaikan</strong> — File CSV langsung rapi di Excel tanpa perlu Text to Columns manual; kolom baru Dm.A/B, DBL, TP ikut ter-export</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Keamanan Firestore</strong> — Security rules otomatis ter-deploy via GitHub Actions setiap ada update</span></div>
+        </div>
+      </div>
+
+      <!-- Previous features -->
+      <div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:11px;color:var(--muted);display:flex;align-items:center;gap:8px">
+          <i class="ti ti-history" style="font-size:14px"></i> Fitur Sebelum Beta
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-file-invoice" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Buat &amp; kelola invoice dengan resep mata, tipe kacamata, item, dan diskon</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-cash" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Pembayaran Lunas &amp; Down Payment (DP) dengan tracking sisa</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-printer" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Print struk A4 &amp; Thermal 80mm langsung dari browser</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-brand-whatsapp" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Kirim struk ke customer via WhatsApp</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-chart-histogram" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Laporan omzet, profit, &amp; grafik bulanan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-packages" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Manajemen produk: Frame, Lensa, Softlens, Aksesoris + stok &amp; alert menipis</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-users" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Database customer dengan histori pembelian</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-crown" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Multi-role: Admin (akses penuh) &amp; Karyawan (akses terbatas)</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-cloud-download" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Backup &amp; Restore data (.json) + sync real-time antar perangkat</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-moon" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span>Dark mode &amp; tampilan responsif</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div style="padding:14px 22px;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none">
+        <input type="checkbox" id="rn-dontshow" style="cursor:pointer;accent-color:var(--gold)"> Jangan tampilkan lagi
+      </label>
+      <button onclick="closeReleaseNotes(document.getElementById('rn-dontshow').checked)" class="btn btn-gold btn-sm">Mengerti, Mulai! <i class="ti ti-arrow-right" style="margin-left:4px"></i></button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ════════════════════════════════════════════════
@@ -647,6 +720,7 @@ function login(role){
   toast('Masuk sebagai '+r.label,'s');
   renderFabForRole();
   startSessionWatch();
+  setTimeout(showReleaseNotes,700);
 }
 
 function logout(){
@@ -656,6 +730,18 @@ function logout(){
   document.getElementById('role-badge').style.display='none';
   document.getElementById('login-ov').style.display='flex';
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
+}
+
+const _RN_VERSION='7.7';
+function showReleaseNotes(){
+  if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
+  const el=document.getElementById('rn-modal');
+  if(el){el.style.display='flex';document.getElementById('rn-dontshow').checked=false;}
+}
+function closeReleaseNotes(dontShow){
+  if(dontShow)localStorage.setItem('rn_seen',_RN_VERSION);
+  const el=document.getElementById('rn-modal');
+  if(el)el.style.display='none';
 }
 
 function applyPermissions(){
