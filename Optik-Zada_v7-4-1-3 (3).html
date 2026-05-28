@@ -440,7 +440,7 @@ const Store={
   seedDB(){return{frames:JSON.parse(JSON.stringify(SEED.frames)),lensas:JSON.parse(JSON.stringify(SEED.lensas)),softlens:JSON.parse(JSON.stringify(SEED.softlens)),aksesoris:JSON.parse(JSON.stringify(SEED.aksesoris)),customers:JSON.parse(JSON.stringify(SEED.customers)),invoices:JSON.parse(JSON.stringify(SEED.invoices)),counter:SEED.invoices.length+1}},
   async init(onRemote){this._onRemote=onRemote;return this.mode==='firebase'?await this._initFB():await this._initLocal()},
   async _initLocal(){try{const v=localStorage.getItem(STORAGE_KEY);if(v){db=JSON.parse(v);return true;}}catch(e){}db=this.seedDB();await this.save();return false},
-  async _initFB(){const a=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');const f=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;return await new Promise(res=>{let first=true;f.onSnapshot(this._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(first){first=false;res(true);}else if(this._onRemote)this._onRemote();}else{db=this.seedDB();this.save();if(first){first=false;res(false);}}},err=>{if(first){first=false;db=this.seedDB();res(false);}});})},
+  async _initFB(){const a=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');const f=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');const au=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);const auth=au.getAuth(app);this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);return await new Promise(res=>{let first=true;f.onSnapshot(this._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(first){first=false;res(true);}else if(this._onRemote)this._onRemote();}else{db=this.seedDB();this.save();if(first){first=false;res(false);}}},err=>{if(first){first=false;db=this.seedDB();res(false);}});})},
   async save(){if(this.mode==='firebase'&&this._docRef){try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}}else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}}
 };
 let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
@@ -455,6 +455,7 @@ let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeo
   if(!db.aksesoris)db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.invoices.forEach(inv=>{if(inv.items&&!inv.items.aksesoris)inv.items.aksesoris=[];});
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');if(_t==='dark'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
+  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(user&&!currentRole){try{const s=await Store._getDoc(Store._userDoc(user.uid));if(s.exists()){const r=s.data().role;if(ROLES[r])login(r);}}catch(e){}}})}
   window.addEventListener('scroll',()=>{document.getElementById('scrtop').style.display=window.scrollY>300?'flex':'none';});
   document.addEventListener('click',e=>{if(!e.target.closest('.ac-wrap'))document.getElementById('ac-drop').style.display='none';if(!e.target.closest('.top-search'))document.getElementById('gs-drop').style.display='none';});
   toast((had?'Data dimuat':'Data awal disiapkan')+' · '+(Store.mode==='firebase'?'Cloud':'Lokal'),'i',2800);
@@ -501,7 +502,18 @@ function injectAuthUI(){
   .role-badge .rdot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
   .role-badge button{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:15px;padding:0;display:flex}
   .role-badge button:hover{color:#fff}
-  @media(max-width:640px){.login-split{flex-direction:column;max-height:95vh;overflow-y:auto}.login-brand{padding:32px 28px}.lb-name{font-size:22px;letter-spacing:2px}.lb-tagline,.lb-divider,.lb-info{display:none}.login-panel{padding:32px 28px}}`;
+  @media(max-width:640px){.login-split{flex-direction:column;max-height:95vh;overflow-y:auto}.login-brand{padding:32px 28px}.lb-name{font-size:22px;letter-spacing:2px}.lb-tagline,.lb-divider,.lb-info{display:none}.login-panel{padding:32px 28px}}
+  .lp-form{display:flex;flex-direction:column;gap:14px}
+  .lp-field label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .lp-field input{border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:10px 12px;font-size:13px;background:var(--bg);color:var(--text);width:100%;font-family:inherit;outline:none;transition:border-color .15s}
+  .lp-field input:focus{border-color:var(--gold);background:var(--card)}
+  .lp-pass-wrap{position:relative}
+  .lp-pass-wrap input{padding-right:40px}
+  .lp-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;display:flex;padding:2px}
+  .lp-eye:hover{color:var(--text)}
+  .lp-err{font-size:12px;color:var(--danger);padding:8px 10px;background:#fff5f5;border-radius:var(--radius-xs);border:1px solid #fed7d7;display:none}
+  .lp-spin{display:inline-block;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}`;
   const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
   const ov=document.createElement('div');ov.id='login-ov';ov.className='login-ov';
   ov.innerHTML=`<div class="login-split">
@@ -519,10 +531,23 @@ function injectAuthUI(){
     </div>
     <div class="login-panel">
       <div class="lp-eyebrow">Selamat Datang</div>
-      <div class="lp-title">Pilih peran<br>untuk masuk</div>
-      <div class="role-card" onclick="login('admin')"><div class="ri" style="background:var(--gold)"><i class="ti ti-crown"></i></div><div class="rt"><b>Admin / Pemilik</b><span>Akses penuh — semua menu &amp; pengaturan</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="role-card" onclick="login('karyawan')"><div class="ri" style="background:var(--success)"><i class="ti ti-user-check"></i></div><div class="rt"><b>Karyawan</b><span>Buat invoice, riwayat, &amp; data customer</span></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="lp-footer">Mode demo · di versi cloud peran ditentukan oleh akun login</div>
+      <div class="lp-title">Masuk ke<br>sistem</div>
+      <div class="lp-form">
+        <div class="lp-field">
+          <label>Email</label>
+          <input type="email" id="auth-email" placeholder="email@optikzada.com" autocomplete="email" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()">
+        </div>
+        <div class="lp-field">
+          <label>Password</label>
+          <div class="lp-pass-wrap">
+            <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLogin()">
+            <button type="button" class="lp-eye" onclick="toggleAuthPass()"><i class="ti ti-eye" id="auth-eye-icon"></i></button>
+          </div>
+        </div>
+        <div id="auth-err" class="lp-err"></div>
+        <button class="btn btn-gold" id="auth-btn" onclick="doAuthLogin()" style="width:100%;padding:11px;font-size:14px"><i class="ti ti-login"></i> Masuk</button>
+      </div>
+      <div class="lp-footer">Optik ZADA · Sistem Manajemen Toko</div>
     </div>
   </div>`;
   document.body.appendChild(ov);
@@ -546,9 +571,11 @@ function login(role){
 }
 
 function logout(){
+  if(Store._signOut)Store._signOut().catch(()=>{});
   currentRole=null;
   document.getElementById('role-badge').style.display='none';
   document.getElementById('login-ov').style.display='flex';
+  const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
 function applyPermissions(){
@@ -1145,6 +1172,42 @@ function showProfitModal(source){
   document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
   document.getElementById('modal').style.display='flex';
 }
+
+// ════════════════════════════════════════════════
+// SECTION 23 · FIREBASE AUTHENTICATION
+// ════════════════════════════════════════════════
+const ADMIN_BOOTSTRAP_EMAIL='syafiqsfauzan@gmail.com';
+
+async function doAuthLogin(){
+  const email=(document.getElementById('auth-email')?.value||'').trim();
+  const pass=document.getElementById('auth-pass')?.value||'';
+  const btn=document.getElementById('auth-btn');
+  if(!email||!pass){showAuthErr('Email dan password wajib diisi');return;}
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Memverifikasi...';}
+  const errEl=document.getElementById('auth-err');if(errEl)errEl.style.display='none';
+  try{
+    const cred=await Store._signIn(email,pass);
+    const uid=cred.user.uid;
+    const snap=await Store._getDoc(Store._userDoc(uid));
+    if(!snap.exists()){
+      if(cred.user.email===ADMIN_BOOTSTRAP_EMAIL){
+        await Store._setDoc(Store._userDoc(uid),{role:'admin',nama:'Admin',email:cred.user.email});
+        login('admin');return;
+      }
+      showAuthErr('Akun belum terdaftar di sistem. Hubungi Admin.');
+      await Store._signOut();return;
+    }
+    const data=snap.data();
+    const role=data.role;
+    if(!ROLES[role]){showAuthErr('Peran tidak valid. Hubungi Admin.');await Store._signOut();return;}
+    login(role);
+  }catch(e){
+    const msgs={'auth/user-not-found':'Email tidak ditemukan','auth/wrong-password':'Password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Email atau password salah'};
+    showAuthErr(msgs[e.code]||('Login gagal: '+e.code));
+  }finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}}
+}
+function showAuthErr(msg){const e=document.getElementById('auth-err');if(e){e.textContent=msg;e.style.display='block';}}
+function toggleAuthPass(){const i=document.getElementById('auth-pass');const ic=document.getElementById('auth-eye-icon');if(!i)return;if(i.type==='password'){i.type='text';if(ic)ic.className='ti ti-eye-off';}else{i.type='password';if(ic)ic.className='ti ti-eye';}}
 
 function buildThermalReceipt(inv){
   if(!inv)return;
