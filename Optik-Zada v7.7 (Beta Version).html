@@ -16,7 +16,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .topbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--topbar);display:flex;align-items:center;padding:0 16px 0 20px;z-index:300;box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
 .brand-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--gold2),var(--gold));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--navy);flex-shrink:0;overflow:hidden}
-.brand-logo-img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.brand-logo-img{width:100%;height:100%;object-fit:contain;border-radius:inherit}
 .brand-text b{display:block;font-size:15px;font-weight:800;color:#fff;letter-spacing:.5px;line-height:1.15}
 .brand-text span{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.8px;text-transform:uppercase}
 .sidebar{position:fixed;top:58px;left:0;width:220px;height:calc(100vh - 58px);background:var(--topbar);z-index:250;display:flex;flex-direction:column;padding:12px 8px;gap:2px;overflow-y:auto;overflow-x:hidden;transition:transform .25s cubic-bezier(.22,1,.36,1);scrollbar-width:none;border-right:1px solid rgba(255,255,255,.07)}
@@ -161,7 +161,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System</span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System</span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -499,10 +499,10 @@ function injectAuthUI(){
   .lb-orb{position:absolute;top:-80px;right:-80px;width:260px;height:260px;border-radius:50%;border:1.5px solid rgba(201,149,42,.12);pointer-events:none}
   .lb-orb::after{content:'';position:absolute;inset:36px;border-radius:50%;border:1.5px solid rgba(201,149,42,.08)}
   .lb-orb::before{content:'';position:absolute;inset:-36px;border-radius:50%;border:1px solid rgba(201,149,42,.06)}
-  .lb-logo-wrap{margin-bottom:24px;flex-shrink:0}
-  .lb-logo-img-card{background:#fff;border-radius:16px;padding:14px 18px;display:inline-block;box-shadow:0 8px 32px rgba(0,0,0,.25)}
-  .lb-logo-img-card img{width:140px;height:auto;display:block}
-  .lb-logo-fb{width:68px;height:68px;border-radius:20px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--navy);box-shadow:0 8px 28px rgba(201,149,42,.35)}
+  .lb-logo-wrap{margin-bottom:20px;flex-shrink:0}
+  .lb-logo-circle{width:96px;height:96px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.3),0 0 0 2.5px rgba(201,149,42,.4);overflow:hidden}
+  .lb-logo-circle img{width:100%;height:100%;object-fit:contain}
+  .lb-logo-fb{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--navy);box-shadow:0 8px 28px rgba(201,149,42,.35)}
   .lb-name{font-size:30px;font-weight:800;color:#fff;letter-spacing:4px;margin-bottom:8px;line-height:1.15}
   .lb-tagline{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:auto}
   .lb-divider{width:40px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:28px 0 20px;flex-shrink:0}
@@ -541,12 +541,12 @@ function injectAuthUI(){
     <div class="login-brand">
       <div class="lb-orb"></div>
       <div class="lb-logo-wrap">
-        <div class="lb-logo-img-card" id="lb-logo-card">
-          <img src="assets/logo.png" alt="Optik ZADA" onerror="document.getElementById('lb-logo-card').style.display='none';document.getElementById('lb-logo-fb').style.display='flex';document.getElementById('lb-name-text').style.display='block'">
+        <div class="lb-logo-circle" id="lb-logo-circle">
+          <img src="assets/logo-icon.png" alt="Optik ZADA" onerror="this.style.display='none';document.getElementById('lb-logo-circle').className='lb-logo-fb';document.getElementById('lb-eyeglass-fb').style.display='block'">
+          <i class="ti ti-eyeglass" id="lb-eyeglass-fb" style="display:none;font-size:38px;color:var(--navy)"></i>
         </div>
-        <div class="lb-logo-fb" id="lb-logo-fb" style="display:none"><i class="ti ti-eyeglass"></i></div>
       </div>
-      <div class="lb-name" id="lb-name-text" style="display:none">OPTIK<br>ZADA</div>
+      <div class="lb-name">OPTIK<br>ZADA</div>
       <div class="lb-tagline">Sistem Manajemen Toko Optik<br>yang cepat, rapi, dan efisien</div>
       <div class="lb-divider"></div>
       <div class="lb-info">
