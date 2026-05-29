@@ -760,8 +760,8 @@ function injectAuthUI(){
       <div class="lp-title">Masuk ke<br>sistem</div>
       <div class="lp-form">
         <div class="lp-field">
-          <label>Username / Email</label>
-          <input type="text" id="auth-email" placeholder="username atau email@..." autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()">
+          <label>Username</label>
+          <input type="text" id="auth-email" placeholder="username atau email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()">
         </div>
         <div class="lp-field">
           <label>Password</label>
@@ -1610,8 +1610,8 @@ async function doAuthLogin(){
   const errEl=document.getElementById('auth-err');if(errEl)errEl.style.display='none';
   let email=rawInput;
   if(!rawInput.includes('@')){
-    try{const uSnap=await Store._getDoc(Store._usernameDoc(rawInput.toLowerCase()));if(!uSnap.exists()){showAuthErr('Username tidak ditemukan');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}email=uSnap.data().email;}
-    catch(e){showAuthErr('Gagal mencari username. Periksa koneksi.');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}
+    try{const uSnap=await Store._getDoc(Store._usernameDoc(rawInput.toLowerCase()));if(!uSnap.exists()){showAuthErr('Username atau password salah');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}email=uSnap.data().email;}
+    catch(e){showAuthErr('Gagal terhubung ke server. Periksa koneksi.');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}
   }
   try{
     const cred=await Store._signIn(email,pass);
@@ -1645,8 +1645,8 @@ async function doAuthLogin(){
     currentUser={uid,nama:(data.nama&&data.nama.trim())||cred.user.email,email:cred.user.email,role};
     login(role);
   }catch(e){
-    const msgs={'auth/user-not-found':'Email tidak ditemukan','auth/wrong-password':'Password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Email atau password salah','auth/network-request-failed':'Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.'};
-    showAuthErr(msgs[e.code]||(e.message?'Login gagal: '+e.message:'Koneksi ke server gagal. Refresh halaman dan coba lagi.'));
+    const msgs={'auth/user-not-found':'Username atau password salah','auth/wrong-password':'Username atau password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Username atau password salah','auth/network-request-failed':'Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.'};
+    showAuthErr(msgs[e.code]||'Username atau password salah');
   }finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}}
 }
 function showAuthErr(msg){const e=document.getElementById('auth-err');if(e){e.removeAttribute('style');e.textContent=msg;e.style.display=msg?'block':'none';}}

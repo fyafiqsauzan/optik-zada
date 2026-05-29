@@ -19,8 +19,11 @@ service cloud.firestore {
     }
 
     // Username → email/uid reverse lookup for username-based login
+    // Public reads: diperlukan untuk lookup sebelum user authenticated (login flow)
+    // Write tetap require auth: hanya admin yang bisa tambah/ubah username
     match /usernames/{username} {
-      allow read, write: if request.auth != null;
+      allow read: if true;
+      allow write: if request.auth != null;
     }
   }
 }
