@@ -329,6 +329,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
     <div style="position:relative;flex:1;min-width:180px"><i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px"></i><input id="sh-q" placeholder="Cari nama / no invoice..." oninput="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px 9px 32px;font-size:13px;width:100%;background:var(--card);color:var(--text);outline:none;font-family:inherit"></div>
     <select id="sh-status" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit"><option value="">Semua Status</option><option value="lunas">Lunas</option><option value="dp">Belum Lunas (DP)</option></select>
     <select id="sh-pay" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;min-width:150px"><option value="">Semua Pembayaran</option><option>Tunai</option><option>QRIS</option><option>Transfer</option></select>
+    <select id="sh-month" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;min-width:140px"><option value="">Semua Bulan</option></select>
     <select id="sh-sort" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit"><option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="highest">Tertinggi</option><option value="lowest">Terendah</option></select>
   </div>
   <div class="card"><div class="tbl-wrap"><table><thead><tr><th>No.</th><th>Tanggal</th><th>Tgl Lunas</th><th>Customer</th><th>Tipe</th><th>Total</th><th>Status</th><th>Pembayaran</th><th class="no-print" id="h-aksi-th">Aksi</th></tr></thead><tbody id="h-tbody"></tbody></table><div id="h-empty" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Tidak ada transaksi</p></div></div>
@@ -396,7 +397,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.1</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.2</button></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
   <div class="card admin-only" id="user-mgmt-card" style="margin-bottom:16px">
@@ -438,7 +439,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.1 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.2 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -456,11 +457,24 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.1 -->
+      <!-- New in v8.2 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v8.1 Beta — Username Login & Cloud Upgrade</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.2 Beta — Filter Bulan & Monitor Data</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-calendar-search" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Filter Bulan di Riwayat</strong> — Pilih bulan/tahun tertentu untuk menyaring daftar invoice langsung dari halaman Riwayat</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-database" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Monitor Ukuran Data</strong> — Progress bar di Pengaturan menampilkan seberapa penuh penyimpanan Firestore (batas ~1 MB)</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Peringatan Otomatis</strong> — Notifikasi muncul saat data mendekati 700 KB (⚠️) atau melampaui 900 KB (🚨) agar selalu ingat backup</span></div>
+        </div>
+      </div>
+
+      <!-- v8.1 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.1</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Username Login & Cloud Upgrade</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-circle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Login via Username</strong> — Karyawan login pakai username (contoh: <code style="font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px">budi_kasir</code>) tanpa perlu ingat email</span></div>
@@ -800,10 +814,12 @@ function injectAuthUI(){
   document.querySelector('.top-right').prepend(badge);
 }
 
+function checkDataSize(){const sk=JSON.stringify(db).length/1024;if(sk>=900)toast(`🚨 Data kritis (${sk.toFixed(0)} KB/1000 KB) — SEGERA backup di Pengaturan!`,'e',9000);else if(sk>=700)toast(`⚠️ Data mendekati batas (${sk.toFixed(0)} KB/1000 KB) — segera backup`,'w',7000);}
 function login(role){
   currentRole=role;
   document.getElementById('login-ov').style.display='none';
   applyPermissions();
+  checkDataSize();
   const r=ROLES[role];
   const badge=document.getElementById('role-badge');
   badge.style.display='flex';
@@ -826,7 +842,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.1';
+const _RN_VERSION='8.2';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -1107,7 +1123,7 @@ document.getElementById('modal-content').innerHTML=buildReceipt(inv)+auditHtml;c
 // delInvoice() → hapus invoice dari db
 // ════════════════════════════════════════════════
 // HISTORY
-function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp)));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
+function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${inv.createdBy.nama}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
@@ -1278,7 +1294,7 @@ function fabAction(type){const m=document.getElementById('fab-menu');m.classList
 // clearTransactions(), resetAll(), exportCSV()
 // ════════════════════════════════════════════════
 // SETTINGS
-function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div><div>Ukuran data: <strong>${(size/1024).toFixed(1)} KB</strong></div><div style="margin-top:6px">${modeTxt}</div></div>`;
+function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Data hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';return`<div>Ukuran data: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>Batas: ~1 MB</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
   if(currentRole==='admin')loadUserList();}
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.click();toast('Backup diunduh');}
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}

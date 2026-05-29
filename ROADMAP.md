@@ -13,6 +13,7 @@
 | **v7.9 Beta** | ✅ Dirilis | Cashflow module (pengeluaran operasional, profit bersih, tutup buku) + bug fix layout |
 | **v8.0 Beta** | ✅ Dirilis | Critical: auth persistence + network error handling + bug fixes (double popup, item name, currency format, gelar, offline spinner) |
 | **v8.1 Beta** | ✅ Dirilis | Username login, auto-create Firebase Auth user, custom domain optik-zada.store, Blaze upgrade, Firebase CDN retry, security fixes |
+| **v8.2 Beta** | ✅ Dirilis | Filter bulan di Riwayat Transaksi, data size monitor dengan progress bar + peringatan otomatis 700KB/900KB |
 | **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
 | **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
@@ -95,8 +96,8 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 23 | Search & Filter Riwayat | Feature | v8.2 | Cari invoice by nama customer / nomor invoice. Saat ini hanya bisa scroll. |
-| 24 | Data Size Monitor + Warning | Monitoring | v8.2 | Firestore limit 1MB. Warning otomatis saat data mendekati 700KB di Settings. |
+| 23 | Search & Filter Riwayat | Feature | ✅ v8.2 | Filter bulan ditambah ke halaman Riwayat. Search nama/invoice + filter status/pembayaran/bulan/sort sudah lengkap. |
+| 24 | Data Size Monitor + Warning | Monitoring | ✅ v8.2 | Progress bar di Pengaturan + toast warning otomatis saat login jika data ≥700KB (⚠️) atau ≥900KB (🚨). |
 | 25 | Firebase Blaze Plan Setup | Infrastructure | ✅ v8.1 | Upgrade dari Spark free tier — aktif dengan GCP free trial credit Rp5.1jt s/d Agustus 2026. |
 | 32 | Custom Domain `optik-zada.store` | Infrastructure | ✅ v8.1 | Domain aktif, SSL auto-provisioned Firebase, authDomain diupdate di kode. |
 | 33 | Custom Email Sender `noreply@optik-zada.store` | Infrastructure | ✅ v8.1 | DNS records (SPF + DKIM) ditambahkan, verifikasi Firebase Auth email domain pending (max 48 jam). |
@@ -238,7 +239,9 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.1 | Infra: Firebase Blaze plan aktif (GCP free trial) + budget alert setup |
 | 29 Mei 2026 | v8.1 | Infra: Custom domain optik-zada.store live + authDomain diupdate |
 | 29 Mei 2026 | v8.1 | Infra: Custom email sender noreply@optik-zada.store — DNS records added, verifikasi pending |
+| 29 Mei 2026 | v8.2 | Feat: filter bulan di Riwayat Transaksi — dropdown otomatis berisi bulan yang ada datanya |
+| 29 Mei 2026 | v8.2 | Feat: data size monitor — progress bar + peringatan otomatis saat login jika data ≥700KB atau ≥900KB |
 
 ---
 
-*Last updated: 29 Mei 2026 · Optik Zada Management System v8.1 Beta*
+*Last updated: 29 Mei 2026 · Optik Zada Management System v8.2 Beta*
