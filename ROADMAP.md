@@ -99,6 +99,7 @@
 | 24 | Data Size Monitor + Warning | Monitoring | v8.1 | Firestore limit 1MB. Warning otomatis saat data mendekati 700KB di Settings. |
 | 25 | Firebase Blaze Plan Setup | Infrastructure | v8.1 | Upgrade dari Spark free tier — batas 50K reads/day bisa terkena tiba-tiba. |
 | B6 | **Auto-create Firebase Auth saat tambah karyawan** | Bug Fix | v8.1 | Admin tidak perlu buka Firebase Console lagi. `createUserWithEmailAndPassword()` + `updateCurrentUser()` untuk restore admin session. Karyawan terima email set-password otomatis. |
+| B7 | **Login pakai username** | Feature | v8.1 | Karyawan login pakai username pendek (contoh: `budi_kasir`) bukan email. Admin set username saat buat akun. Lookup via Firestore `usernames/{username}` → email → Firebase signIn. Email tetap ada untuk reset password. |
 
 ---
 
@@ -231,6 +232,7 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.0 | Hotfix: "Koneksi ke server belum siap" — _initFB() rewrite Promise.race 10s + injectAuthUI timeout 15s |
 | 29 Mei 2026 | v8.0 | Hotfix: _connectFirebase() refactor — retry 3x CDN import, handle duplicate-app, setPersistence try-catch |
 | 29 Mei 2026 | v8.1 | Fix: auto-create Firebase Auth saat admin tambah karyawan — tidak perlu Firebase Console lagi |
+| 29 Mei 2026 | v8.1 | Feat: login pakai username (karyawan tidak perlu ingat email) + Firestore usernames collection |
 
 ---
 
