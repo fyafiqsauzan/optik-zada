@@ -227,6 +227,7 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.0 | Auth persistence fix (item #21) + network error banner (item #22) |
 | 29 Mei 2026 | v8.0 | Bug fixes: double popup, item nama hilang, format rupiah, hapus Dr. |
 | 29 Mei 2026 | v8.0 | Hotfix: spinner macet saat offline (timeout 5s + _initFB timeout 8s) |
+| 29 Mei 2026 | v8.0 | Hotfix: "Koneksi ke server belum siap" — _initFB() rewrite Promise.race 10s + injectAuthUI timeout 15s |
 
 ---
 
