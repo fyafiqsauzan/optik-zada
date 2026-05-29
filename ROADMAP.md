@@ -12,9 +12,9 @@
 | **v7.8 Beta** | ✅ Dirilis | Week 1: Rx fields, audit log, karyawan lunaskan, reset PW, soft delete, pagination, CSV fix, CI/CD security rules, release notes |
 | **v7.9 Beta** | ✅ Dirilis | Cashflow module (pengeluaran operasional, profit bersih, tutup buku) + bug fix layout |
 | **v8.0 Beta** | ✅ Dirilis | Critical: auth persistence + network error handling + bug fixes (double popup, item name, currency format, gelar, offline spinner) |
-| **v8.1 Beta** | 📋 Planned | Search/filter riwayat, data size monitor, Firebase Blaze |
+| **v8.1 Beta** | ✅ Dirilis | Username login, auto-create Firebase Auth user, custom domain optik-zada.store, Blaze upgrade, Firebase CDN retry, security fixes |
 | **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
-| **v8.8 RC** | 📋 Planned | Polish: custom domain, mobile audit, email verification, laporan profit, print customization |
+| **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
 > **Skema:** patch (x.x.Y) = bugfix kecil · minor (x.Y.0) = fitur baru · major (Y.0.0) = perubahan arsitektur besar · RC = Release Candidate
@@ -95,11 +95,13 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 23 | Search & Filter Riwayat | Feature | v8.1 | Cari invoice by nama customer / nomor invoice. Saat ini hanya bisa scroll. |
-| 24 | Data Size Monitor + Warning | Monitoring | v8.1 | Firestore limit 1MB. Warning otomatis saat data mendekati 700KB di Settings. |
-| 25 | Firebase Blaze Plan Setup | Infrastructure | v8.1 | Upgrade dari Spark free tier — batas 50K reads/day bisa terkena tiba-tiba. |
-| B6 | **Auto-create Firebase Auth saat tambah karyawan** | Bug Fix | v8.1 | Admin tidak perlu buka Firebase Console lagi. `createUserWithEmailAndPassword()` + `updateCurrentUser()` untuk restore admin session. Karyawan terima email set-password otomatis. |
-| B7 | **Login pakai username** | Feature | v8.1 | Karyawan login pakai username pendek (contoh: `budi_kasir`) bukan email. Admin set username saat buat akun. Lookup via Firestore `usernames/{username}` → email → Firebase signIn. Email tetap ada untuk reset password. |
+| 23 | Search & Filter Riwayat | Feature | v8.2 | Cari invoice by nama customer / nomor invoice. Saat ini hanya bisa scroll. |
+| 24 | Data Size Monitor + Warning | Monitoring | v8.2 | Firestore limit 1MB. Warning otomatis saat data mendekati 700KB di Settings. |
+| 25 | Firebase Blaze Plan Setup | Infrastructure | ✅ v8.1 | Upgrade dari Spark free tier — aktif dengan GCP free trial credit Rp5.1jt s/d Agustus 2026. |
+| 32 | Custom Domain `optik-zada.store` | Infrastructure | ✅ v8.1 | Domain aktif, SSL auto-provisioned Firebase, authDomain diupdate di kode. |
+| 33 | Custom Email Sender `noreply@optik-zada.store` | Infrastructure | ✅ v8.1 | DNS records (SPF + DKIM) ditambahkan, verifikasi Firebase Auth email domain pending (max 48 jam). |
+| B6 | **Auto-create Firebase Auth saat tambah karyawan** | Bug Fix | ✅ v8.1 | Admin tidak perlu buka Firebase Console lagi. `createUserWithEmailAndPassword()` + `updateCurrentUser()` untuk restore admin session. Karyawan terima email set-password otomatis. |
+| B7 | **Login pakai username** | Feature | ✅ v8.1 | Karyawan login pakai username pendek (contoh: `budi_kasir`) bukan email. Admin set username saat buat akun. Lookup via Firestore `usernames/{username}` → email → Firebase signIn. Email tetap ada untuk reset password. |
 
 ---
 
@@ -233,6 +235,9 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.0 | Hotfix: _connectFirebase() refactor — retry 3x CDN import, handle duplicate-app, setPersistence try-catch |
 | 29 Mei 2026 | v8.1 | Fix: auto-create Firebase Auth saat admin tambah karyawan — tidak perlu Firebase Console lagi |
 | 29 Mei 2026 | v8.1 | Feat: login pakai username (karyawan tidak perlu ingat email) + Firestore usernames collection |
+| 29 Mei 2026 | v8.1 | Infra: Firebase Blaze plan aktif (GCP free trial) + budget alert setup |
+| 29 Mei 2026 | v8.1 | Infra: Custom domain optik-zada.store live + authDomain diupdate |
+| 29 Mei 2026 | v8.1 | Infra: Custom email sender noreply@optik-zada.store — DNS records added, verifikasi pending |
 
 ---
 
