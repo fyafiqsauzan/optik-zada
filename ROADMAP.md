@@ -14,6 +14,7 @@
 | **v8.0 Beta** | ✅ Dirilis | Critical: auth persistence + network error handling + bug fixes (double popup, item name, currency format, gelar, offline spinner) |
 | **v8.1 Beta** | ✅ Dirilis | Username login, auto-create Firebase Auth user, custom domain optik-zada.store, Blaze upgrade, Firebase CDN retry, security fixes |
 | **v8.2 Beta** | ✅ Dirilis | Filter bulan di Riwayat Transaksi, data size monitor dengan progress bar + peringatan otomatis 700KB/900KB |
+| **v8.3 Beta** | ✅ Dirilis | Badge emas "siap diambil" di sidebar (lewat tglSiap & belum lunas), password reset continue URL ke optik-zada.store |
 | **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
 | **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
@@ -119,8 +120,8 @@
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
 | 27 | Riwayat Resep per Customer | Feature | v8.2 | Customer → klik nama → lihat semua invoice + resep mata historis. Berguna untuk repeat customer. |
-| 28 | List DP Outstanding + WA Blast Reminder | Feature | v8.2 | Daftar semua DP belum lunas + tombol WA reminder ke masing-masing customer. |
-| 29 | Notif "Siap Diambil" — badge sidebar | Enhancement | v8.2 | Sekarang hanya banner pasif. Tambah badge count di sidebar untuk pesanan lewat tanggal siap ambil. |
+| 28 | List DP Outstanding + WA Blast Reminder | Feature | ⏭️ Skip | Sama konsepnya dengan tombol WA yang sudah ada di riwayat invoice. Tidak perlu duplikasi. |
+| 29 | Notif "Siap Diambil" — badge sidebar | Enhancement | ✅ v8.3 | Badge emas di sidebar Riwayat — hitung invoice DP yang sudah lewat tglSiap. Terpisah dari badge merah total DP. |
 | 30 | Print Nota Customization | Feature | v8.3 | Admin bisa edit nama toko, alamat, HP, footer struk dari Settings (saat ini hardcoded). |
 
 ---
@@ -241,7 +242,9 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.1 | Infra: Custom email sender noreply@optik-zada.store — DNS records added, verifikasi pending |
 | 29 Mei 2026 | v8.2 | Feat: filter bulan di Riwayat Transaksi — dropdown otomatis berisi bulan yang ada datanya |
 | 29 Mei 2026 | v8.2 | Feat: data size monitor — progress bar + peringatan otomatis saat login jika data ≥700KB atau ≥900KB |
+| 29 Mei 2026 | v8.3 | Feat: badge emas "siap diambil" di sidebar — count invoice DP lewat tglSiap, terpisah dari badge merah total DP |
+| 29 Mei 2026 | v8.3 | Fix: password reset continue URL → optik-zada.store (bukan firebaseapp.com) |
 
 ---
 
-*Last updated: 29 Mei 2026 · Optik Zada Management System v8.2 Beta*
+*Last updated: 29 Mei 2026 · Optik Zada Management System v8.3 Beta*

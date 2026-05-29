@@ -398,7 +398,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.2</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.3</button></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
   <div class="card admin-only" id="user-mgmt-card" style="margin-bottom:16px">
@@ -440,7 +440,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.2 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.3 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -458,11 +458,23 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.2 -->
+      <!-- New in v8.3 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v8.2 Beta — Filter Bulan & Monitor Data</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.3 Beta — Badge Siap Diambil & Fixes</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-clock-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Badge Siap Diambil</strong> — Badge emas di sidebar Riwayat menampilkan jumlah pesanan DP yang sudah lewat tanggal siap ambil — terpisah dari badge merah total DP</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-mail-forward" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Reset Password Redirect</strong> — Setelah reset password berhasil, user langsung diarahkan ke <strong>optik-zada.store</strong> bukan halaman Firebase</span></div>
+        </div>
+      </div>
+
+      <!-- v8.2 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.2</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Filter Bulan & Monitor Data</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-calendar-search" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Filter Bulan di Riwayat</strong> — Pilih bulan/tahun tertentu untuk menyaring daftar invoice langsung dari halaman Riwayat</span></div>
@@ -843,7 +855,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.2';
+const _RN_VERSION='8.3';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
