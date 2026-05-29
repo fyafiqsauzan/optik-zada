@@ -185,6 +185,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <button class="nl" onclick="showPage('settings',this)"><i class="ti ti-settings"></i>Pengaturan</button>
 </aside>
 <div id="toast-wrap"></div>
+<div id="offline-banner" class="no-print" style="display:none;position:fixed;top:58px;left:0;right:0;z-index:299;background:#991b1b;color:#fff;padding:8px 16px;font-size:13px;font-weight:600;align-items:center;justify-content:center;gap:8px;transform:translateY(-100%);transition:transform .25s ease"><i class="ti ti-wifi-off"></i> Koneksi terputus — perubahan mungkin belum tersimpan</div>
 <button id="scrtop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="ti ti-arrow-up"></i></button>
 <div class="main">
 
@@ -608,7 +609,7 @@ const Store={
   seedDB(){return{frames:JSON.parse(JSON.stringify(SEED.frames)),lensas:JSON.parse(JSON.stringify(SEED.lensas)),softlens:JSON.parse(JSON.stringify(SEED.softlens)),aksesoris:JSON.parse(JSON.stringify(SEED.aksesoris)),customers:JSON.parse(JSON.stringify(SEED.customers)),invoices:JSON.parse(JSON.stringify(SEED.invoices)),counter:SEED.invoices.length+1,expenses:[],closedMonths:[]}},
   async init(onRemote){this._onRemote=onRemote;return this.mode==='firebase'?await this._initFB():await this._initLocal()},
   async _initLocal(){try{const v=localStorage.getItem(STORAGE_KEY);if(v){db=JSON.parse(v);return true;}}catch(e){}db=this.seedDB();await this.save();return false},
-  async _initFB(){const a=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');const f=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');const au=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);const auth=au.getAuth(app);await au.setPersistence(auth,au.inMemoryPersistence);this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);return await new Promise(res=>{let first=true;f.onSnapshot(this._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(first){first=false;res(true);}else if(this._onRemote)this._onRemote();}else{db=this.seedDB();this.save();if(first){first=false;res(false);}}},err=>{if(first){first=false;db=this.seedDB();res(false);}});})},
+  async _initFB(){const a=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');const f=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');const au=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);const auth=au.getAuth(app);await au.setPersistence(auth,au.browserLocalStoragePersistence);this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);return await new Promise(res=>{let first=true;f.onSnapshot(this._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(first){first=false;res(true);}else if(this._onRemote)this._onRemote();}else{db=this.seedDB();this.save();if(first){first=false;res(false);}}},err=>{if(first){first=false;db=this.seedDB();res(false);}});})},
   async save(){if(this.mode==='firebase'&&this._docRef){try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}}else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}}
 };
 let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
@@ -625,9 +626,10 @@ function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
   if(!db.aksesoris)db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.invoices.forEach(inv=>{if(inv.items&&!inv.items.aksesoris)inv.items.aksesoris=[];});
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');if(_t==='dark'){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
-  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(user&&!currentRole){try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);}}}catch(e){}}})}
+  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{const _ac=document.getElementById('auth-checking');if(!user){if(_ac)_ac.style.display='none';return;}if(currentRole)return;try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);return;}}}catch(e){}if(_ac)_ac.style.display='none';})}
   window.addEventListener('scroll',()=>{document.getElementById('scrtop').style.display=window.scrollY>300?'flex':'none';});
   document.addEventListener('click',e=>{if(!e.target.closest('.ac-wrap'))document.getElementById('ac-drop').style.display='none';if(!e.target.closest('.top-search'))document.getElementById('gs-drop').style.display='none';});
+  _initNetworkBanner();
   toast((had?'Data dimuat':'Data awal disiapkan')+' · '+(Store.mode==='firebase'?'Cloud':'Lokal'),'i',2800);
 })();
 
@@ -662,7 +664,10 @@ function injectAuthUI(){
   .lb-info{display:flex;flex-direction:column;gap:10px}
   .lb-info-row{display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(255,255,255,.45)}
   .lb-info-row i{font-size:14px;color:var(--gold);opacity:.8;flex-shrink:0}
-  .login-panel{flex:1;background:var(--card);padding:52px 44px;display:flex;flex-direction:column;justify-content:center}
+  .login-panel{flex:1;background:var(--card);padding:52px 44px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+  #auth-checking{position:absolute;inset:0;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5}
+  #auth-checking .ac-spin{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+  #auth-checking .ac-txt{font-size:13px;color:var(--muted)}
   .lp-eyebrow{font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
   .lp-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:28px;line-height:1.3}
   .role-card{display:flex;align-items:center;gap:14px;padding:16px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;margin-bottom:10px;text-align:left}
@@ -709,6 +714,7 @@ function injectAuthUI(){
       </div>
     </div>
     <div class="login-panel">
+      <div id="auth-checking"><div class="ac-spin"></div><div class="ac-txt">Memeriksa sesi aktif...</div></div>
       <div class="lp-eyebrow">Selamat Datang</div>
       <div class="lp-title">Masuk ke<br>sistem</div>
       <div class="lp-form">
@@ -1671,6 +1677,20 @@ function startSessionWatch(){
 function stopSessionWatch(){
   clearTimeout(_sTimer);clearTimeout(_sWarn);
   _SESS_EVS.forEach(ev=>document.removeEventListener(ev,resetSessionTimer));
+}
+
+function _initNetworkBanner(){
+  const b=document.getElementById('offline-banner');
+  if(!b)return;
+  function goOffline(){b.style.display='flex';requestAnimationFrame(()=>{requestAnimationFrame(()=>b.style.transform='translateY(0)');});}
+  function goOnline(){
+    b.innerHTML='<i class="ti ti-wifi"></i> Terhubung kembali';
+    b.style.background='#15803d';
+    setTimeout(()=>{b.style.transform='translateY(-100%)';setTimeout(()=>{b.style.display='none';b.style.background='#991b1b';b.innerHTML='<i class="ti ti-wifi-off"></i> Koneksi terputus — perubahan mungkin belum tersimpan';},280);},2200);
+  }
+  if(!navigator.onLine)goOffline();
+  window.addEventListener('offline',goOffline);
+  window.addEventListener('online',goOnline);
 }
 
 async function cancelPendingUser(key){
