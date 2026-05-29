@@ -738,6 +738,7 @@ function injectAuthUI(){
     </div>
   </div>`;
   document.body.appendChild(ov);
+  setTimeout(()=>{const _ac=document.getElementById('auth-checking');if(_ac&&_ac.style.display!=='none')_ac.style.display='none';},5000);
   const badge=document.createElement('div');badge.id='role-badge';badge.className='role-badge';
   document.querySelector('.top-right').prepend(badge);
 }
