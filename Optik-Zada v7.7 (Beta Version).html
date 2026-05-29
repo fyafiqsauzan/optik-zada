@@ -398,7 +398,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.4</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.5</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
@@ -420,6 +420,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       </div>
     </div>
   </div>
+  <div class="card admin-only" id="migrate-card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database-export"></i> Migrasi Struktur Data <span style="font-size:10px;font-weight:800;background:var(--gold);color:#000;padding:1px 7px;border-radius:20px;margin-left:6px;letter-spacing:.3px">v8.5</span></div><div id="migrate-info" style="font-size:13px;color:var(--muted);margin-bottom:12px">Memeriksa status...</div><div id="migrate-actions"></div></div>
   <div class="card" style="border-color:#f5d782"><div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Hapus transaksi atau reset semua data. Backup dulu!</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm admin-only" onclick="showArchivedInvoices()"><i class="ti ti-archive"></i> Lihat Invoice Terhapus</button><button class="btn btn-outline btn-sm admin-only" onclick="seedMasterData()" style="border-color:var(--warn);color:var(--warn)"><i class="ti ti-database-import"></i> Reset Master Data & Customer</button><button class="btn btn-danger btn-sm" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Semua Transaksi</button><button class="btn btn-danger btn-sm" onclick="resetAll()"><i class="ti ti-alert-octagon"></i> Reset Semua Data</button></div></div>
 </div>
 
@@ -441,7 +442,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.4 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.5 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -459,11 +460,24 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.4 -->
+      <!-- New in v8.5 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v8.4 Beta — Info Toko Dinamis</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.5 Beta — Firestore Per-Dokumen</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-database-export" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Struktur Per-Dokumen</strong> — Setiap invoice kini disimpan sebagai dokumen Firestore terpisah (<code style="font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px">invoices/{id}</code>). Batas 1 MB tidak berlaku lagi!</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-settings-automation" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Migrasi Satu Klik</strong> — Kartu migrasi di Pengaturan memandu perpindahan dari struktur lama ke baru. Backup dulu, lalu klik Mulai Migrasi</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Backward Compatible</strong> — Aplikasi berjalan normal di kedua struktur. Sebelum migrasi, tetap pakai blob lama; setelah migrasi, otomatis pakai struktur baru</span></div>
+        </div>
+      </div>
+
+      <!-- v8.4 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.4</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Info Toko Dinamis</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-building-store" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Info Toko dari Pengaturan</strong> — Nama toko, alamat, kota, HP, jam operasional, dan footer struk kini bisa diedit langsung dari halaman Pengaturan (Admin)</span></div>
@@ -691,7 +705,7 @@ const Store={
       const app=(a.getApps&&a.getApps().length)?a.getApp():a.initializeApp(FIREBASE_CONFIG);
       const fdb=f.getFirestore(app);const auth=au.getAuth(app);
       try{await au.setPersistence(auth,au.browserLocalStoragePersistence);}catch(e){}
-      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email,{url:'https://optik-zada.store',handleCodeInApp:false});this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._usernameDoc=(uname)=>f.doc(fdb,'usernames',uname);this._fbSnap=f.onSnapshot;
+      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email,{url:'https://optik-zada.store',handleCodeInApp:false});this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._usernameDoc=(uname)=>f.doc(fdb,'usernames',uname);this._fbSnap=f.onSnapshot;this._configRef=f.doc(fdb,'optik-zada','config');this._metaRef=f.doc(fdb,'optik-zada','meta');this._invoicesCol=f.collection(fdb,'invoices');this._invDoc=(id)=>f.doc(fdb,'invoices',String(id));
       return true;
     }catch(e){return false;}
   },
@@ -702,12 +716,41 @@ const Store={
     const _core=async()=>{
       const ok=await _self._connectFirebase();
       if(!ok){db=_self.seedDB();return false;}
-      return await new Promise(res=>{_self._fbSnap(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}});});
+      let migrated=false;
+      try{const m=await _self._getDoc(_self._metaRef);migrated=m.exists()&&m.data().migrated===true;}catch(e){}
+      if(migrated){_self._migrated=true;return await _self._loadNewStructure();}
+      return await new Promise(res=>{_self._fbSnap(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}else if(_self._onRemote)_self._onRemote();}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}});});
     };
     const result=await Promise.race([_core().then(r=>{_resolved=true;return r;}),_fallback]);
     return result;
   },
-  async save(){if(this.mode==='firebase'&&this._docRef){try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}}else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}}
+  async _loadNewStructure(){
+    const _self=this;
+    try{
+      const[cfgSnap,invSnap]=await Promise.all([_self._getDoc(_self._configRef),_self._getDocs(_self._invoicesCol)]);
+      if(cfgSnap.exists()){const c=Object.assign({},cfgSnap.data());delete c.updatedAt;Object.assign(db,c);}else{db=_self.seedDB();await _self.save();}
+      db.invoices=[];invSnap.forEach(d=>db.invoices.push(d.data()));db.invoices.sort((a,b)=>(b.ts||0)-(a.ts||0));
+    }catch(e){db=_self.seedDB();return false;}
+    let _firstCfg=true;
+    _self._fbSnap(_self._configRef,async snap=>{
+      if(_firstCfg){_firstCfg=false;return;}
+      if(snap.metadata.hasPendingWrites)return;
+      if(!snap.exists())return;
+      const c=Object.assign({},snap.data());delete c.updatedAt;Object.assign(db,c);
+      try{const is=await _self._getDocs(_self._invoicesCol);db.invoices=[];is.forEach(d=>db.invoices.push(d.data()));db.invoices.sort((a,b)=>(b.ts||0)-(a.ts||0));}catch(e){}
+      if(_self._onRemote)_self._onRemote();
+    });
+    return true;
+  },
+  async save(){
+    if(this.mode==='firebase'){
+      if(this._migrated&&this._configRef){
+        try{const{invoices:_i,...cfg}=db;await this._setDoc(this._configRef,{...cfg,updatedAt:this._serverTs()});}catch(e){}
+      }else if(this._docRef){
+        try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}
+      }
+    }else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}
+  }
 };
 let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
 let _histPage=1;const HIST_PER=25;
@@ -870,7 +913,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.4';
+const _RN_VERSION='8.5';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -1063,7 +1106,7 @@ if(currentRole==='admin'&&all.some(x=>!(x.modal>0))){toast('Ada item tanpa harga
 cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});
 const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}`:pay;
 const ro=getRO();const _invNo='INV-'+String(db.counter).padStart(4,'0');document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
-db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
+db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
 
 
 // ════════════════════════════════════════════════
@@ -1121,6 +1164,7 @@ function doLunas(id){
   inv.lunasAmount=inv.sisa;inv.payStatus='lunas';inv.sisa=0;
   inv.lunasDate=lunasDateFormatted;inv.lunasPay=payLunas;inv.lunasTs=Date.now();
   inv.lunasBy=currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null;
+  if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});
   closeModal();renderHistory();renderDashboard();persist();updateDPBadge();toast('Invoice '+inv.no+' LUNAS via '+payLunas+'!','s');
 }
 
@@ -1156,9 +1200,9 @@ document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
 const _pgEl=document.getElementById('h-pagination');if(_pgEl){if(_pgTotal>1){let _ph='';if(_histPage>1)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage--;renderHistory()"><i class="ti ti-chevron-left"></i></button>';_ph+='<span style="font-size:12px;color:var(--muted);padding:0 8px">Hal '+_histPage+' / '+_pgTotal+' &nbsp;&#xb7;&nbsp; '+arr.length+' transaksi</span>';if(_histPage<_pgTotal)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage++;renderHistory()"><i class="ti ti-chevron-right"></i></button>';_pgEl.innerHTML=_ph;}else _pgEl.innerHTML='';}const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=currentRole==='admin'?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
-function delInvoice(id){if(!confirm('Arsipkan invoice ini? Invoice bisa dipulihkan dari Settings.'))return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();}closeModal();renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
+function delInvoice(id){if(!confirm('Arsipkan invoice ini? Invoice bisa dipulihkan dari Settings.'))return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(()=>{});}closeModal();renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
 function showArchivedInvoices(){const deleted=db.invoices.filter(x=>x.deletedAt).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));document.getElementById('modal-content').innerHTML='<div class="modal-title"><i class="ti ti-archive"></i> Invoice Terhapus ('+deleted.length+')</div>'+(deleted.length?deleted.map(inv=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600">'+inv.no+' — '+inv.customer+'</div><div style="font-size:11px;color:var(--muted)">'+inv.tanggal+' · '+fmt(inv.tot)+' · '+inv.pay+'</div></div><button class="btn btn-success btn-xs" onclick="restoreInvoice('+inv.id+')"><i class="ti ti-refresh"></i> Pulihkan</button></div>').join(''):'<div class="empty" style="padding:24px"><i class="ti ti-check-circle" style="font-size:32px;color:var(--success)"></i><p>Tidak ada invoice terhapus</p></div>');document.getElementById('modal-actions').innerHTML='<button class="btn btn-outline" onclick="closeModal()">Tutup</button>';document.getElementById('modal').style.display='flex';}
-function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
+function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
 
 
 // ════════════════════════════════════════════════
@@ -1324,6 +1368,12 @@ function fabAction(type){const m=document.getElementById('fab-menu');m.classList
 // SETTINGS
 function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Data hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';return`<div>Ukuran data: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>Batas: ~1 MB</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
   const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});
+  const miInfo=document.getElementById('migrate-info');const miAct=document.getElementById('migrate-actions');
+  if(miInfo&&miAct){
+    if(Store.mode!=='firebase'){miInfo.textContent='Hanya tersedia di mode Firebase.';miAct.innerHTML='';}
+    else if(Store._migrated){miInfo.innerHTML='<span style="color:var(--success)"><i class="ti ti-check-circle"></i> Struktur v8.5 aktif — setiap invoice tersimpan sebagai dokumen terpisah. Batas 1 MB tidak berlaku lagi.</span>';miAct.innerHTML='';}
+    else{miInfo.innerHTML='Saat ini semua data tersimpan dalam <strong>satu blob JSON</strong> di Firestore (batas 1 MB). Migrasi ke struktur per-dokumen menghilangkan batas tersebut.<br><strong style="color:var(--warn)">Backup data dulu sebelum migrasi!</strong>';miAct.innerHTML='<button class="btn btn-primary btn-sm" id="migrate-btn" onclick="migrateToV2()"><i class="ti ti-database-export"></i> Mulai Migrasi</button><span id="migrate-status" style="font-size:12px;color:var(--muted);margin-left:10px"></span>';}
+  }
   if(currentRole==='admin')loadUserList();}
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.click();toast('Backup diunduh');}
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
@@ -1339,6 +1389,25 @@ function seedMasterData(){
 }
 function clearTransactions(){if(!confirm('Hapus SEMUA transaksi?'))return;db.invoices=[];db.counter=1;persist();renderSettings();renderDashboard();toast('Transaksi dihapus','w');}
 function resetAll(){if(!confirm('RESET SEMUA DATA?'))return;db=Store.seedDB();persist();renderSettings();renderDashboard();toast('Data direset','w');}
+async function migrateToV2(){
+  if(Store._migrated||Store.mode!=='firebase'||!Store._configRef||!Store._metaRef||!Store._invDoc||!Store._setDoc){toast('Migrasi tidak tersedia','e');return;}
+  if(!confirm('Migrasi struktur data ke v8.5?\n\nPastikan backup sudah diunduh.\nProses ini tidak bisa dibalik.'))return;
+  const btn=document.getElementById('migrate-btn');const st=document.getElementById('migrate-status');
+  if(btn)btn.disabled=true;if(st)st.textContent='Memigrasikan...';
+  try{
+    const{invoices:_inv,...cfgData}=db;
+    await Store._setDoc(Store._configRef,{...cfgData,updatedAt:Store._serverTs()});
+    const writes=(db.invoices||[]).map(inv=>Store._setDoc(Store._invDoc(inv.id),inv));
+    await Promise.all(writes);
+    await Store._setDoc(Store._metaRef,{migrated:true,migratedAt:Store._serverTs()});
+    Store._migrated=true;
+    renderSettings();toast('Migrasi v8.5 selesai! Invoice per-dokumen aktif','s',5000);
+  }catch(e){
+    if(st)st.textContent='Gagal: '+e.message;
+    if(btn)btn.disabled=false;
+    toast('Migrasi gagal: '+e.message,'e',5000);
+  }
+}
 function exportCSV(){if(!activeInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(T)','Dm.B(L)','DBL','TP','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.tp||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
 
 

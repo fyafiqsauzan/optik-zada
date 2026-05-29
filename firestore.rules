@@ -25,5 +25,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
+
+    // v8.5: per-document invoice storage — authenticated users only
+    match /invoices/{invId} {
+      allow read, write: if request.auth != null;
+    }
   }
 }

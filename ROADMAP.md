@@ -16,7 +16,7 @@
 | **v8.2 Beta** | ✅ Dirilis | Filter bulan di Riwayat Transaksi, data size monitor dengan progress bar + peringatan otomatis 700KB/900KB |
 | **v8.3 Beta** | ✅ Dirilis | Badge emas "siap diambil" di sidebar (lewat tglSiap & belum lunas), password reset continue URL ke optik-zada.store |
 | **v8.4 Beta** | ✅ Dirilis | Info toko dinamis dari Pengaturan (nama, alamat, HP, jam, footer) — struk, print thermal, WA otomatis update |
-| **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
+| **v8.5 Beta** | ✅ Dirilis | Firestore per-document restructure — invoices/{id}, backward-compat migration UI |
 | **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -114,7 +114,7 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 26 | **Firestore Per-Document Restructure** | Major / Architectural | v8.5 | Seluruh data disimpan sebagai 1 JSON string — hard limit 1MB. Estimasi meledak dalam ~8–10 bulan production. Restructure ke `invoices/{id}`, `products/{id}`, `customers/{id}`, `expenses/{id}` sebagai dokumen terpisah. Butuh migrasi data + testing menyeluruh. |
+| 26 | **Firestore Per-Document Restructure** | Major / Architectural | ✅ v8.5 | Setiap invoice disimpan sebagai dokumen `invoices/{id}` terpisah. Config (produk, customer, toko, dll) di `optik-zada/config`. Migration flag di `optik-zada/meta`. Migrasi satu klik dari Pengaturan (Admin). Backward-compatible — app tetap jalan di struktur lama sampai migrasi dijalankan. |
 
 ### 🟡 MEDIUM
 
@@ -250,4 +250,4 @@ Setiap ada tambahan request dari client atau fixing selesai:
 
 ---
 
-*Last updated: 29 Mei 2026 · Optik Zada Management System v8.4 Beta*
+*Last updated: 29 Mei 2026 · Optik Zada Management System v8.5 Beta*
