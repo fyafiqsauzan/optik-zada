@@ -115,8 +115,8 @@
 ---
 
 ## 💰 Detail: Modul Cashflow & Pengeluaran Toko (Item #21)
-> Status: **✅ Spesifikasi Dikonfirmasi — Siap Dikerjakan**
-> Scope: Major new module · Admin + Karyawan (akses terbatas)
+> Status: **✅ Spesifikasi Final — Siap Dikerjakan**
+> Scope: Major new module · Admin (full) + Karyawan (input + view harian)
 
 ### Latar Belakang
 Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memonitor tidak hanya pemasukan dari penjualan, tapi juga seluruh pengeluaran operasional toko — agar angka profit yang terlihat di dashboard benar-benar mencerminkan kondisi keuangan toko secara keseluruhan.
@@ -150,10 +150,10 @@ Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memon
 - Breakdown per kategori (nominal + persentase dari total pengeluaran)
 - Export CSV pengeluaran bulanan
 
-#### C. Halaman Cashflow — Karyawan ⚠️ (1 item pending)
-- Karyawan **hanya bisa lihat pengeluaran hari ini** (tidak ada summary bulanan / profit)
-- Karyawan **tidak bisa lihat** profit bersih, laporan historis, atau breakdown kategori
-- Apakah karyawan bisa **input** pengeluaran? → **Menunggu konfirmasi client**
+#### C. Halaman Cashflow — Karyawan ✅
+- Karyawan **bisa input** pengeluaran (semua 6 kategori tersedia)
+- Karyawan **hanya bisa lihat pengeluaran hari ini** — tidak ada summary bulanan, profit bersih, atau riwayat historis
+- Form input sama dengan admin, tapi tampilan list dibatasi hanya hari ini
 
 #### D. Fitur Tutup Buku Bulanan (Manual)
 - Admin klik "Tutup Buku" untuk bulan tertentu → snapshot disimpan sebagai laporan final
@@ -187,14 +187,14 @@ db.closedMonths[] = [
 ]
 ```
 
-### Hal yang Perlu Dikonfirmasi ke Client
+### Checklist Konfirmasi Client (✅ Semua Selesai)
 - [x] Kategori pengeluaran apa saja? ✅ 6 kategori final (tagihan lensa & restock frame dihapus — sudah HPP)
 - [x] Apakah karyawan bisa lihat pengeluaran? ✅ Lihat pengeluaran harian saja
 - [x] Perlu fitur "tutup buku"? ✅ Ya, manual per bulan
 - [x] Nominal gaji preset atau manual? ✅ Input manual
 - [x] Riwayat per jenis atau total saja? ✅ Tampil satu per satu
 - [x] Tagihan Lensa & Restock Frame = HPP atau pengeluaran terpisah? ✅ Sudah HPP — pakai **Skenario B**
-- [ ] Apakah karyawan bisa **input** pengeluaran, atau hanya bisa lihat?
+- [x] Apakah karyawan bisa input pengeluaran? ✅ Ya, bisa input — tapi view hanya hari ini
 
 ### Estimasi Kompleksitas
 - UI: halaman baru "Cashflow" di sidebar (icon: `ti-wallet`) + integrasi ke Laporan
@@ -235,3 +235,4 @@ Setiap ada tambahan request dari client atau kebutuhan baru:
 | 28 Mei 2026 | Tambah item #21 Cashflow & Pengeluaran Toko (request client) |
 | 29 Mei 2026 | Update #21 — semua spesifikasi dikonfirmasi client; 2 pertanyaan open tersisa |
 | 29 Mei 2026 | Update #21 — Skenario B confirmed; hapus Tagihan Lensa & Restock Frame dari kategori (sudah HPP); 1 pertanyaan tersisa |
+| 29 Mei 2026 | Update #21 — Semua checklist selesai; karyawan bisa input + view harian; spesifikasi final |
