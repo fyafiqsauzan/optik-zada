@@ -619,7 +619,7 @@ let cart={frame:[],lensa:[],softlens:[],aksesoris:[]};
 let pay='',bank='',darkMode=false,isDP=false;
 const STORAGE_KEY='optik_zada_db';
 const USE_FIREBASE=true;
-const FIREBASE_CONFIG={apiKey:"AIzaSyDEIar7pSANo_09J1AiDENxNDxzB3dSMA4",authDomain:"optik-zada1127.firebaseapp.com",projectId:"optik-zada1127",storageBucket:"optik-zada1127.firebasestorage.app",messagingSenderId:"65150928401",appId:"1:65150928401:web:2abaf2fd2b22b4407fd3b0"};
+const FIREBASE_CONFIG={apiKey:"AIzaSyDEIar7pSANo_09J1AiDENxNDxzB3dSMA4",authDomain:"optik-zada.store",projectId:"optik-zada1127",storageBucket:"optik-zada1127.firebasestorage.app",messagingSenderId:"65150928401",appId:"1:65150928401:web:2abaf2fd2b22b4407fd3b0"};
 const Store={
   mode:USE_FIREBASE?'firebase':'local',_docRef:null,_setDoc:null,_serverTs:null,_onRemote:null,
   seedDB(){return{frames:JSON.parse(JSON.stringify(SEED.frames)),lensas:JSON.parse(JSON.stringify(SEED.lensas)),softlens:JSON.parse(JSON.stringify(SEED.softlens)),aksesoris:JSON.parse(JSON.stringify(SEED.aksesoris)),customers:JSON.parse(JSON.stringify(SEED.customers)),invoices:JSON.parse(JSON.stringify(SEED.invoices)),counter:SEED.invoices.length+1,expenses:[],closedMonths:[]}},
