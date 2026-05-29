@@ -115,47 +115,91 @@
 ---
 
 ## 💰 Detail: Modul Cashflow & Pengeluaran Toko (Item #21)
-> Status: **Planned — Menunggu detail lengkap dari client**
-> Scope: Major new module, admin-only
+> Status: **✅ Spesifikasi Dikonfirmasi — Siap Dikerjakan**
+> Scope: Major new module · Admin + Karyawan (akses terbatas)
 
 ### Latar Belakang
 Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memonitor tidak hanya pemasukan dari penjualan, tapi juga seluruh pengeluaran operasional toko — agar angka profit yang terlihat di dashboard benar-benar mencerminkan kondisi keuangan toko secara keseluruhan.
 
-### Fitur yang Direncanakan
+### Kategori Pengeluaran (✅ Dikonfirmasi Client)
 
-#### Catat Pengeluaran
-- Input manual pengeluaran dengan kategori (contoh awal):
-  - 🍱 Makan karyawan / konsumsi
-  - 👤 Gaji karyawan tetap
-  - 👨‍👩‍👧 Gaji anggota keluarga / staff keluarga
-  - 📦 Restok produk / modal barang
-  - 🔧 Operasional (listrik, air, sewa, dll.)
-  - ⚡ Pengeluaran tak terduga / lain-lain
-- Field: tanggal, kategori, nominal, keterangan (opsional), dicatat oleh siapa
+| Kategori | Kode |
+|----------|------|
+| ⚡ Biaya Listrik Toko | `listrik` |
+| 📶 Biaya WiFi | `wifi` |
+| 👤 Biaya Gaji Karyawan | `gaji_karyawan` |
+| 🔭 Biaya Tagihan Lensa | `tagihan_lensa` |
+| 🖼️ Biaya Restock Frame | `restock_frame` |
+| 🏠 Biaya Sewa Ruko | `sewa` |
+| 📉 Biaya Penyusutan Etalase | `penyusutan` |
+| 📝 Lain-lain | `lainnya` |
 
-#### Dashboard Cashflow (Admin Only)
-- **Ringkasan bulan ini**: Kas Masuk (omzet) vs Total Pengeluaran → **Net Cash / Profit Bersih**
-- Grafik bar/line: pemasukan vs pengeluaran per hari atau per minggu
-- Tabel pengeluaran terbaru (bisa filter by kategori & periode)
-- Breakdown pengeluaran per kategori (pie chart atau list dengan persentase)
+### Spesifikasi Fitur (✅ Semua Dikonfirmasi)
 
-#### Integrasi dengan Laporan Existing
-- Halaman Laporan saat ini menampilkan Omzet & Profit kotor (dari selisih harga jual - modal produk)
-- Setelah modul ini: tambah kolom **"Pengeluaran Operasional"** dan **"Profit Bersih"** yang sudah dikurangi semua pengeluaran
-- Export CSV laporan bisa include data pengeluaran
+#### A. Form Input Pengeluaran
+- Tanggal, kategori (dropdown), nominal, keterangan (opsional), otomatis tercatat nama user yang input
+- Riwayat setiap jenis pengeluaran ditampilkan **satu per satu** (bukan hanya total)
+- Nominal gaji: **input manual** setiap kali (tidak ada preset/template)
+
+#### B. Halaman Cashflow — Admin
+- **Ringkasan bulan ini**: Kas Masuk (omzet dari invoice) vs Total Pengeluaran → **Net Profit Bersih**
+- Grafik pemasukan vs pengeluaran per hari/minggu
+- Tabel riwayat pengeluaran lengkap: filter by kategori & periode, tampil satu per satu
+- Breakdown pengeluaran per kategori (nominal + persentase)
+- Export CSV pengeluaran
+
+#### C. Halaman Cashflow — Karyawan (akses terbatas)
+- Karyawan **hanya bisa lihat pengeluaran hari ini** (tanpa nominal kumulatif / summary bulanan)
+- Karyawan tidak bisa lihat data profit bersih atau laporan historis
+- Karyawan tetap bisa catat pengeluaran (misal: input biaya makan harian)
+
+#### D. Fitur Tutup Buku Bulanan (Manual)
+- Admin bisa "tutup buku" per bulan: snapshot ringkasan bulan tersebut disimpan sebagai laporan bulanan final
+- Setelah tutup buku, data bulan itu terkunci (tidak bisa diedit), hanya bisa dilihat
+- Daftar laporan bulanan yang sudah ditutup tersimpan dan bisa diakses kapan saja
+
+#### E. Integrasi ke Laporan Existing
+- Halaman Laporan tambah kolom **"Total Pengeluaran"** dan **"Profit Bersih"** di samping Omzet & Profit Kotor
+- Profit Bersih = Omzet − Modal Produk − Pengeluaran Operasional
+- Export CSV laporan bulanan include data pengeluaran
+
+### Struktur Data
+```
+db.expenses[] = [
+  {
+    id: timestamp,
+    tanggal: "YYYY-MM-DD",
+    kategori: "gaji_karyawan",   // kode kategori
+    nominal: 2500000,
+    ket: "Gaji Budi bulan Mei",  // opsional
+    createdBy: { uid, nama }
+  }
+]
+
+db.closedMonths[] = [
+  {
+    monthKey: "2026-05",
+    closedAt: timestamp,
+    closedBy: { uid, nama },
+    snapshot: { omzet, pengeluaran, profitBersih, breakdown: {...} }
+  }
+]
+```
 
 ### Hal yang Perlu Dikonfirmasi ke Client
-- [ ] Kategori pengeluaran apa saja yang dipakai (list lengkap)?
-- [ ] Apakah karyawan bisa lihat pengeluaran, atau admin-only?
-- [ ] Apakah perlu fitur "tutup buku" per bulan?
-- [ ] Apakah nominal gaji bersifat tetap (bisa preset) atau selalu input manual?
-- [ ] Apakah perlu riwayat gajian per karyawan, atau cukup total saja?
+- [x] Kategori pengeluaran apa saja yang dipakai? ✅ 7 kategori + lainnya
+- [x] Apakah karyawan bisa lihat pengeluaran, atau admin-only? ✅ Karyawan lihat pengeluaran harian saja
+- [x] Apakah perlu fitur "tutup buku" per bulan? ✅ Ya, manual
+- [x] Apakah nominal gaji bersifat tetap atau selalu input manual? ✅ Input manual
+- [x] Apakah perlu riwayat per jenis pengeluaran atau cukup total? ✅ Tampil satu per satu per jenis
+- [ ] Apakah karyawan bisa **input** pengeluaran, atau hanya admin?
+- [ ] Apakah "Biaya Tagihan Lensa" dan "Biaya Restock Frame" dianggap sebagai HPP (sudah masuk modal produk) atau pengeluaran terpisah?
 
 ### Estimasi Kompleksitas
-- UI: halaman baru "Cashflow" di sidebar (admin only) + integrasi ke Laporan
-- Data: kolom baru `db.expenses[]` dengan struktur `{id, tanggal, kategori, nominal, ket, createdBy}`
-- Setelah Firestore restructure (#15), expenses juga jadi collection terpisah `expenses/{id}`
-- Estimasi waktu pengerjaan setelah detail dari client lengkap: **3–5 hari kerja**
+- UI: halaman baru "Cashflow" di sidebar (icon: `ti-wallet`) + integrasi ke Laporan
+- Data: `db.expenses[]` + `db.closedMonths[]`
+- Setelah Firestore restructure (#15): expenses dan closedMonths jadi collection terpisah
+- **Estimasi pengerjaan: 4–6 hari kerja** (termasuk tutup buku + integrasi laporan)
 
 ---
 
@@ -188,3 +232,4 @@ Setiap ada tambahan request dari client atau kebutuhan baru:
 |---------|-----------|
 | 28 Mei 2026 | Roadmap dibuat — 28 item + 5 launch checklist |
 | 28 Mei 2026 | Tambah item #21 Cashflow & Pengeluaran Toko (request client) |
+| 29 Mei 2026 | Update #21 — semua spesifikasi dikonfirmasi client; 2 pertanyaan open tersisa |
