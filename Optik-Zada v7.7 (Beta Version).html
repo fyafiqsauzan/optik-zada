@@ -624,18 +624,27 @@ const Store={
   seedDB(){return{frames:JSON.parse(JSON.stringify(SEED.frames)),lensas:JSON.parse(JSON.stringify(SEED.lensas)),softlens:JSON.parse(JSON.stringify(SEED.softlens)),aksesoris:JSON.parse(JSON.stringify(SEED.aksesoris)),customers:JSON.parse(JSON.stringify(SEED.customers)),invoices:JSON.parse(JSON.stringify(SEED.invoices)),counter:SEED.invoices.length+1,expenses:[],closedMonths:[]}},
   async init(onRemote){this._onRemote=onRemote;return this.mode==='firebase'?await this._initFB():await this._initLocal()},
   async _initLocal(){try{const v=localStorage.getItem(STORAGE_KEY);if(v){db=JSON.parse(v);return true;}}catch(e){}db=this.seedDB();await this.save();return false},
+  async _connectFirebase(){
+    if(this._signIn)return true;
+    let a,f,au;
+    try{[a,f,au]=await Promise.all([import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'),import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js')]);}
+    catch(e){return false;}
+    try{
+      const app=(a.getApps&&a.getApps().length)?a.getApp():a.initializeApp(FIREBASE_CONFIG);
+      const fdb=f.getFirestore(app);const auth=au.getAuth(app);
+      try{await au.setPersistence(auth,au.browserLocalStoragePersistence);}catch(e){}
+      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);this._fbSnap=f.onSnapshot;
+      return true;
+    }catch(e){return false;}
+  },
   async _initFB(){
     const _self=this;
     let _resolved=false;
     const _fallback=new Promise(res=>setTimeout(()=>{if(!_resolved){if(!db||!db.frames)db=_self.seedDB();res(false);}},10000));
     const _core=async()=>{
-      let a,f,au;
-      try{[a,f,au]=await Promise.all([import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'),import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js')]);}
-      catch(e){db=_self.seedDB();return false;}
-      const app=a.initializeApp(FIREBASE_CONFIG);const fdb=f.getFirestore(app);const auth=au.getAuth(app);
-      await au.setPersistence(auth,au.browserLocalStoragePersistence);
-      _self._auth=auth;_self._docRef=f.doc(fdb,'optik-zada','main');_self._setDoc=f.setDoc;_self._serverTs=f.serverTimestamp;_self._getDoc=f.getDoc;_self._getDocs=f.getDocs;_self._deleteDoc=f.deleteDoc;_self._collection=(path)=>f.collection(fdb,path);_self._userDoc=(uid)=>f.doc(fdb,'users',uid);_self._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);_self._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);_self._signOut=()=>au.signOut(auth);_self._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);_self._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);
-      return await new Promise(res=>{f.onSnapshot(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}});});
+      const ok=await _self._connectFirebase();
+      if(!ok){db=_self.seedDB();return false;}
+      return await new Promise(res=>{_self._fbSnap(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}});});
     };
     const result=await Promise.race([_core().then(r=>{_resolved=true;return r;}),_fallback]);
     return result;
@@ -1591,8 +1600,8 @@ async function doAuthLogin(){
   if(!Store._signIn){
     if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Menghubungkan...';}
     const errEl2=document.getElementById('auth-err');if(errEl2)errEl2.style.display='none';
-    let _waited=0;
-    await new Promise(res=>{const _poll=setInterval(()=>{_waited+=500;if(Store._signIn||_waited>=15000){clearInterval(_poll);res();}},500);});
+    let _ok=false;
+    for(let _i=0;_i<3&&!_ok;_i++){_ok=await Store._connectFirebase();if(!_ok&&_i<2)await new Promise(r=>setTimeout(r,2000));}
     if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}
     if(!Store._signIn){showAuthErr('Tidak bisa terhubung ke Firebase. Periksa koneksi internet lalu refresh halaman.');return;}
   }
@@ -1642,8 +1651,8 @@ async function doForgotPassword(){
   const btn=document.getElementById('forgot-btn');
   if(!Store._sendPasswordReset){
     if(btn){btn.disabled=true;btn.textContent='Menghubungkan...';}
-    let _waited=0;
-    await new Promise(res=>{const _poll=setInterval(()=>{_waited+=500;if(Store._sendPasswordReset||_waited>=15000){clearInterval(_poll);res();}},500);});
+    let _ok=false;
+    for(let _i=0;_i<3&&!_ok;_i++){_ok=await Store._connectFirebase();if(!_ok&&_i<2)await new Promise(r=>setTimeout(r,2000));}
     if(btn){btn.disabled=false;btn.textContent='Lupa password?';}
     if(!Store._sendPasswordReset){showAuthErr('Tidak bisa terhubung ke Firebase. Periksa koneksi internet lalu refresh halaman.');return;}
   }
