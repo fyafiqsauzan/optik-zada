@@ -121,47 +121,48 @@
 ### Latar Belakang
 Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memonitor tidak hanya pemasukan dari penjualan, tapi juga seluruh pengeluaran operasional toko — agar angka profit yang terlihat di dashboard benar-benar mencerminkan kondisi keuangan toko secara keseluruhan.
 
-### Kategori Pengeluaran (✅ Dikonfirmasi Client)
+### Kategori Pengeluaran (✅ Final — Dikonfirmasi Client)
+> "Tagihan Lensa" dan "Restock Frame" **dihapus** dari cashflow — sudah masuk sebagai HPP (modal) di manajemen produk. Dihitung otomatis lewat profit per invoice. Pakai **Skenario B**.
 
 | Kategori | Kode |
 |----------|------|
 | ⚡ Biaya Listrik Toko | `listrik` |
 | 📶 Biaya WiFi | `wifi` |
 | 👤 Biaya Gaji Karyawan | `gaji_karyawan` |
-| 🔭 Biaya Tagihan Lensa | `tagihan_lensa` |
-| 🖼️ Biaya Restock Frame | `restock_frame` |
 | 🏠 Biaya Sewa Ruko | `sewa` |
 | 📉 Biaya Penyusutan Etalase | `penyusutan` |
 | 📝 Lain-lain | `lainnya` |
 
-### Spesifikasi Fitur (✅ Semua Dikonfirmasi)
+> ℹ️ HPP Lensa & Frame sudah otomatis terhitung di kolom "Profit Kotor" dari field modal per produk — tidak perlu diinput ulang di cashflow agar tidak double counting.
+
+### Spesifikasi Fitur (✅ Dikonfirmasi — 1 item pending)
 
 #### A. Form Input Pengeluaran
-- Tanggal, kategori (dropdown), nominal, keterangan (opsional), otomatis tercatat nama user yang input
-- Riwayat setiap jenis pengeluaran ditampilkan **satu per satu** (bukan hanya total)
-- Nominal gaji: **input manual** setiap kali (tidak ada preset/template)
+- Tanggal, kategori (dropdown 6 pilihan), nominal, keterangan (opsional)
+- Otomatis mencatat nama user yang input + timestamp
+- Riwayat setiap pengeluaran tampil **satu per satu** (bukan hanya total)
+- Nominal gaji: **input manual** setiap kali
 
 #### B. Halaman Cashflow — Admin
-- **Ringkasan bulan ini**: Kas Masuk (omzet dari invoice) vs Total Pengeluaran → **Net Profit Bersih**
-- Grafik pemasukan vs pengeluaran per hari/minggu
-- Tabel riwayat pengeluaran lengkap: filter by kategori & periode, tampil satu per satu
-- Breakdown pengeluaran per kategori (nominal + persentase)
-- Export CSV pengeluaran
+- **Ringkasan bulan ini**: Kas Masuk (omzet invoice) vs Total Pengeluaran Operasional → **Profit Bersih**
+- Formula: `Profit Bersih = Omzet − HPP (dari modal produk) − Pengeluaran Operasional`
+- Tabel riwayat pengeluaran: filter by kategori & periode, tampil per entri
+- Breakdown per kategori (nominal + persentase dari total pengeluaran)
+- Export CSV pengeluaran bulanan
 
-#### C. Halaman Cashflow — Karyawan (akses terbatas)
-- Karyawan **hanya bisa lihat pengeluaran hari ini** (tanpa nominal kumulatif / summary bulanan)
-- Karyawan tidak bisa lihat data profit bersih atau laporan historis
-- Karyawan tetap bisa catat pengeluaran (misal: input biaya makan harian)
+#### C. Halaman Cashflow — Karyawan ⚠️ (1 item pending)
+- Karyawan **hanya bisa lihat pengeluaran hari ini** (tidak ada summary bulanan / profit)
+- Karyawan **tidak bisa lihat** profit bersih, laporan historis, atau breakdown kategori
+- Apakah karyawan bisa **input** pengeluaran? → **Menunggu konfirmasi client**
 
 #### D. Fitur Tutup Buku Bulanan (Manual)
-- Admin bisa "tutup buku" per bulan: snapshot ringkasan bulan tersebut disimpan sebagai laporan bulanan final
-- Setelah tutup buku, data bulan itu terkunci (tidak bisa diedit), hanya bisa dilihat
-- Daftar laporan bulanan yang sudah ditutup tersimpan dan bisa diakses kapan saja
+- Admin klik "Tutup Buku" untuk bulan tertentu → snapshot disimpan sebagai laporan final
+- Data bulan yang sudah ditutup **terkunci** (tidak bisa diedit), hanya bisa dilihat
+- Daftar semua laporan bulanan yang sudah ditutup tersimpan permanen
 
 #### E. Integrasi ke Laporan Existing
-- Halaman Laporan tambah kolom **"Total Pengeluaran"** dan **"Profit Bersih"** di samping Omzet & Profit Kotor
-- Profit Bersih = Omzet − Modal Produk − Pengeluaran Operasional
-- Export CSV laporan bulanan include data pengeluaran
+- Halaman Laporan: tambah baris **"Pengeluaran Operasional"** dan **"Profit Bersih"**
+- Export CSV laporan bulanan include data pengeluaran operasional
 
 ### Struktur Data
 ```
@@ -187,13 +188,13 @@ db.closedMonths[] = [
 ```
 
 ### Hal yang Perlu Dikonfirmasi ke Client
-- [x] Kategori pengeluaran apa saja yang dipakai? ✅ 7 kategori + lainnya
-- [x] Apakah karyawan bisa lihat pengeluaran, atau admin-only? ✅ Karyawan lihat pengeluaran harian saja
-- [x] Apakah perlu fitur "tutup buku" per bulan? ✅ Ya, manual
-- [x] Apakah nominal gaji bersifat tetap atau selalu input manual? ✅ Input manual
-- [x] Apakah perlu riwayat per jenis pengeluaran atau cukup total? ✅ Tampil satu per satu per jenis
-- [ ] Apakah karyawan bisa **input** pengeluaran, atau hanya admin?
-- [ ] Apakah "Biaya Tagihan Lensa" dan "Biaya Restock Frame" dianggap sebagai HPP (sudah masuk modal produk) atau pengeluaran terpisah?
+- [x] Kategori pengeluaran apa saja? ✅ 6 kategori final (tagihan lensa & restock frame dihapus — sudah HPP)
+- [x] Apakah karyawan bisa lihat pengeluaran? ✅ Lihat pengeluaran harian saja
+- [x] Perlu fitur "tutup buku"? ✅ Ya, manual per bulan
+- [x] Nominal gaji preset atau manual? ✅ Input manual
+- [x] Riwayat per jenis atau total saja? ✅ Tampil satu per satu
+- [x] Tagihan Lensa & Restock Frame = HPP atau pengeluaran terpisah? ✅ Sudah HPP — pakai **Skenario B**
+- [ ] Apakah karyawan bisa **input** pengeluaran, atau hanya bisa lihat?
 
 ### Estimasi Kompleksitas
 - UI: halaman baru "Cashflow" di sidebar (icon: `ti-wallet`) + integrasi ke Laporan
@@ -233,3 +234,4 @@ Setiap ada tambahan request dari client atau kebutuhan baru:
 | 28 Mei 2026 | Roadmap dibuat — 28 item + 5 launch checklist |
 | 28 Mei 2026 | Tambah item #21 Cashflow & Pengeluaran Toko (request client) |
 | 29 Mei 2026 | Update #21 — semua spesifikasi dikonfirmasi client; 2 pertanyaan open tersisa |
+| 29 Mei 2026 | Update #21 — Skenario B confirmed; hapus Tagihan Lensa & Restock Frame dari kategori (sudah HPP); 1 pertanyaan tersisa |
