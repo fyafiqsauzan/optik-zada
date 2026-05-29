@@ -395,7 +395,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v7.7</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v7.9</button></div>
   </div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
   <div class="card admin-only" id="user-mgmt-card" style="margin-bottom:16px">
@@ -436,7 +436,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v7.7 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v7.9 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -454,21 +454,39 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v7.7 -->
+      <!-- New in v7.9 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v7.7 Beta</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v7.9 Beta — Cashflow Module</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Resep Mata Lengkap</strong> — Tambah kolom Dm.A(T), Dm.B(L), DBL, TP di bawah PD/Add pada form invoice &amp; struk</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Audit Log Invoice</strong> — Setiap invoice mencatat siapa yang membuatnya (nama user)</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Karyawan Bisa Lunaskan DP</strong> — Tidak perlu admin untuk proses pelunasan sisa pembayaran</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-key" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Reset Password</strong> — Tombol "Lupa password?" di halaman login untuk kirim email reset</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-archive" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Soft Delete / Arsip Invoice</strong> — Hapus invoice tidak permanen; bisa dipulihkan dari Pengaturan → Invoice Diarsipkan</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-list-numbers" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Pagination Riwayat</strong> — Riwayat transaksi dibagi 25 per halaman agar lebih ringan</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Export CSV Perbaikan</strong> — File CSV langsung rapi di Excel tanpa perlu Text to Columns manual; kolom baru Dm.A/B, DBL, TP ikut ter-export</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Keamanan Firestore</strong> — Security rules otomatis ter-deploy via GitHub Actions setiap ada update</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-wallet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Modul Cashflow</strong> — Halaman baru untuk monitoring keuangan &amp; pengeluaran toko (Admin)</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-chart-bar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Stat Cards Admin</strong> — Kas Masuk, Profit Kotor, Total Pengeluaran, Profit Bersih per bulan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-plus" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Catat Pengeluaran</strong> — 6 kategori: Listrik, WiFi, Gaji Karyawan, Sewa Ruko, Penyusutan Etalase, Lain-lain</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-list-details" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Riwayat Pengeluaran</strong> — Tabel per bulan + breakdown per kategori (progress bar)</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-book" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Tutup Buku Bulanan</strong> — Snapshot laporan terkunci permanen; arsip bisa dilihat kapan saja</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Export CSV Pengeluaran</strong> — Download riwayat pengeluaran per bulan ke Excel</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Akses Karyawan</strong> — Karyawan bisa input pengeluaran &amp; lihat riwayat hari ini saja</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-report-money" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Ringkasan di Laporan</strong> — Card Profit Kotor → Pengeluaran → Profit Bersih di halaman Laporan</span></div>
+        </div>
+      </div>
+
+      <!-- v7.8 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v7.8</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Foundation &amp; Beta Features</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-eye-check" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Resep Mata Lengkap</strong> — Kolom Dm.A(T), Dm.B(L), DBL, TP pada form invoice &amp; struk</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-user-check" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Audit Log</strong> — Invoice mencatat nama pembuat</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-check" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Karyawan Lunaskan DP</strong> — Tidak perlu admin untuk pelunasan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-key" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Reset Password</strong> — "Lupa password?" kirim email reset</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-archive" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Soft Delete / Arsip Invoice</strong> — Hapus tidak permanen, bisa dipulihkan</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-list-numbers" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Pagination Riwayat</strong> — 25 transaksi per halaman</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-file-spreadsheet" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Export CSV</strong> — Langsung rapi di Excel tanpa Text to Columns manual</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted)"><i class="ti ti-lock" style="font-size:13px;flex-shrink:0;margin-top:2px"></i><span><strong>Keamanan Firestore</strong> — Security rules auto-deploy via GitHub Actions</span></div>
         </div>
       </div>
 
@@ -743,7 +761,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='7.7';
+const _RN_VERSION='7.9';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');

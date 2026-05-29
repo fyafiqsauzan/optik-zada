@@ -4,125 +4,154 @@
 
 ---
 
+## 🏷️ Skema Versi
+
+| Versi | Status | Milestone |
+|-------|--------|-----------|
+| **v7.7 Beta** | ✅ Dirilis | Starting point — app sebelum sesi pengembangan ini dimulai |
+| **v7.8 Beta** | ✅ Dirilis | Week 1: Rx fields, audit log, karyawan lunaskan, reset PW, soft delete, pagination, CSV fix, CI/CD security rules, release notes |
+| **v7.9 Beta** | ✅ Dirilis | Cashflow module (pengeluaran operasional, profit bersih, tutup buku) + bug fix layout |
+| **v8.0 Beta** | 🔄 Next | Critical: auth persistence + network error handling |
+| **v8.1 Beta** | 📋 Planned | Search/filter riwayat, data size monitor, Firebase Blaze |
+| **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
+| **v8.8 RC** | 📋 Planned | Polish: custom domain, mobile audit, email verification, laporan profit, print customization |
+| **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
+
+> **Skema:** patch (x.x.Y) = bugfix kecil · minor (x.Y.0) = fitur baru · major (Y.0.0) = perubahan arsitektur besar · RC = Release Candidate
+
+---
+
 ## 📊 Status Overview
 
-| Fase | Periode | Status |
-|------|---------|--------|
-| Week 1 — Foundation & Beta Features | 20–27 Mei | ✅ Selesai |
-| Week 2 — Critical Fixes & UX | 28 Mei – 3 Juni | 🔄 In Progress |
-| Week 3 — Core Production Features | 4–10 Juni | 📋 Planned |
-| Week 4 — Architectural & Polish | 11–17 Juni | 📋 Planned |
-| Launch Week | 18–20 Juni | 🚀 Target |
+| Fase | Periode | Versi | Status |
+|------|---------|-------|--------|
+| Week 1 — Foundation & Beta Features | 20–27 Mei | v7.7 → v7.8 | ✅ Selesai |
+| Week 2 — Cashflow + Early Fixes | 28–29 Mei | v7.8 → v7.9 | ✅ Selesai |
+| Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.1 | 🔄 In Progress |
+| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.5 | 📋 Planned |
+| Week 5 — Architectural & Polish | 13–17 Juni | v8.5 → v8.8 | 📋 Planned |
+| Launch Week | 18–20 Juni | v8.8 → v9.0 | 🚀 Target |
 
 ---
 
-## ✅ Week 1 — Foundation & Beta Features (20–27 Mei)
-> Semua item di bawah sudah selesai dikerjakan.
+## ✅ v7.7 → v7.8 Beta — Foundation & Beta Features (20–27 Mei)
+> Semua item selesai. Deployed.
 
-| # | Item | Tipe | Keterangan |
-|---|------|------|------------|
-| 1 | Resep Mata Lengkap (Dm.A, Dm.B, DBL, TP) | Enhancement | Field baru di bawah PD/Add; sync ke struk, CSV, arsip |
-| 2 | Audit Log Invoice | Enhancement | Setiap invoice mencatat `createdBy` (nama user) |
-| 3 | Karyawan bisa Lunaskan DP | Fix | Tidak perlu admin untuk proses pelunasan |
-| 4 | Reset Password via Email | Feature | "Lupa password?" di halaman login |
-| 5 | Soft Delete / Arsip Invoice | Feature | Hapus tidak permanen; pulihkan dari Settings |
-| 6 | Pagination Riwayat (25/halaman) | Enhancement | Performa lebih baik untuk history banyak |
-| 7 | CSV Export Fix | Fix | Langsung rapi di Excel tanpa Text-to-Columns manual; kolom Rx baru ikut ter-export |
-| 8 | Firestore Security Rules — CI/CD | Security | Rules di-deploy otomatis via GitHub Actions |
-| 9 | Release Notes Modal | Feature | Muncul setelah login; caution beta + daftar fitur |
-
----
-
-## 🔄 Week 2 — Critical Fixes & UX (28 Mei – 3 Juni)
-
-### 🔴 HIGH RISK — Wajib diselesaikan minggu ini
-
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 10 | **Fix Auth Persistence** | **Critical Fix** | Sekarang pakai `inMemoryPersistence` — user logout setiap refresh halaman. Ganti ke `browserLocalStorage` agar sesi tetap aktif. Ini dealbreaker untuk daily use. |
-| 11 | **Network Error Handling** | Critical Fix | Jika internet putus atau Firebase unreachable, user tidak dapat feedback apapun. Tambah banner "Koneksi terputus — data belum tersimpan" dan retry indicator. |
-
-### 🟡 MEDIUM — Sangat dianjurkan
-
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 12 | Search & Filter Riwayat | Feature | Cari invoice by nama customer, nomor invoice, atau bulan. Saat ini hanya bisa scroll. |
-| 13 | Data Size Monitor + Warning | Monitoring | Firestore limit 1MB per dokumen. Tambah indikator ukuran data di Settings dan warning otomatis saat mendekati 700KB. |
-| 14 | Firebase Blaze Plan Setup | Infrastructure | Free tier: 50K reads/day, 20K writes/day. Bisa terkena limit tiba-tiba. Upgrade ke Blaze (pay-as-you-go) — biaya praktis nol untuk skala toko kecil. |
+| # | Item | Tipe | Versi |
+|---|------|------|-------|
+| 1 | Resep Mata Lengkap (Dm.A, Dm.B, DBL, TP) | Enhancement | v7.8 |
+| 2 | Audit Log Invoice (`createdBy` per invoice) | Enhancement | v7.8 |
+| 3 | Karyawan bisa Lunaskan DP | Fix | v7.8 |
+| 4 | Reset Password via Email ("Lupa password?") | Feature | v7.8 |
+| 5 | Soft Delete / Arsip Invoice + Pulihkan | Feature | v7.8 |
+| 6 | Pagination Riwayat (25/halaman) | Enhancement | v7.8 |
+| 7 | CSV Export Fix — langsung rapi di Excel, kolom Rx baru ter-export | Fix | v7.8 |
+| 8 | Firestore Security Rules — auto deploy via GitHub Actions CI/CD | Security | v7.8 |
+| 9 | Release Notes Modal — muncul setelah login, versi terbaru | Feature | v7.8 |
 
 ---
 
-## 📋 Week 3 — Core Production Features (4–10 Juni)
+## ✅ v7.8 → v7.9 Beta — Cashflow Module (28–29 Mei)
+> Selesai. Deployed.
 
-### 🔵 MAJOR — Architectural
-
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 15 | **Firestore Per-Document Restructure** | **Major / Architectural** | Saat ini seluruh data (invoices, produk, customers) disimpan sebagai 1 JSON string dalam 1 dokumen Firestore. Hard limit = 1MB. Estimasi: 100 invoice/bulan × 12 bulan ≈ data meledak dalam ~8–10 bulan. Restructure ke: `invoices/{id}`, `products/{id}`, `customers/{id}` sebagai dokumen terpisah. Ini perubahan terbesar dan paling riskan — butuh migrasi data + testing menyeluruh. |
-
-### 🟡 MEDIUM — Penting untuk daily ops
-
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 16 | Riwayat Resep per Customer | Feature | Di halaman Customer → klik nama → lihat semua invoice + resep mata sebelumnya. Sangat berguna untuk repeat customer. |
-| 17 | List DP Outstanding + WA Blast | Feature | Dashboard khusus: semua invoice DP yang belum lunas, lengkap dengan tombol WA reminder ke masing-masing customer. |
-| 18 | Notif "Siap Diambil" lebih proaktif | Enhancement | Sekarang ada banner pasif. Tambah highlight + badge count di sidebar untuk pesanan yang sudah lewat tanggal siap ambil. |
-| 19 | Print Nota Customization | Feature | Admin bisa edit nama toko, alamat, nomor telepon, dan footer struk dari Settings (saat ini hardcoded). |
+| # | Item | Tipe | Versi |
+|---|------|------|-------|
+| 10 | **Cashflow Module** — halaman pengeluaran operasional + profit bersih | Major Feature | v7.9 |
+| 11 | Admin: 4 stat cards (Kas Masuk, Profit Kotor, Pengeluaran, Profit Bersih) | Feature | v7.9 |
+| 12 | Admin: Form catat pengeluaran (6 kategori, tanggal, nominal, keterangan) | Feature | v7.9 |
+| 13 | Admin: Tabel riwayat pengeluaran per bulan + delete | Feature | v7.9 |
+| 14 | Admin: Breakdown pengeluaran per kategori (progress bar) | Feature | v7.9 |
+| 15 | Admin: Tutup Buku bulanan — snapshot terkunci permanen | Feature | v7.9 |
+| 16 | Admin: Arsip laporan tertutup + modal detail | Feature | v7.9 |
+| 17 | Admin: Export CSV pengeluaran | Feature | v7.9 |
+| 18 | Karyawan: Input pengeluaran + view harian saja | Feature | v7.9 |
+| 19 | Laporan page: Ringkasan Cashflow card (Profit Kotor → Pengeluaran → Profit Bersih) | Integration | v7.9 |
+| 20 | **Bug Fix**: Cashflow page di luar `.main` wrapper → posisi salah di mobile | Critical Fix | v7.9 |
 
 ---
 
-## 📋 Week 4 — Polish & Launch Prep (11–17 Juni)
+## 🔄 v7.9 → v8.0 Beta — Critical Fixes & UX (30 Mei – 5 Juni)
 
-### 🔵 MAJOR
+### 🔴 CRITICAL — Harus selesai sebelum client pakai
 
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 20 | **Multi-User Concurrent Edit Safety** | Major | Saat admin dan karyawan edit data bersamaan, ada risiko salah satu overwrite data yang lain. Implementasi optimistic locking dengan Firestore transactions untuk operasi kritis (simpan invoice, update stok). |
-| 21 | **Cashflow & Pengeluaran Toko** | **Major / New Module** | Modul baru khusus role Admin untuk monitoring keuangan toko secara menyeluruh. Lihat detail di bawah. |
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 21 | **Fix Auth Persistence** | Critical Fix | v8.0 | `inMemoryPersistence` → `browserLocalStorage`. User saat ini logout setiap refresh halaman — dealbreaker untuk daily use. |
+| 22 | **Network Error Handling** | Critical Fix | v8.0 | Tidak ada feedback saat internet putus. Tambah banner "Koneksi terputus — data mungkin belum tersimpan". |
 
 ### 🟡 MEDIUM
 
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 22 | Custom Domain Setup | Infrastructure | Ganti URL Firebase default (`optik-zada1127.web.app`) ke domain sendiri (misal `optikzada.com`). Lebih profesional untuk client. |
-| 23 | Mobile Responsive Audit | Polish | Pastikan semua halaman — terutama Invoice form dan Riwayat — dapat digunakan nyaman di layar HP/tablet (karyawan jaga sendiri). |
-| 24 | Kompresi Aset | Performance | `assets/logo.png` ~1MB → target <100KB. Gunakan [squoosh.app](https://squoosh.app) untuk kompresi manual. Percepat loading awal. |
-| 25 | Konfirmasi Email Akun Baru | Security | Saat ini karyawan bisa daftar dengan email apapun tanpa verifikasi. Tambah email verification sebelum akun aktif. |
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 23 | Search & Filter Riwayat | Feature | v8.1 | Cari invoice by nama customer / nomor invoice. Saat ini hanya bisa scroll. |
+| 24 | Data Size Monitor + Warning | Monitoring | v8.1 | Firestore limit 1MB. Warning otomatis saat data mendekati 700KB di Settings. |
+| 25 | Firebase Blaze Plan Setup | Infrastructure | v8.1 | Upgrade dari Spark free tier — batas 50K reads/day bisa terkena tiba-tiba. |
+
+---
+
+## 📋 v8.1 → v8.5 Beta — Core Production Features (6–12 Juni)
+
+### 🔵 MAJOR — Architectural
+
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 26 | **Firestore Per-Document Restructure** | Major / Architectural | v8.5 | Seluruh data disimpan sebagai 1 JSON string — hard limit 1MB. Estimasi meledak dalam ~8–10 bulan production. Restructure ke `invoices/{id}`, `products/{id}`, `customers/{id}`, `expenses/{id}` sebagai dokumen terpisah. Butuh migrasi data + testing menyeluruh. |
+
+### 🟡 MEDIUM
+
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 27 | Riwayat Resep per Customer | Feature | v8.2 | Customer → klik nama → lihat semua invoice + resep mata historis. Berguna untuk repeat customer. |
+| 28 | List DP Outstanding + WA Blast Reminder | Feature | v8.2 | Daftar semua DP belum lunas + tombol WA reminder ke masing-masing customer. |
+| 29 | Notif "Siap Diambil" — badge sidebar | Enhancement | v8.2 | Sekarang hanya banner pasif. Tambah badge count di sidebar untuk pesanan lewat tanggal siap ambil. |
+| 30 | Print Nota Customization | Feature | v8.3 | Admin bisa edit nama toko, alamat, HP, footer struk dari Settings (saat ini hardcoded). |
+
+---
+
+## 📋 v8.5 → v8.8 RC — Polish & Launch Prep (13–17 Juni)
+
+### 🔵 MAJOR
+
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 31 | **Multi-User Concurrent Edit Safety** | Major | v8.6 | Risk overwrite data saat admin dan karyawan edit bersamaan. Implementasi Firestore transactions untuk operasi kritis. |
+
+### 🟡 MEDIUM
+
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 32 | Custom Domain Setup | Infrastructure | v8.7 | Ganti URL default Firebase ke domain sendiri (misal `optikzada.com`). |
+| 33 | Mobile Responsive Audit | Polish | v8.7 | Audit semua halaman di layar HP/tablet — terutama Invoice form dan Riwayat. |
+| 34 | Kompresi Aset (logo.png) | Performance | v8.7 | `assets/logo.png` ~1MB → <100KB via [squoosh.app](https://squoosh.app). Manual oleh user. |
+| 35 | Konfirmasi Email Akun Baru | Security | v8.8 | Email verification sebelum akun karyawan aktif. |
+| 36 | Laporan Profit per Produk | Feature | v8.8 | Breakdown margin per kategori (frame, lensa, softlens) di halaman Laporan. |
 
 ### 🟢 NICE TO HAVE
 
-| # | Item | Tipe | Detail |
-|---|------|------|--------|
-| 26 | Laporan Profit per Produk | Feature | Di halaman Laporan: breakdown margin keuntungan per kategori produk (frame, lensa, softlens). |
-| 27 | Diskon Global / Promo | Feature | Setting diskon persentase global yang bisa diaktifkan sementara (misal promo Lebaran). |
-| 28 | Dark/Light Mode Toggle Otomatis | Enhancement | Ikuti preferensi sistem (prefers-color-scheme) secara default. |
-| 29 | Tooltip / Help Onboarding | UX | Tooltip singkat di setiap field kompleks (Rx, DP amount) untuk bantu user baru. |
+| # | Item | Tipe | Target Versi | Detail |
+|---|------|------|-------------|--------|
+| 37 | Diskon Global / Promo | Feature | v8.8+ | Setting diskon persentase global sementara (misal promo Lebaran). |
+| 38 | Dark/Light Mode Toggle Otomatis | Enhancement | v8.8+ | Ikuti `prefers-color-scheme` sistem secara default. |
+| 39 | Tooltip / Help Onboarding | UX | v8.8+ | Tooltip singkat di field kompleks (Rx, DP) untuk bantu user baru. |
 
 ---
 
-## 🚀 Launch Week — Go-Live (18–20 Juni)
+## 🚀 v8.8 → v9.0 — Launch Week (18–20 Juni)
 
 | # | Item | Detail |
 |---|------|--------|
-| L1 | Final Testing End-to-End | Simulasi skenario lengkap: buat invoice, DP, lunaskan, print, export CSV, backup |
-| L2 | Data Migration (jika #15 dikerjakan) | Migrasi data dari single-doc ke per-doc Firestore dengan validasi tidak ada data hilang |
-| L3 | Onboarding Client | Buat akun admin + karyawan untuk client; demo singkat alur kerja utama |
-| L4 | Monitor Firebase Usage 24 jam | Pantau Firestore reads/writes, hosting bandwidth di Firebase Console |
-| L5 | Hotfix Standby | Siap deploy fix darurat jika ada bug yang ditemukan saat pertama kali dipakai |
+| L1 | Final Testing End-to-End | Simulasi skenario lengkap: invoice → DP → lunaskan → print → export CSV → backup → cashflow → tutup buku |
+| L2 | Data Migration (jika #26 dikerjakan) | Migrasi single-doc ke per-doc Firestore dengan validasi tidak ada data hilang |
+| L3 | Onboarding Client | Buat akun admin + karyawan; demo alur kerja utama; panduan backup rutin |
+| L4 | Monitor Firebase Usage 24 jam | Pantau reads/writes/hosting bandwidth di Firebase Console |
+| L5 | Hotfix Standby | Siap deploy fix darurat jika bug ditemukan saat pertama dipakai |
 
 ---
 
----
+## 💰 Detail: Modul Cashflow & Pengeluaran Toko (Item #10–19)
+> Status: **✅ SELESAI — Deployed di v7.9 Beta**
 
-## 💰 Detail: Modul Cashflow & Pengeluaran Toko (Item #21)
-> Status: **✅ Spesifikasi Final — Siap Dikerjakan**
-> Scope: Major new module · Admin (full) + Karyawan (input + view harian)
-
-### Latar Belakang
-Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memonitor tidak hanya pemasukan dari penjualan, tapi juga seluruh pengeluaran operasional toko — agar angka profit yang terlihat di dashboard benar-benar mencerminkan kondisi keuangan toko secara keseluruhan.
-
-### Kategori Pengeluaran (✅ Final — Dikonfirmasi Client)
-> "Tagihan Lensa" dan "Restock Frame" **dihapus** dari cashflow — sudah masuk sebagai HPP (modal) di manajemen produk. Dihitung otomatis lewat profit per invoice. Pakai **Skenario B**.
+### Kategori Pengeluaran (6 kategori final)
 
 | Kategori | Kode |
 |----------|------|
@@ -133,74 +162,23 @@ Client adalah usaha keluarga. Yang memegang keuangan (ayah/ibu) perlu bisa memon
 | 📉 Biaya Penyusutan Etalase | `penyusutan` |
 | 📝 Lain-lain | `lainnya` |
 
-> ℹ️ HPP Lensa & Frame sudah otomatis terhitung di kolom "Profit Kotor" dari field modal per produk — tidak perlu diinput ulang di cashflow agar tidak double counting.
+> Tagihan Lensa & Restock Frame tidak masuk cashflow — sudah terhitung otomatis sebagai HPP (modal produk) di setiap invoice. Pakai **Skenario B** untuk menghindari double counting.
 
-### Spesifikasi Fitur (✅ Dikonfirmasi — 1 item pending)
+### Akses per Role
 
-#### A. Form Input Pengeluaran
-- Tanggal, kategori (dropdown 6 pilihan), nominal, keterangan (opsional)
-- Otomatis mencatat nama user yang input + timestamp
-- Riwayat setiap pengeluaran tampil **satu per satu** (bukan hanya total)
-- Nominal gaji: **input manual** setiap kali
+| Fitur | Admin | Karyawan |
+|-------|-------|----------|
+| Input pengeluaran | ✅ | ✅ |
+| View riwayat | ✅ Semua periode | ⚠️ Hari ini saja |
+| Profit Bersih & summary | ✅ | ❌ |
+| Tutup Buku bulanan | ✅ | ❌ |
+| Export CSV | ✅ | ❌ |
+| Delete entri | ✅ (kecuali bulan ditutup) | ❌ |
 
-#### B. Halaman Cashflow — Admin
-- **Ringkasan bulan ini**: Kas Masuk (omzet invoice) vs Total Pengeluaran Operasional → **Profit Bersih**
-- Formula: `Profit Bersih = Omzet − HPP (dari modal produk) − Pengeluaran Operasional`
-- Tabel riwayat pengeluaran: filter by kategori & periode, tampil per entri
-- Breakdown per kategori (nominal + persentase dari total pengeluaran)
-- Export CSV pengeluaran bulanan
-
-#### C. Halaman Cashflow — Karyawan ✅
-- Karyawan **bisa input** pengeluaran (semua 6 kategori tersedia)
-- Karyawan **hanya bisa lihat pengeluaran hari ini** — tidak ada summary bulanan, profit bersih, atau riwayat historis
-- Form input sama dengan admin, tapi tampilan list dibatasi hanya hari ini
-
-#### D. Fitur Tutup Buku Bulanan (Manual)
-- Admin klik "Tutup Buku" untuk bulan tertentu → snapshot disimpan sebagai laporan final
-- Data bulan yang sudah ditutup **terkunci** (tidak bisa diedit), hanya bisa dilihat
-- Daftar semua laporan bulanan yang sudah ditutup tersimpan permanen
-
-#### E. Integrasi ke Laporan Existing
-- Halaman Laporan: tambah baris **"Pengeluaran Operasional"** dan **"Profit Bersih"**
-- Export CSV laporan bulanan include data pengeluaran operasional
-
-### Struktur Data
+### Formula
 ```
-db.expenses[] = [
-  {
-    id: timestamp,
-    tanggal: "YYYY-MM-DD",
-    kategori: "gaji_karyawan",   // kode kategori
-    nominal: 2500000,
-    ket: "Gaji Budi bulan Mei",  // opsional
-    createdBy: { uid, nama }
-  }
-]
-
-db.closedMonths[] = [
-  {
-    monthKey: "2026-05",
-    closedAt: timestamp,
-    closedBy: { uid, nama },
-    snapshot: { omzet, pengeluaran, profitBersih, breakdown: {...} }
-  }
-]
+Profit Bersih = Omzet − HPP (modal produk, otomatis) − Pengeluaran Operasional (manual)
 ```
-
-### Checklist Konfirmasi Client (✅ Semua Selesai)
-- [x] Kategori pengeluaran apa saja? ✅ 6 kategori final (tagihan lensa & restock frame dihapus — sudah HPP)
-- [x] Apakah karyawan bisa lihat pengeluaran? ✅ Lihat pengeluaran harian saja
-- [x] Perlu fitur "tutup buku"? ✅ Ya, manual per bulan
-- [x] Nominal gaji preset atau manual? ✅ Input manual
-- [x] Riwayat per jenis atau total saja? ✅ Tampil satu per satu
-- [x] Tagihan Lensa & Restock Frame = HPP atau pengeluaran terpisah? ✅ Sudah HPP — pakai **Skenario B**
-- [x] Apakah karyawan bisa input pengeluaran? ✅ Ya, bisa input — tapi view hanya hari ini
-
-### Estimasi Kompleksitas
-- UI: halaman baru "Cashflow" di sidebar (icon: `ti-wallet`) + integrasi ke Laporan
-- Data: `db.expenses[]` + `db.closedMonths[]`
-- Setelah Firestore restructure (#15): expenses dan closedMonths jadi collection terpisah
-- **Estimasi pengerjaan: 4–6 hari kerja** (termasuk tutup buku + integrasi laporan)
 
 ---
 
@@ -208,31 +186,33 @@ db.closedMonths[] = [
 
 ### Risk Register
 
-| Risk | Severity | Mitigasi |
-|------|----------|---------|
-| Firestore 1MB limit (item #15) | 🔴 High | Segera restructure sebelum data production masuk banyak |
-| Auth logout setiap refresh (item #10) | 🔴 High | Fix di Week 2 sebelum client mulai pakai |
-| Concurrent edit overwrite (item #20) | 🟡 Medium | Mitigasi sementara: SOP internal "jangan edit bersamaan"; fix proper di Week 4 |
-| Firebase Spark quota (item #14) | 🟡 Medium | Upgrade Blaze sebelum launch |
+| Risk | Severity | Status | Mitigasi |
+|------|----------|--------|---------|
+| Firestore 1MB limit (item #26) | 🔴 High | 📋 Planned v8.5 | Restructure sebelum data production banyak masuk |
+| Auth logout setiap refresh (item #21) | 🔴 High | 🔄 Next v8.0 | Fix sebelum client mulai pakai |
+| Concurrent edit overwrite (item #31) | 🟡 Medium | 📋 Planned v8.6 | SOP sementara: jangan edit bersamaan |
+| Firebase Spark quota (item #25) | 🟡 Medium | 📋 Planned v8.1 | Upgrade Blaze sebelum launch |
 
 ### Cara Update Roadmap Ini
-Setiap ada tambahan request dari client atau kebutuhan baru:
-1. Tambahkan item baru ke section yang relevan
-2. Beri nomor lanjutan
-3. Update status tabel di bagian atas
-4. Commit dengan message: `docs: update roadmap - tambah [nama item]`
+Setiap ada tambahan request dari client atau fixing selesai:
+1. Pindahkan item dari "Planned" → "Selesai" dengan versi yang sesuai
+2. Update tabel Skema Versi dan Status Overview
+3. Tambah entry ke Changelog
+4. Commit: `docs: roadmap - [versi] [nama item]`
 
 ---
 
-*Last updated: 28 Mei 2026 · Optik Zada Management System v7.7 Beta*
+## 📋 Changelog
+
+| Tanggal | Versi | Perubahan |
+|---------|-------|-----------|
+| 28 Mei 2026 | — | Roadmap dibuat — 29 item + 5 launch checklist |
+| 28 Mei 2026 | — | Tambah item #21 Cashflow (request client) |
+| 29 Mei 2026 | — | Cashflow spec dikonfirmasi client — semua 7 checklist selesai |
+| 29 Mei 2026 | v7.9 | Cashflow module selesai diimplementasi & deployed |
+| 29 Mei 2026 | v7.9 | Bug fix: cashflow page di luar `.main` wrapper (mobile layout) |
+| 29 Mei 2026 | — | Roadmap di-restructure dengan skema versi v7.7→v9.0 |
 
 ---
 
-### Changelog
-| Tanggal | Perubahan |
-|---------|-----------|
-| 28 Mei 2026 | Roadmap dibuat — 28 item + 5 launch checklist |
-| 28 Mei 2026 | Tambah item #21 Cashflow & Pengeluaran Toko (request client) |
-| 29 Mei 2026 | Update #21 — semua spesifikasi dikonfirmasi client; 2 pertanyaan open tersisa |
-| 29 Mei 2026 | Update #21 — Skenario B confirmed; hapus Tagihan Lensa & Restock Frame dari kategori (sudah HPP); 1 pertanyaan tersisa |
-| 29 Mei 2026 | Update #21 — Semua checklist selesai; karyawan bisa input + view harian; spesifikasi final |
+*Last updated: 29 Mei 2026 · Optik Zada Management System v7.9 Beta*
