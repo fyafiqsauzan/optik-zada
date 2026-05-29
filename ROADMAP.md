@@ -11,7 +11,7 @@
 | **v7.7 Beta** | ✅ Dirilis | Starting point — app sebelum sesi pengembangan ini dimulai |
 | **v7.8 Beta** | ✅ Dirilis | Week 1: Rx fields, audit log, karyawan lunaskan, reset PW, soft delete, pagination, CSV fix, CI/CD security rules, release notes |
 | **v7.9 Beta** | ✅ Dirilis | Cashflow module (pengeluaran operasional, profit bersih, tutup buku) + bug fix layout |
-| **v8.0 Beta** | 🔄 Next | Critical: auth persistence + network error handling |
+| **v8.0 Beta** | ✅ Dirilis | Critical: auth persistence + network error handling + bug fixes (double popup, item name, currency format, gelar, offline spinner) |
 | **v8.1 Beta** | 📋 Planned | Search/filter riwayat, data size monitor, Firebase Blaze |
 | **v8.5 Beta** | 📋 Planned | Firestore per-document restructure (major architectural) |
 | **v8.8 RC** | 📋 Planned | Polish: custom domain, mobile audit, email verification, laporan profit, print customization |
@@ -27,7 +27,8 @@
 |------|---------|-------|--------|
 | Week 1 — Foundation & Beta Features | 20–27 Mei | v7.7 → v7.8 | ✅ Selesai |
 | Week 2 — Cashflow + Early Fixes | 28–29 Mei | v7.8 → v7.9 | ✅ Selesai |
-| Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.1 | 🔄 In Progress |
+| Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.0 | ✅ Selesai |
+| Week 3 lanjutan — Search, Monitor, Infra | 30 Mei – 5 Juni | v8.0 → v8.1 | 🔄 In Progress |
 | Week 4 — Core Features | 6–12 Juni | v8.1 → v8.5 | 📋 Planned |
 | Week 5 — Architectural & Polish | 13–17 Juni | v8.5 → v8.8 | 📋 Planned |
 | Launch Week | 18–20 Juni | v8.8 → v9.0 | 🚀 Target |
@@ -70,14 +71,25 @@
 
 ---
 
-## 🔄 v7.9 → v8.0 Beta — Critical Fixes & UX (30 Mei – 5 Juni)
+## ✅ v7.9 → v8.0 Beta — Critical Fixes & UX (30 Mei – 5 Juni)
+> Selesai. Deployed.
 
-### 🔴 CRITICAL — Harus selesai sebelum client pakai
+### 🔴 CRITICAL
 
-| # | Item | Tipe | Target Versi | Detail |
-|---|------|------|-------------|--------|
-| 21 | **Fix Auth Persistence** | Critical Fix | v8.0 | `inMemoryPersistence` → `browserLocalStorage`. User saat ini logout setiap refresh halaman — dealbreaker untuk daily use. |
-| 22 | **Network Error Handling** | Critical Fix | v8.0 | Tidak ada feedback saat internet putus. Tambah banner "Koneksi terputus — data mungkin belum tersimpan". |
+| # | Item | Tipe | Versi | Detail |
+|---|------|------|-------|--------|
+| 21 | **Fix Auth Persistence** | Critical Fix | v8.0 | `inMemoryPersistence` → `browserLocalStoragePersistence`. Sesi tersimpan di localStorage — user tidak logout setiap refresh. Login panel tampil spinner "Memeriksa sesi aktif..." saat restore. |
+| 22 | **Network Error Handling** | Critical Fix | v8.0 | Banner merah slide-down saat offline: "Koneksi terputus — perubahan mungkin belum tersimpan". Hijau saat reconnect. |
+
+### 🟠 BUG FIXES (v8.0 sepaket)
+
+| # | Item | Tipe | Versi |
+|---|------|------|-------|
+| B1 | Double release notes popup saat login | Bug Fix | v8.0 | Race condition `onAuthStateChanged` vs `doAuthLogin()` — fix double-check `!currentRole` setelah await |
+| B2 | Nama item invoice hilang saat tambah item lain | Bug Fix | v8.0 | `renderCart()` tidak mark `selected` pada option yang aktif — fix per-item opts dengan `selected` attribute |
+| B3 | Format nominal rupiah tidak konsisten | Bug Fix | v8.0 | Semua input harga (cashflow, produk, cart) kini format ribuan otomatis (1.500.000) |
+| B4 | Hapus gelar "Dr." dari dropdown invoice & customer | Bug Fix | v8.0 | Tidak relevan untuk toko optik — dihapus dari semua dropdown + regex |
+| B5 | Spinner "Memeriksa sesi aktif..." macet selamanya | Critical Fix | v8.0 | Hard timeout 5 detik di `injectAuthUI()` + timeout 8 detik di `_initFB()` saat offline |
 
 ### 🟡 MEDIUM
 
@@ -189,7 +201,7 @@ Profit Bersih = Omzet − HPP (modal produk, otomatis) − Pengeluaran Operasion
 | Risk | Severity | Status | Mitigasi |
 |------|----------|--------|---------|
 | Firestore 1MB limit (item #26) | 🔴 High | 📋 Planned v8.5 | Restructure sebelum data production banyak masuk |
-| Auth logout setiap refresh (item #21) | 🔴 High | 🔄 Next v8.0 | Fix sebelum client mulai pakai |
+| Auth logout setiap refresh (item #21) | 🔴 High | ✅ Fixed v8.0 | `browserLocalStoragePersistence` — sesi persistent |
 | Concurrent edit overwrite (item #31) | 🟡 Medium | 📋 Planned v8.6 | SOP sementara: jangan edit bersamaan |
 | Firebase Spark quota (item #25) | 🟡 Medium | 📋 Planned v8.1 | Upgrade Blaze sebelum launch |
 
@@ -212,7 +224,10 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v7.9 | Cashflow module selesai diimplementasi & deployed |
 | 29 Mei 2026 | v7.9 | Bug fix: cashflow page di luar `.main` wrapper (mobile layout) |
 | 29 Mei 2026 | — | Roadmap di-restructure dengan skema versi v7.7→v9.0 |
+| 29 Mei 2026 | v8.0 | Auth persistence fix (item #21) + network error banner (item #22) |
+| 29 Mei 2026 | v8.0 | Bug fixes: double popup, item nama hilang, format rupiah, hapus Dr. |
+| 29 Mei 2026 | v8.0 | Hotfix: spinner macet saat offline (timeout 5s + _initFB timeout 8s) |
 
 ---
 
-*Last updated: 29 Mei 2026 · Optik Zada Management System v7.9 Beta*
+*Last updated: 29 Mei 2026 · Optik Zada Management System v8.0 Beta*
