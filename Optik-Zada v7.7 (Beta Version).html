@@ -153,6 +153,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 @media print{.topbar,.sidebar,.sidebar-overlay,#toast-wrap,#scrtop,.no-print{display:none!important}.main{margin-top:0!important;margin-left:0!important}}
 /* ── KOMPONEN: SIDEBAR DP BADGE & SIAP AMBIL BANNER ── */
 .dp-badge{display:none;margin-left:auto;min-width:18px;height:18px;border-radius:9px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;align-items:center;justify-content:center;padding:0 4px;flex-shrink:0;line-height:1}
+.siap-badge{display:none;margin-left:4px;min-width:18px;height:18px;border-radius:9px;background:var(--gold);color:#000;font-size:10px;font-weight:700;align-items:center;justify-content:center;padding:0 4px;flex-shrink:0;line-height:1}
 .siap-banner{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:var(--radius-sm);background:#e8f3fd;border:1px solid #93c5fd;color:#1a55c0;font-size:13px;font-weight:500;margin-bottom:14px;cursor:pointer}
 [data-theme="dark"] .siap-banner{background:#0d1f3a;border-color:#1d4ed8;color:#60a5fa}
 .siap-banner i{font-size:18px;flex-shrink:0}
@@ -173,7 +174,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="sep"></div>
   <div class="sidebar-section">Transaksi</div>
   <button class="nl" onclick="showPage('invoice',this)"><i class="ti ti-file-invoice"></i>Invoice</button>
-  <button class="nl" onclick="showPage('history',this)"><i class="ti ti-receipt"></i>Riwayat<span class="dp-badge" id="dp-badge"></span></button>
+  <button class="nl" onclick="showPage('history',this)"><i class="ti ti-receipt"></i>Riwayat<span class="dp-badge" id="dp-badge"></span><span class="siap-badge" id="siap-badge" title="Siap diambil"></span></button>
   <div class="sep"></div>
   <div class="sidebar-section" id="nav-masterdata-sep">Master Data</div>
   <button class="nl" onclick="showPage('frame',this)"><i class="ti ti-glasses"></i>Frame</button>
@@ -1515,11 +1516,13 @@ function rxHistory(custId){
 }
 
 function updateDPBadge(){
-  const count=activeInvs().filter(x=>x.payStatus==='dp'&&!x.lunasAmount).length;
+  const today=new Date().toISOString().slice(0,10);
+  const dpAll=activeInvs().filter(x=>x.payStatus==='dp'&&!x.lunasAmount);
+  const siap=dpAll.filter(x=>x.tglSiap&&x.tglSiap<=today);
   const badge=document.getElementById('dp-badge');
-  if(!badge)return;
-  if(count>0){badge.textContent=count>9?'9+':String(count);badge.style.display='inline-flex';}
-  else badge.style.display='none';
+  if(badge){if(dpAll.length){badge.textContent=dpAll.length>9?'9+':String(dpAll.length);badge.style.display='inline-flex';}else badge.style.display='none';}
+  const siapBadge=document.getElementById('siap-badge');
+  if(siapBadge){if(siap.length){siapBadge.textContent=siap.length>9?'9+':String(siap.length);siapBadge.style.display='inline-flex';}else siapBadge.style.display='none';}
 }
 
 function renderSiapAlert(){
