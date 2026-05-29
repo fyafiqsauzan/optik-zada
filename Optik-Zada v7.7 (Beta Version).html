@@ -404,10 +404,11 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
     <div id="user-list" style="font-size:13px;color:var(--muted);margin-bottom:16px">Memuat...</div>
     <div style="border-top:1px solid var(--border);padding-top:14px">
       <div style="font-size:13px;font-weight:700;margin-bottom:6px"><i class="ti ti-user-plus"></i> Daftarkan Pengguna Baru</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Akun langsung dibuat otomatis. Karyawan akan menerima <b>email untuk set password</b> — pastikan email yang dimasukkan aktif.</p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Akun langsung dibuat otomatis. Karyawan login pakai <b>username</b> yang kamu buat, dan akan terima email untuk set password sendiri.</p>
       <div style="display:grid;gap:8px">
         <input id="nu-nama" placeholder="Nama lengkap" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
-        <input id="nu-email" type="email" placeholder="email@contoh.com" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
+        <input id="nu-username" placeholder="Username untuk login (contoh: budi_kasir)" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
+        <input id="nu-email" type="email" placeholder="Email (untuk set password)" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
         <select id="nu-role" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none">
           <option value="karyawan">Karyawan</option>
           <option value="admin">Admin</option>
@@ -633,7 +634,7 @@ const Store={
       const app=(a.getApps&&a.getApps().length)?a.getApp():a.initializeApp(FIREBASE_CONFIG);
       const fdb=f.getFirestore(app);const auth=au.getAuth(app);
       try{await au.setPersistence(auth,au.browserLocalStoragePersistence);}catch(e){}
-      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._fbSnap=f.onSnapshot;
+      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._usernameDoc=(uname)=>f.doc(fdb,'usernames',uname);this._fbSnap=f.onSnapshot;
       return true;
     }catch(e){return false;}
   },
@@ -759,8 +760,8 @@ function injectAuthUI(){
       <div class="lp-title">Masuk ke<br>sistem</div>
       <div class="lp-form">
         <div class="lp-field">
-          <label>Email</label>
-          <input type="email" id="auth-email" placeholder="email@optikzada.com" autocomplete="email" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()">
+          <label>Username / Email</label>
+          <input type="text" id="auth-email" placeholder="username atau email@..." autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()">
         </div>
         <div class="lp-field">
           <label>Password</label>
@@ -1593,10 +1594,10 @@ function showProfitModal(source){
 const ADMIN_BOOTSTRAP_EMAIL='syafiqsfauzan@gmail.com';
 
 async function doAuthLogin(){
-  const email=(document.getElementById('auth-email')?.value||'').trim();
+  const rawInput=(document.getElementById('auth-email')?.value||'').trim();
   const pass=document.getElementById('auth-pass')?.value||'';
   const btn=document.getElementById('auth-btn');
-  if(!email||!pass){showAuthErr('Email dan password wajib diisi');return;}
+  if(!rawInput||!pass){showAuthErr('Username/email dan password wajib diisi');return;}
   if(!Store._signIn){
     if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Menghubungkan...';}
     const errEl2=document.getElementById('auth-err');if(errEl2)errEl2.style.display='none';
@@ -1607,6 +1608,11 @@ async function doAuthLogin(){
   }
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Memverifikasi...';}
   const errEl=document.getElementById('auth-err');if(errEl)errEl.style.display='none';
+  let email=rawInput;
+  if(!rawInput.includes('@')){
+    try{const uSnap=await Store._getDoc(Store._usernameDoc(rawInput.toLowerCase()));if(!uSnap.exists()){showAuthErr('Username tidak ditemukan');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}email=uSnap.data().email;}
+    catch(e){showAuthErr('Gagal mencari username. Periksa koneksi.');if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}return;}
+  }
   try{
     const cred=await Store._signIn(email,pass);
     const uid=cred.user.uid;
@@ -1645,9 +1651,9 @@ async function doAuthLogin(){
 }
 function showAuthErr(msg){const e=document.getElementById('auth-err');if(e){e.removeAttribute('style');e.textContent=msg;e.style.display=msg?'block':'none';}}
 async function doForgotPassword(){
-  const email=(document.getElementById('auth-email')?.value||'').trim();
+  const rawInput=(document.getElementById('auth-email')?.value||'').trim();
   const errEl=document.getElementById('auth-err');
-  if(!email){showAuthErr('Masukkan email terlebih dahulu');return;}
+  if(!rawInput){showAuthErr('Masukkan username atau email terlebih dahulu');return;}
   const btn=document.getElementById('forgot-btn');
   if(!Store._sendPasswordReset){
     if(btn){btn.disabled=true;btn.textContent='Menghubungkan...';}
@@ -1655,6 +1661,11 @@ async function doForgotPassword(){
     for(let _i=0;_i<3&&!_ok;_i++){_ok=await Store._connectFirebase();if(!_ok&&_i<2)await new Promise(r=>setTimeout(r,2000));}
     if(btn){btn.disabled=false;btn.textContent='Lupa password?';}
     if(!Store._sendPasswordReset){showAuthErr('Tidak bisa terhubung ke Firebase. Periksa koneksi internet lalu refresh halaman.');return;}
+  }
+  let email=rawInput;
+  if(!rawInput.includes('@')){
+    try{const uSnap=await Store._getDoc(Store._usernameDoc(rawInput.toLowerCase()));if(!uSnap.exists()){showAuthErr('Username tidak ditemukan');return;}email=uSnap.data().email;}
+    catch(e){showAuthErr('Gagal mencari username. Periksa koneksi.');return;}
   }
   if(btn){btn.disabled=true;btn.textContent='Mengirim...';}
   try{
@@ -1677,8 +1688,8 @@ async function loadUserList(){
     const myUid=Store._auth&&Store._auth.currentUser?Store._auth.currentUser.uid:null;
     let rows='';
     uSnap.forEach(d=>{
-      const {role,nama,email}=d.data();const isMe=d.id===myUid;
-      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
+      const {role,nama,email,username}=d.data();const isMe=d.id===myUid;
+      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}${username?` <span style="font-size:11px;color:var(--muted);font-weight:400">@${username}</span>`:''}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
     });
     let pending='';
     pSnap.forEach(d=>{
@@ -1691,27 +1702,32 @@ async function loadUserList(){
 
 async function addPendingUser(){
   const nama=(document.getElementById('nu-nama')?.value||'').trim();
+  const username=(document.getElementById('nu-username')?.value||'').trim().toLowerCase();
   const email=(document.getElementById('nu-email')?.value||'').trim().toLowerCase();
   const role=document.getElementById('nu-role')?.value||'karyawan';
-  if(!nama||!email){toast('Nama dan email wajib diisi','w');return;}
+  if(!nama||!username||!email){toast('Nama, username, dan email wajib diisi','w');return;}
+  if(!/^[a-z0-9_]{3,20}$/.test(username)){toast('Username hanya boleh huruf kecil, angka, underscore (3–20 karakter)','w');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Format email tidak valid','w');return;}
   if(Store.mode!=='firebase'||!Store._createUser){toast('Fitur ini hanya tersedia di mode Firebase','w');return;}
   const btn=document.getElementById('nu-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Membuat akun...';}
   const adminUser=Store._auth?.currentUser||null;
   try{
+    const existUname=await Store._getDoc(Store._usernameDoc(username));
+    if(existUname.exists()){toast('Username "'+username+'" sudah digunakan, pilih username lain','w');return;}
     const tempPass=Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,5).toUpperCase()+'!7';
     const cred=await Store._createUser(email,tempPass);
     const newUid=cred.user.uid;
-    await Store._setDoc(Store._userDoc(newUid),{role,nama,email,createdAt:new Date().toISOString()});
+    await Store._setDoc(Store._userDoc(newUid),{role,nama,email,username,createdAt:new Date().toISOString()});
+    await Store._setDoc(Store._usernameDoc(username),{uid:newUid,email});
     try{await Store._sendPasswordReset(email);}catch(e){}
     if(adminUser&&Store._updateCurrentUser){try{await Store._updateCurrentUser(adminUser);}catch(e){}}
-    document.getElementById('nu-nama').value='';document.getElementById('nu-email').value='';
-    toast(`Akun ${nama} dibuat! Email set-password dikirim ke ${email}`,'s',5000);
+    document.getElementById('nu-nama').value='';document.getElementById('nu-username').value='';document.getElementById('nu-email').value='';
+    toast(`Akun ${nama} dibuat! Username: "${username}" — email set-password dikirim ke ${email}`,'s',6000);
     loadUserList();
   }catch(e){
     if(adminUser&&Store._updateCurrentUser){try{await Store._updateCurrentUser(adminUser);}catch(e2){}}
-    const msgs={'auth/email-already-in-use':'Email sudah terdaftar di Firebase Authentication','auth/invalid-email':'Format email tidak valid','auth/weak-password':'Password terlalu lemah (minimal 6 karakter)'};
+    const msgs={'auth/email-already-in-use':'Email sudah terdaftar di Firebase Authentication','auth/invalid-email':'Format email tidak valid','auth/weak-password':'Password terlalu lemah'};
     toast('Gagal: '+(msgs[e.code]||e.message||e.code),'e');
   }finally{
     if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-user-plus"></i> Buat Akun & Kirim Email';}
