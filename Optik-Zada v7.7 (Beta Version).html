@@ -404,7 +404,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
     <div id="user-list" style="font-size:13px;color:var(--muted);margin-bottom:16px">Memuat...</div>
     <div style="border-top:1px solid var(--border);padding-top:14px">
       <div style="font-size:13px;font-weight:700;margin-bottom:6px"><i class="ti ti-user-plus"></i> Daftarkan Pengguna Baru</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Daftarkan email karyawan di sini, lalu buatkan akun mereka di <b>Firebase Console → Authentication → Add user</b> dengan email yang sama, dan beri tahu password-nya.</p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Akun langsung dibuat otomatis. Karyawan akan menerima <b>email untuk set password</b> — pastikan email yang dimasukkan aktif.</p>
       <div style="display:grid;gap:8px">
         <input id="nu-nama" placeholder="Nama lengkap" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
         <input id="nu-email" type="email" placeholder="email@contoh.com" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
@@ -412,7 +412,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
           <option value="karyawan">Karyawan</option>
           <option value="admin">Admin</option>
         </select>
-        <button class="btn btn-primary btn-sm" onclick="addPendingUser()"><i class="ti ti-user-plus"></i> Daftarkan</button>
+        <button id="nu-btn" class="btn btn-primary btn-sm" onclick="addPendingUser()"><i class="ti ti-user-plus"></i> Buat Akun & Kirim Email</button>
       </div>
     </div>
   </div>
@@ -633,7 +633,7 @@ const Store={
       const app=(a.getApps&&a.getApps().length)?a.getApp():a.initializeApp(FIREBASE_CONFIG);
       const fdb=f.getFirestore(app);const auth=au.getAuth(app);
       try{await au.setPersistence(auth,au.browserLocalStoragePersistence);}catch(e){}
-      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);this._fbSnap=f.onSnapshot;
+      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email);this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._fbSnap=f.onSnapshot;
       return true;
     }catch(e){return false;}
   },
@@ -1695,14 +1695,27 @@ async function addPendingUser(){
   const role=document.getElementById('nu-role')?.value||'karyawan';
   if(!nama||!email){toast('Nama dan email wajib diisi','w');return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Format email tidak valid','w');return;}
-  if(Store.mode!=='firebase'){toast('Fitur ini hanya tersedia di mode Firebase','w');return;}
-  const key=email.replace(/\./g,'_');
+  if(Store.mode!=='firebase'||!Store._createUser){toast('Fitur ini hanya tersedia di mode Firebase','w');return;}
+  const btn=document.getElementById('nu-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Membuat akun...';}
+  const adminUser=Store._auth?.currentUser||null;
   try{
-    await Store._setDoc(Store._pendingDoc(key),{role,nama,email,addedAt:new Date().toISOString()});
+    const tempPass=Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,5).toUpperCase()+'!7';
+    const cred=await Store._createUser(email,tempPass);
+    const newUid=cred.user.uid;
+    await Store._setDoc(Store._userDoc(newUid),{role,nama,email,createdAt:new Date().toISOString()});
+    try{await Store._sendPasswordReset(email);}catch(e){}
+    if(adminUser&&Store._updateCurrentUser){try{await Store._updateCurrentUser(adminUser);}catch(e){}}
     document.getElementById('nu-nama').value='';document.getElementById('nu-email').value='';
-    toast(`${nama} berhasil didaftarkan sebagai ${role}`,'s',3000);
+    toast(`Akun ${nama} dibuat! Email set-password dikirim ke ${email}`,'s',5000);
     loadUserList();
-  }catch(e){toast('Gagal mendaftarkan: '+(e.message||e.code),'e');}
+  }catch(e){
+    if(adminUser&&Store._updateCurrentUser){try{await Store._updateCurrentUser(adminUser);}catch(e2){}}
+    const msgs={'auth/email-already-in-use':'Email sudah terdaftar di Firebase Authentication','auth/invalid-email':'Format email tidak valid','auth/weak-password':'Password terlalu lemah (minimal 6 karakter)'};
+    toast('Gagal: '+(msgs[e.code]||e.message||e.code),'e');
+  }finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-user-plus"></i> Buat Akun & Kirim Email';}
+  }
 }
 
 // ════════════════════════════════════════════════
