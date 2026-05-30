@@ -1370,7 +1370,7 @@ function fabAction(type){const m=document.getElementById('fab-menu');m.classList
 function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Data hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';return`<div>Ukuran data: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>Batas: ~1 MB</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
   const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});
   const logEl=document.getElementById('action-log-content');
-  if(logEl){const logs=(db.actionLog||[]).slice(0,10);if(!logs.length){logEl.textContent='Belum ada tindakan tercatat.';}else{logEl.innerHTML=logs.map(l=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div style="font-weight:600;color:var(--text)">${l.label}</div><div style="font-size:11px;color:var(--muted)">oleh: <strong>${l.by}</strong>${l.byEmail?' — '+l.byEmail:''}</div></div><div style="font-size:11px;color:var(--muted);flex-shrink:0;text-align:right">${new Date(l.ts).toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')+(logs.length===10?'<div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">Menampilkan 10 tindakan terakhir</div>':'');}}
+  if(logEl){const logs=(db.actionLog||[]).slice(0,5);if(!logs.length){logEl.textContent='Belum ada tindakan tercatat.';}else{const total=(db.actionLog||[]).length;logEl.innerHTML=logs.map(l=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div style="font-weight:600;color:var(--text)">${l.label}</div><div style="font-size:11px;color:var(--muted)">oleh: <strong>${l.by}</strong>${l.byEmail?' — '+l.byEmail:''}</div></div><div style="font-size:11px;color:var(--muted);flex-shrink:0;text-align:right">${new Date(l.ts).toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')+(total>5?`<div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">+${total-5} tindakan lainnya tersimpan</div>`:'')+`<div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="db.actionLog=[];Store.save();renderSettings();"><i class="ti ti-trash"></i> Hapus Log</button></div>`;}}
   const miInfo=document.getElementById('migrate-info');const miAct=document.getElementById('migrate-actions');
   if(miInfo&&miAct){
     if(Store.mode!=='firebase'){miInfo.textContent='Hanya tersedia di mode Firebase.';miAct.innerHTML='';}
@@ -1382,13 +1382,15 @@ function backupData(){const a=document.createElement('a');a.href='data:applicati
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;await Store.save();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
 async function seedMasterData(){
   if(!confirm('Reset data master produk & customer ke data demo?\n\nTransaksi (invoice) tidak akan dihapus.'))return;
+  const _log={action:'seedMasterData',label:'Reset Master Data & Customer',by:currentUser?(currentUser.nama||currentUser.email||'Admin'):'Admin',byEmail:currentUser?currentUser.email:'',ts:Date.now()};
   db.frames=JSON.parse(JSON.stringify(SEED.frames));
   db.lensas=JSON.parse(JSON.stringify(SEED.lensas));
   db.softlens=JSON.parse(JSON.stringify(SEED.softlens));
   db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));
   db.customers=JSON.parse(JSON.stringify(SEED.customers));
+  if(!db.actionLog)db.actionLog=[];db.actionLog.unshift(_log);if(db.actionLog.length>20)db.actionLog=db.actionLog.slice(0,20);
   await Store.save();renderSettings();
-  toast('Master data & customer berhasil direset ke data demo','s',3000);
+  toast('Master data & customer berhasil direset ke data demo · dicatat: '+_log.by,'s',3000);
 }
 async function clearTransactions(){
   if(!confirm('Hapus SEMUA transaksi?\n\nTindakan ini akan dicatat di log audit.'))return;
@@ -1397,7 +1399,7 @@ async function clearTransactions(){
     try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){}
   }
   db.invoices=[];db.counter=1;
-  if(!db.actionLog)db.actionLog=[];db.actionLog.unshift(_log);if(db.actionLog.length>50)db.actionLog=db.actionLog.slice(0,50);
+  if(!db.actionLog)db.actionLog=[];db.actionLog.unshift(_log);if(db.actionLog.length>20)db.actionLog=db.actionLog.slice(0,20);
   await Store.save();
   renderSettings();renderDashboard();
   toast('Transaksi dihapus · dicatat: '+_log.by,'w',4000);
@@ -1410,7 +1412,7 @@ async function resetAll(){
   }
   const _prevLog=(db.actionLog||[]).slice();
   db=Store.seedDB();
-  db.actionLog=_prevLog;db.actionLog.unshift(_log);if(db.actionLog.length>50)db.actionLog=db.actionLog.slice(0,50);
+  db.actionLog=_prevLog;db.actionLog.unshift(_log);if(db.actionLog.length>20)db.actionLog=db.actionLog.slice(0,20);
   await Store.save();
   renderSettings();renderDashboard();
   toast('Data direset · dicatat: '+_log.by,'w',4000);
