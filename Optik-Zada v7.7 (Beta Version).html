@@ -1379,15 +1379,15 @@ function renderSettings(){const size=JSON.stringify(db).length;const modeTxt=Sto
   }
   if(currentRole==='admin')loadUserList();}
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.click();toast('Backup diunduh');}
-function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;persist();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
-function seedMasterData(){
+function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;await Store.save();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
+async function seedMasterData(){
   if(!confirm('Reset data master produk & customer ke data demo?\n\nTransaksi (invoice) tidak akan dihapus.'))return;
   db.frames=JSON.parse(JSON.stringify(SEED.frames));
   db.lensas=JSON.parse(JSON.stringify(SEED.lensas));
   db.softlens=JSON.parse(JSON.stringify(SEED.softlens));
   db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));
   db.customers=JSON.parse(JSON.stringify(SEED.customers));
-  persist();renderSettings();
+  await Store.save();renderSettings();
   toast('Master data & customer berhasil direset ke data demo','s',3000);
 }
 async function clearTransactions(){
