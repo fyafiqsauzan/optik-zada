@@ -1232,9 +1232,12 @@ function importHistorisCustomer(input){
           break;
         }
       }
-      // PD and Add from main header row
-      if(mainCol['pd']!==undefined)rxCol.pd=mainCol['pd'];
-      if(mainCol['add']!==undefined)rxCol.add=mainCol['add'];
+      // PD and Add — scan ALL rows from mainHdrRow through rxHdrRow (they may be in an intermediate row)
+      const _rxHdrEnd=Math.max(mainHdrRow,rxHdrRow>=0?rxHdrRow:mainHdrRow+4);
+      for(let i=mainHdrRow;i<=_rxHdrEnd&&i<raw.length;i++){
+        const cells=raw[i].map(cell=>String(cell instanceof Date?'':cell||'').toLowerCase().trim());
+        cells.forEach((c,j)=>{if(c==='pd')rxCol.pd=j;if(c==='add')rxCol.add=j;});
+      }
 
       const colNO=mainCol['no']??0;
       const colTgl=mainCol['tanggal']??1;
