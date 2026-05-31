@@ -17,6 +17,7 @@
 | **v8.3 Beta** | ✅ Dirilis | Badge emas "siap diambil" di sidebar (lewat tglSiap & belum lunas), password reset continue URL ke optik-zada.store |
 | **v8.4 Beta** | ✅ Dirilis | Info toko dinamis dari Pengaturan (nama, alamat, HP, jam, footer) — struk, print thermal, WA otomatis update |
 | **v8.5 Beta** | ✅ Dirilis | Firestore per-document restructure — invoices/{id}, backward-compat migration UI |
+| **v8.5.1 Beta** | ✅ Dirilis | Hotfix: hapus produk & customer pakai modal in-app (bukan `confirm()` native — blocked oleh Chrome desktop) |
 | **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
