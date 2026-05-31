@@ -23,7 +23,7 @@
 | **v8.7 Beta** | ✅ Dirilis | Mobile responsive audit (#33), verifikasi email akun baru (#35), laporan profit per produk (#36) |
 | **v8.7.1 Beta** | ✅ Dirilis | Autocomplete pencarian produk di form invoice |
 | **v8.7.2 Beta** | ✅ Dirilis | Filter/cari di master data semua kategori + import Excel pertahankan stok existing |
-| **v8.8.0 Beta** | ✅ Dirilis | Promo global (#37), riwayat customer lengkap (#27), dark mode otomatis (#38), tooltip Rx/DP (#39) |
+| **v8.8.0 Beta** | ✅ Dirilis | Riwayat customer lengkap (#27), dark mode otomatis (#38), tooltip Rx/DP (#39) |
 | **v8.8 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -157,7 +157,7 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 37 | Diskon Global / Promo | Feature | ✅ v8.8.0 | Setting promo di Pengaturan (label + jumlah Rp). Aktif → semua invoice baru dapat diskon otomatis, tampil di struk & live preview. |
+| 37 | Diskon Global / Promo | Feature | ⏭️ Skip | User prefer input diskon langsung per invoice (field sudah ada). Fitur global tidak diperlukan. |
 | 38 | Dark/Light Mode Toggle Otomatis | Enhancement | ✅ v8.8.0 | `prefers-color-scheme` digunakan jika belum ada pilihan manual. `matchMedia` listener — otomatis ikut sistem saat berubah. |
 | 39 | Tooltip / Help Onboarding | UX | ✅ v8.8.0 | Tooltip ikon `?` di semua field Rx (Sph, Cyl, Axis, Visus, PD, Add, Dm.A, Dm.B, DBL, TP) + field DP. |
 
