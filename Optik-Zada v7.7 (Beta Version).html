@@ -395,6 +395,11 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <div id="page-customer" class="page">
   <div class="ph"><div class="ph-left"><h2>Data Customer</h2><p>Seluruh customer terdaftar</p></div></div>
   <div class="card" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Customer</div><div class="frow" style="grid-template-columns:80px 2fr 1fr 1fr 80px 44px"><div class="fg"><label>Gelar</label><select id="cg" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">—</option><option value="Tn.">Tn.</option><option value="Ny.">Ny.</option><option value="Nn.">Nn.</option><option value="An.">An.</option></select></div><div class="fg"><label>Nama *</label><input id="cn" placeholder="Nama lengkap"></div><div class="fg"><label>No. HP</label><input id="chp" placeholder="+628xxx"></div><div class="fg"><label>Tempat Tinggal</label><input id="ca" placeholder="Kota / alamat"></div><div class="fg"><label>Usia</label><input id="cu" type="number" min="1" max="120" placeholder="Thn"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addCustomerManual()"><i class="ti ti-plus"></i> Tambah</button></div></div></div>
+  <div class="card admin-only" style="margin-bottom:14px">
+    <div class="ct"><i class="ti ti-table-import"></i> Import Historis dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx)</span></div>
+    <p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import data pasien dari file Excel lama dengan kolom <strong>BON, Nama, Usia, contact, Pembelian, Rx (S/C/Axis/Visus), PD, Add</strong>. Otomatis deteksi kolom. Preview dulu sebelum diimport.</p>
+    <label class="btn btn-outline btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Pilih File Excel<input type="file" accept=".xlsx,.xls" style="display:none" onchange="importHistorisCustomer(this)"></label>
+  </div>
   <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Customer</div><div style="position:relative;margin-bottom:12px"><i class="ti ti-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px"></i><input id="c-q" placeholder="Cari nama..." oninput="renderCustomers()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px 9px 32px;font-size:13px;width:100%;background:var(--card);color:var(--text);outline:none;font-family:inherit"></div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>No. HP</th><th>Tempat Tinggal</th><th>Usia</th><th>Transaksi</th><th>Total Belanja</th><th>Aksi</th></tr></thead><tbody id="cu-tb"></tbody></table><div id="cu-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
@@ -1184,6 +1189,194 @@ function delCustomer(id){const c=db.customers.find(x=>x.id===id);if(!c)return;do
 function _doDelCustomer(id){db.customers=db.customers.filter(x=>x.id!==id);renderCustomers();persist();closeModal();toast('Customer dihapus','w');}
 function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').toLowerCase();const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));document.getElementById('cu-emp').style.display=arr.length?'none':'block';document.getElementById('cu-tb').innerHTML=arr.map((c,i)=>{const txs=activeInvs().filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase());const totalBelanja=txs.reduce((s,x)=>s+x.tot,0);return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${c.nama}</strong></td><td>${c.hp||'—'}</td><td>${c.alamat||'—'}</td><td>${c.usia||'—'}</td><td><span class="badge bblue">${txs.length} txn</span></td><td><strong>${txs.length?fmt(totalBelanja):'—'}</strong></td><td style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="rxHistory(${c.id})" title="Riwayat Transaksi &amp; Resep"><i class="ti ti-history"></i></button>${currentRole==='admin'?`<button class="btn btn-danger btn-xs" onclick="delCustomer(${c.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join('');}
 
+// ════════════════════════════════════════════════
+// IMPORT HISTORIS CUSTOMER DARI EXCEL
+// ════════════════════════════════════════════════
+function importHistorisCustomer(input){
+  if(typeof XLSX==='undefined'){toast('Library Excel sedang dimuat, coba lagi','w');input.value='';return;}
+  const file=input.files[0];input.value='';if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:true});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',cellDates:true});
+
+      // ── Detect main header row (must have "bon" AND "nama") ──
+      let mainCol={},mainHdrRow=-1;
+      for(let i=0;i<Math.min(12,raw.length);i++){
+        const cells=raw[i].map(cell=>String(cell instanceof Date?'':cell||'').toLowerCase().trim());
+        if(cells.some(c=>c==='bon')&&cells.some(c=>c==='nama')){
+          mainHdrRow=i;
+          cells.forEach((c,j)=>{if(c)mainCol[c]=j;});
+          break;
+        }
+      }
+      if(mainHdrRow<0){toast('Format tidak dikenali — pastikan ada kolom "BON" dan "Nama" di Excel','e');return;}
+
+      // ── Detect Rx sub-header row (has >=2 "s" cells AND "axis"/"visus") ──
+      let rxCol={rs:-1,rc:-1,ra:-1,rv:-1,ls:-1,lc:-1,la:-1,lv:-1,pd:-1,add:-1};
+      for(let i=mainHdrRow+1;i<=mainHdrRow+4&&i<raw.length;i++){
+        const cells=raw[i].map(cell=>String(cell instanceof Date?'':cell||'').toLowerCase().trim());
+        const sIdxes=[];cells.forEach((c,j)=>{if(c==='s')sIdxes.push(j);});
+        if(sIdxes.length>=2||(cells.includes('axis')&&cells.includes('visus'))){
+          // Assign R and L column positions
+          if(sIdxes.length>=1)rxCol.rs=sIdxes[0];
+          if(sIdxes.length>=2)rxCol.ls=sIdxes[1];
+          const lBoundary=rxCol.ls>=0?rxCol.ls:999;
+          cells.forEach((c,j)=>{
+            if(c==='c'){if(j<lBoundary)rxCol.rc=j;else rxCol.lc=j;}
+            if(c==='axis'){if(j<lBoundary)rxCol.ra=j;else rxCol.la=j;}
+            if(c==='visus'){if(j<lBoundary)rxCol.rv=j;else rxCol.lv=j;}
+          });
+          break;
+        }
+      }
+      // PD and Add from main header row
+      if(mainCol['pd']!==undefined)rxCol.pd=mainCol['pd'];
+      if(mainCol['add']!==undefined)rxCol.add=mainCol['add'];
+
+      const colNO=mainCol['no']??0;
+      const colTgl=mainCol['tanggal']??1;
+      const colBON=mainCol['bon']??2;
+      const colNama=mainCol['nama']??3;
+      const colUsia=mainCol['usia']??4;
+      const colHP=mainCol['contact']??5;
+      const colTipe=mainCol['pembelian']??6;
+
+      const dataStart=mainHdrRow+1;
+      const valid=[],skipped=[];
+      const existingBons=new Set(db.invoices.map(inv=>inv.no));
+
+      for(let i=dataStart;i<raw.length;i++){
+        const r=raw[i];
+        const namaRaw=String(r[colNama] instanceof Date?'':r[colNama]||'').trim();
+        const bon=String(r[colBON] instanceof Date?'':r[colBON]||'').trim();
+        const bonKey='BON-'+bon;
+
+        // Skip empty or placeholder rows
+        if(!namaRaw||namaRaw.toLowerCase()==='customer'||!bon){
+          if(namaRaw||bon)skipped.push({rowNum:i+1,nama:namaRaw,bon,reason:'Nama kosong atau placeholder'});
+          continue;
+        }
+        // Skip already imported
+        if(existingBons.has(bonKey)){skipped.push({rowNum:i+1,nama:namaRaw,bon,reason:'BON sudah ada'});continue;}
+
+        // Parse date
+        let tanggal='';
+        const tglRaw=r[colTgl];
+        if(tglRaw instanceof Date){
+          if(tglRaw.getFullYear()>1990)tanggal=tglRaw.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});
+        }else if(typeof tglRaw==='number'&&tglRaw>1){
+          const d=new Date(Math.round((tglRaw-25569)*864e5));
+          if(d.getFullYear()>1990)tanggal=d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});
+        }else if(tglRaw){tanggal=String(tglRaw).trim();}
+
+        // Parse Rx — preserve "Plano", numbers, and empty strings
+        const _rv=col=>col>=0&&r[col]!==''&&r[col]!==undefined&&r[col]!==null?String(r[col] instanceof Date?'':r[col]).trim():'';
+        const rx={rs:_rv(rxCol.rs),rc:_rv(rxCol.rc),ra:_rv(rxCol.ra),rv:_rv(rxCol.rv),ls:_rv(rxCol.ls),lc:_rv(rxCol.lc),la:_rv(rxCol.la),lv:_rv(rxCol.lv),pd:_rv(rxCol.pd),add:_rv(rxCol.add),dma:'',dmb:'',dbl:'',tp:''};
+        const hasRx=!!(rx.rs||rx.rc||rx.ls||rx.lc||rx.pd||rx.add);
+
+        valid.push({rowNum:i+1,bon,bonKey,nama:namaRaw,tanggal,usia:parseInt(r[colUsia])||0,hp:String(r[colHP] instanceof Date?'':r[colHP]||'').trim(),tipe:String(r[colTipe] instanceof Date?'':r[colTipe]||'').trim(),rx,hasRx});
+      }
+
+      if(!valid.length){toast('Tidak ada baris valid ditemukan. Cek format dan konten file.','w');return;}
+
+      // Deduplicate customers → only truly new
+      const existingNames=new Set(db.customers.map(c=>c.nama.toLowerCase().trim()));
+      const newCustMap=new Map();
+      valid.forEach(row=>{
+        const key=row.nama.toLowerCase().trim();
+        if(!existingNames.has(key)&&!newCustMap.has(key))newCustMap.set(key,{nama:row.nama,hp:row.hp,usia:row.usia});
+      });
+      const trulyNew=[...newCustMap.values()];
+
+      window._importHistorisData={valid,skipped,trulyNew};
+      _showImportHistorisPreview(valid,skipped,trulyNew);
+    }catch(err){
+      console.error(err);
+      toast('Gagal parsing Excel: '+(err.message||err),'e');
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+function _showImportHistorisPreview(valid,skipped,trulyNew){
+  const rxStar=hasRx=>`<span style="font-size:12px;${hasRx?'color:var(--success)':'color:var(--muted)'}">${hasRx?'✓ Ada':'—'}</span>`;
+  const rowsHtml=valid.slice(0,200).map(r=>`<tr style="font-size:12.5px">
+    <td style="color:var(--muted);padding:6px 8px">${r.rowNum}</td>
+    <td style="padding:6px 8px"><strong>${r.bon}</strong></td>
+    <td style="padding:6px 8px">${r.nama}</td>
+    <td style="padding:6px 8px;color:var(--muted)">${r.tanggal||'—'}</td>
+    <td style="padding:6px 8px">${r.tipe?`<span class="badge bg" style="font-size:10px">${r.tipe}</span>`:'<span style="color:var(--muted)">—</span>'}</td>
+    <td style="padding:6px 8px;text-align:center">${rxStar(r.hasRx)}</td>
+  </tr>`).join('');
+  const moreRows=valid.length>200?`<tr><td colspan="6" style="text-align:center;padding:10px;color:var(--muted);font-size:12px">... dan ${valid.length-200} baris lainnya</td></tr>`:'';
+  const skipNote=skipped.length?`<div style="margin-top:8px;font-size:12px;color:var(--muted);line-height:1.6"><strong>Baris dilewati:</strong> ${skipped.map(s=>`Baris ${s.rowNum} <em>${s.nama||'(kosong)'}</em> — ${s.reason}`).join(' · ')}</div>`:'';
+
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-title"><i class="ti ti-table-import"></i> Preview Import Historis Excel</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <div style="background:rgba(72,199,142,.12);border:1px solid rgba(72,199,142,.35);border-radius:var(--radius-sm);padding:8px 14px;font-size:13px"><i class="ti ti-users" style="color:var(--success)"></i> <strong>${trulyNew.length}</strong> customer baru</div>
+      <div style="background:rgba(99,179,237,.12);border:1px solid rgba(99,179,237,.35);border-radius:var(--radius-sm);padding:8px 14px;font-size:13px"><i class="ti ti-receipt" style="color:var(--info)"></i> <strong>${valid.length}</strong> invoice historis</div>
+      ${skipped.length?`<div style="background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);border-radius:var(--radius-sm);padding:8px 14px;font-size:13px"><i class="ti ti-alert-triangle" style="color:var(--warn)"></i> <strong>${skipped.length}</strong> baris dilewati</div>`:''}
+    </div>
+    <div style="overflow-y:auto;max-height:330px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+      <table style="width:100%;border-collapse:collapse">
+        <thead style="position:sticky;top:0;background:var(--bg2);z-index:1">
+          <tr>
+            <th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--muted);font-weight:600">Baris</th>
+            <th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--muted);font-weight:600">BON</th>
+            <th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--muted);font-weight:600">Nama</th>
+            <th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--muted);font-weight:600">Tanggal</th>
+            <th style="padding:7px 8px;text-align:left;font-size:11px;color:var(--muted);font-weight:600">Tipe</th>
+            <th style="padding:7px 8px;text-align:center;font-size:11px;color:var(--muted);font-weight:600">Rx</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}${moreRows}</tbody>
+      </table>
+    </div>
+    ${skipNote}
+    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.6">Invoice historis dibuat dengan total <strong>Rp 0</strong> (harga tidak tersedia di Excel). Pembayaran dicatat sebagai <em>Historis</em>. Bisa dilihat di halaman Riwayat.</p>`;
+
+  document.getElementById('modal-actions').innerHTML=`
+    <button class="btn btn-outline" onclick="closeModal()">Batal</button>
+    <button class="btn btn-primary" id="do-import-btn" onclick="_doImportHistoris()"><i class="ti ti-download"></i> Import Sekarang (${valid.length} data)</button>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+async function _doImportHistoris(){
+  const data=window._importHistorisData;if(!data)return;
+  const btn=document.getElementById('do-import-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Mengimport...';}
+  const baseTs=Date.now();
+  const existingNames=new Set(db.customers.map(c=>c.nama.toLowerCase().trim()));
+  let addedC=0,addedI=0;
+
+  // Insert new customers
+  data.trulyNew.forEach((c,i)=>{
+    if(!existingNames.has(c.nama.toLowerCase().trim())){
+      db.customers.push({id:baseTs+i,nama:c.nama,hp:c.hp||'',alamat:'',usia:c.usia||0,jk:''});
+      existingNames.add(c.nama.toLowerCase().trim());addedC++;
+    }
+  });
+
+  // Insert invoice records
+  const offset=data.trulyNew.length+1;
+  data.valid.forEach((row,i)=>{
+    const inv={id:baseTs+offset+i,no:row.bonKey,tanggal:row.tanggal||'—',ts:baseTs+offset+i,customer:row.nama,hp:row.hp,usia:row.usia,jk:'',alamat:'',tipe:row.tipe||'Kacamata',tglSiap:'',ro:{nama:'',siro:''},rx:row.rx,frameDetail:{brand:'',mat:'',code:'',color:''},lensDetail:{brand:'',focus:'',type:'',color:''},items:{frame:[],lensa:[],softlens:[],aksesoris:[]},sub:0,disc:0,tot:0,mod:0,profit:0,pay:'Historis',payStatus:'lunas',dpAmount:0,sisa:0,catatan:'Import dari data historis Excel',isHistoris:true,createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email,role:currentUser.role}:null,createdTs:baseTs+offset+i};
+    db.invoices.push(inv);
+    if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});
+    addedI++;
+  });
+
+  db.invoices.sort((a,b)=>(b.ts||0)-(a.ts||0));
+  await persist();
+  delete window._importHistorisData;
+  closeModal();renderCustomers();
+  toast(`Import selesai! ${addedC} customer baru & ${addedI} invoice historis ditambahkan`,'s',5000);
+}
+
 
 // ════════════════════════════════════════════════
 // SECTION 8 · AUTOCOMPLETE & GLOBAL SEARCH
@@ -1356,7 +1549,7 @@ document.getElementById('modal-content').innerHTML=buildReceipt(inv)+auditHtml;c
 function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';const myOnly=typeof _shMyInv!=='undefined'&&_shMyInv&&!!currentUser?.uid;let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm)&&(!myOnly||inv.createdBy?.uid===currentUser?.uid));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${inv.createdBy.nama}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
-return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
+return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':inv.pay==='Historis'?'bg':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
 const _pgEl=document.getElementById('h-pagination');if(_pgEl){if(_pgTotal>1){let _ph='';if(_histPage>1)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage--;renderHistory()"><i class="ti ti-chevron-left"></i></button>';_ph+='<span style="font-size:12px;color:var(--muted);padding:0 8px">Hal '+_histPage+' / '+_pgTotal+' &nbsp;&#xb7;&nbsp; '+arr.length+' transaksi</span>';if(_histPage<_pgTotal)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage++;renderHistory()"><i class="ti ti-chevron-right"></i></button>';_pgEl.innerHTML=_ph;}else _pgEl.innerHTML='';}const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=currentRole==='admin'?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
 function delInvoice(id){if(!confirm('Arsipkan invoice ini? Invoice bisa dipulihkan dari Settings.'))return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(()=>{});}closeModal();renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
 function showArchivedInvoices(){const deleted=db.invoices.filter(x=>x.deletedAt).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));document.getElementById('modal-content').innerHTML='<div class="modal-title"><i class="ti ti-archive"></i> Invoice Terhapus ('+deleted.length+')</div>'+(deleted.length?deleted.map(inv=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600">'+inv.no+' — '+inv.customer+'</div><div style="font-size:11px;color:var(--muted)">'+inv.tanggal+' · '+fmt(inv.tot)+' · '+inv.pay+'</div></div><button class="btn btn-success btn-xs" onclick="restoreInvoice('+inv.id+')"><i class="ti ti-refresh"></i> Pulihkan</button></div>').join(''):'<div class="empty" style="padding:24px"><i class="ti ti-check-circle" style="font-size:32px;color:var(--success)"></i><p>Tidak ada invoice terhapus</p></div>');document.getElementById('modal-actions').innerHTML='<button class="btn btn-outline" onclick="closeModal()">Tutup</button>';document.getElementById('modal').style.display='flex';}
