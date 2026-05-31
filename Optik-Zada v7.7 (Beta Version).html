@@ -412,7 +412,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.0</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.3</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card admin-only" style="margin-bottom:16px">
@@ -479,7 +479,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.0 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.3 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -497,10 +497,47 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.9.0 -->
+      <!-- New in v8.9.3 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.3 — Perbaikan Struk &amp; Tampilan Invoice</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-receipt" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Detail Lensa Tidak Double</strong> — Jika lensa diinput dari katalog (item), baris "Lensa: ..." di struk tidak lagi muncul dobel. Detail hanya ditampilkan jika tidak ada item katalog yang sesuai.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-layout-grid" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Button Invoice Lebih Rapi</strong> — Tombol di modal invoice (WA, Order Supplier, Thermal) kini ikon-only dengan tooltip, sehingga tidak meluap di layar kecil. Hapus, Lunaskan, dan Cetak tetap berLabel teks.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.2 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.2</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.2 — Manajemen Supplier &amp; Order via WhatsApp</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-truck-delivery" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Daftar Supplier Lensa</strong> — Admin kini bisa tambah, edit, dan hapus supplier lensa dari halaman Pengaturan. Setiap supplier punya nama, nomor WhatsApp, dan catatan opsional.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-brand-whatsapp" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Order ke Supplier via WA</strong> — Dari modal invoice (invoice dengan resep atau lensa), klik tombol ikon truk untuk memilih supplier. Aplikasi otomatis membuka WhatsApp dengan pesan order berisi detail resep Rx, ukuran lensa, dan info customer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.1 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.1</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.1 — Import Historis Customer dari Excel</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-table-import" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Import Data Historis dari Excel</strong> — Admin bisa unggah file Excel lama (.xlsx/.xls) berisi data pasien. Aplikasi otomatis mendeteksi kolom (Bon, Nama, Usia, HP, Tipe, Rx) meski header multi-baris. Preview data muncul sebelum diimport.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Preview Sebelum Import</strong> — Sebelum data masuk ke database, tampil tabel preview dengan semua baris yang akan diimport. Konfirmasi manual untuk menghindari import data yang salah.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-history" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Badge "Historis" di Riwayat</strong> — Invoice hasil import ditandai badge abu-abu "Historis" di halaman Riwayat Transaksi, sehingga mudah dibedakan dari transaksi aktif.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.0 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.0</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.9.0 — Fitur Karyawan: Profil, Transaksi Saya & Notif Stok</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -986,7 +1023,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.0';
+const _RN_VERSION='8.9.3';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');

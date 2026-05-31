@@ -25,6 +25,9 @@
 | **v8.7.2 Beta** | ✅ Dirilis | Filter/cari di master data semua kategori + import Excel pertahankan stok existing |
 | **v8.8.0 Beta** | ✅ Dirilis | Riwayat customer lengkap (#27), dark mode otomatis (#38), tooltip Rx/DP (#39) |
 | **v8.9.0 Beta** | ✅ Dirilis | Karyawan: halaman Profil Saya, filter Transaksi Saya di Riwayat, notif stok kritis di dashboard |
+| **v8.9.1 Beta** | ✅ Dirilis | Import historis customer dari Excel — deteksi kolom otomatis, preview sebelum import, badge "Historis" di Riwayat |
+| **v8.9.2 Beta** | ✅ Dirilis | Manajemen supplier lensa di Pengaturan + Order ke Supplier via WhatsApp langsung dari modal invoice |
+| **v8.9.3 Beta** | ✅ Dirilis | Fix: detail lensa double di struk + button invoice overflow di layar kecil |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -164,6 +167,9 @@
 | 40 | Halaman Profil Karyawan | Feature | ✅ v8.9.0 | Halaman "Profil Saya" untuk semua role: nama, email, badge peran, info toko, tombol kirim email ganti password (Firebase mode). |
 | 41 | Filter "Transaksi Saya" di Riwayat | Feature | ✅ v8.9.0 | Toggle button di Riwayat Transaksi — filter hanya invoice yang dibuat oleh user yang login (`createdBy.uid`). |
 | 42 | Notif Stok Kritis untuk Karyawan | Enhancement | ✅ v8.9.0 | Banner stok menipis di Dashboard kini tampil untuk role karyawan (sebelumnya admin-only). |
+| 43 | Import Historis Customer dari Excel | Feature | ✅ v8.9.1 | Upload .xlsx dengan format header bebas (multi-baris). Auto-deteksi kolom Bon, Nama, Usia, HP, Tipe, Rx (R/L Sph/Cyl/Axis/Vis), PD, Add, DM.A/B, DBL, TP. Preview tabel sebelum konfirmasi. Invoice disimpan dengan flag `isHistoris:true` + badge "Historis" abu-abu di Riwayat. |
+| 44 | Manajemen Supplier + Order via WhatsApp | Feature | ✅ v8.9.2 | Admin kelola daftar supplier lensa (nama, WA, catatan) dari Pengaturan. Di modal invoice, tombol truk membuka picker supplier → app buka WA dengan pesan order otomatis berisi detail Rx + ukuran lensa + info customer. |
+| 45 | Fix Struk & Button Invoice | Bug Fix | ✅ v8.9.3 | (1) Detail lensa di struk tidak lagi double jika lensa diambil dari katalog item. (2) Button WA/Supplier/Thermal dijadikan ikon-only dengan tooltip agar tidak overflow di layar kecil. |
 
 ---
 
@@ -258,7 +264,12 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 29 Mei 2026 | v8.3 | Feat: badge emas "siap diambil" di sidebar — count invoice DP lewat tglSiap, terpisah dari badge merah total DP |
 | 29 Mei 2026 | v8.3 | Fix: password reset continue URL → optik-zada.store (bukan firebaseapp.com) |
 | 29 Mei 2026 | v8.4 | Feat: info toko dinamis — nama, alamat, HP, jam, footer bisa diedit dari Pengaturan, update ke struk/print/WA |
+| 31 Mei 2026 | v8.9.0 | Feat: halaman Profil Saya (semua role), filter "Transaksi Saya" di Riwayat, notif stok kritis untuk karyawan |
+| 31 Mei 2026 | v8.9.1 | Feat: import historis customer dari Excel — deteksi header otomatis, PD/Add multi-row, preview sebelum import |
+| 31 Mei 2026 | v8.9.1 | Infra: file Excel historis dibersihkan (159 baris, tipe dinormalisasi, tanggal diperbaiki, header Rx merge ranges) |
+| 31 Mei 2026 | v8.9.2 | Feat: manajemen supplier lensa di Pengaturan + order ke supplier via WhatsApp dari modal invoice |
+| 31 Mei 2026 | v8.9.3 | Fix: detail lensa double di struk + button WA/Supplier/Thermal jadi ikon-only agar tidak overflow |
 
 ---
 
-*Last updated: 29 Mei 2026 · Optik Zada Management System v8.5 Beta*
+*Last updated: 31 Mei 2026 · Optik Zada Management System v8.9.3 Beta*
