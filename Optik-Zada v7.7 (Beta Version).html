@@ -186,6 +186,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <button class="nl" onclick="showPage('customer',this)"><i class="ti ti-users"></i>Customer</button>
   <div class="sep"></div>
   <button class="nl" onclick="showPage('settings',this)"><i class="ti ti-settings"></i>Pengaturan</button>
+  <button class="nl" onclick="showPage('profil',this)"><i class="ti ti-user-circle"></i>Profil Saya</button>
 </aside>
 <div id="toast-wrap"></div>
 <div id="offline-banner" class="no-print" style="display:none;position:fixed;top:58px;left:0;right:0;z-index:299;background:#991b1b;color:#fff;padding:8px 16px;font-size:13px;font-weight:600;align-items:center;justify-content:center;gap:8px;transform:translateY(-100%);transition:transform .25s ease"><i class="ti ti-wifi-off"></i> Koneksi terputus — perubahan mungkin belum tersimpan</div>
@@ -335,6 +336,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
     <select id="sh-pay" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;min-width:150px"><option value="">Semua Pembayaran</option><option>Tunai</option><option>QRIS</option><option>Transfer</option></select>
     <select id="sh-month" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;min-width:140px"><option value="">Semua Bulan</option></select>
     <select id="sh-sort" onchange="_histPage=1;renderHistory()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit"><option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="highest">Tertinggi</option><option value="lowest">Terendah</option></select>
+    <button id="sh-myinv" class="btn btn-outline btn-sm" onclick="_shMyInv=!_shMyInv;this.className='btn btn-sm '+(_shMyInv?'btn-primary':'btn-outline');_histPage=1;renderHistory()" style="white-space:nowrap;display:flex;align-items:center;gap:6px"><i class="ti ti-user-circle"></i> Transaksi Saya</button>
   </div>
   <div class="card"><div class="tbl-wrap"><table><thead><tr><th>No.</th><th>Tanggal</th><th>Tgl Lunas</th><th>Customer</th><th>Tipe</th><th>Total</th><th>Status</th><th>Pembayaran</th><th class="no-print" id="h-aksi-th">Aksi</th></tr></thead><tbody id="h-tbody"></tbody></table><div id="h-empty" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Tidak ada transaksi</p></div></div>
     <div id="h-pagination" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:12px"></div>
@@ -405,7 +407,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.8.0</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.0</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
@@ -432,6 +434,12 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="card" style="border-color:#f5d782"><div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Hapus transaksi atau reset semua data. Backup dulu!</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm admin-only" onclick="showArchivedInvoices()"><i class="ti ti-archive"></i> Lihat Invoice Terhapus</button><button class="btn btn-outline btn-sm admin-only" onclick="seedMasterData()" style="border-color:var(--warn);color:var(--warn)"><i class="ti ti-database-import"></i> Reset Master Data & Customer</button><button class="btn btn-danger btn-sm admin-only" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Semua Transaksi</button><button class="btn btn-danger btn-sm admin-only" onclick="resetAll()"><i class="ti ti-alert-octagon"></i> Reset Semua Data</button></div></div>
 </div>
 
+<!-- PROFIL PAGE -->
+<div id="page-profil" class="page">
+  <div class="ph"><div class="ph-left"><h2>Profil Saya</h2><p>Info akun &amp; keamanan</p></div></div>
+  <div id="profil-content"></div>
+</div>
+
 <!-- CASHFLOW PAGE -->
 <div id="page-cashflow" class="page">
   <div class="ph">
@@ -450,7 +458,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.8.0 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.0 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -468,10 +476,23 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.8.0 -->
+      <!-- New in v8.9.0 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.0 — Fitur Karyawan: Profil, Transaksi Saya & Notif Stok</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-circle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Halaman Profil Saya</strong> — Semua role kini punya halaman profil sendiri. Tampil nama, email, badge peran, dan info toko. Di mode Firebase, bisa kirim email ganti password langsung dari sini.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-filter" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Filter "Transaksi Saya" di Riwayat</strong> — Karyawan bisa klik tombol <em>Transaksi Saya</em> di halaman Riwayat untuk hanya melihat invoice yang dibuat oleh akun mereka sendiri.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Notifikasi Stok Kritis untuk Karyawan</strong> — Banner peringatan stok menipis di Dashboard kini juga muncul untuk role karyawan, bukan hanya admin.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.8.0 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.8.0</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.8.0 — Riwayat Customer, Dark Mode Otomatis & Tooltip Rx</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -792,7 +813,7 @@ function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
 // Booting urutan: load storage → render dashboard → attach events
 // ════════════════════════════════════════════════
 (async function init(){
-  let had=false;try{had=await Store.init(()=>{const a=document.querySelector('.page.on');const id=a?a.id.replace('page-',''):'dashboard';const m={dashboard:renderDashboard,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,reports:renderReports,cashflow:renderCashflow};if(m[id])m[id]();toast('Data diperbarui dari perangkat lain','i',2200);});}catch(e){db=Store.seedDB();}
+  let had=false;try{had=await Store.init(()=>{const a=document.querySelector('.page.on');const id=a?a.id.replace('page-',''):'dashboard';const m={dashboard:renderDashboard,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,reports:renderReports,cashflow:renderCashflow,profil:renderProfil};if(m[id])m[id]();toast('Data diperbarui dari perangkat lain','i',2200);});}catch(e){db=Store.seedDB();}
   if(!db.aksesoris)db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.invoices.forEach(inv=>{if(inv.items&&!inv.items.aksesoris)inv.items.aksesoris=[];});if(!db.toko)db.toko={nama:'OPTIK ZADA',alamat:'Jl. Raya Mangun Jaya No.03C, Tambun',kota:'Kab. Bekasi, Jawa Barat 17510',hp:'',jam:'09.00 – 21.00 WIB',footer:'Terima kasih atas kepercayaan Anda 🙏'};if(!db.actionLog)db.actionLog=[];
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');const _sysDark=!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);const _useDark=_t?_t==='dark':_sysDark;if(_useDark){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{if(!localStorage.getItem('optik_zada_theme')){darkMode=e.matches;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';}});}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
@@ -811,11 +832,12 @@ function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
 // login() → set currentRole, applyPermissions() → hide/show nav
 // ════════════════════════════════════════════════
 const ROLES={
-  admin:    {label:'Admin / Pemilik',icon:'ti-crown',color:'var(--gold)',pages:['dashboard','reports','cashflow','invoice','history','frame','lensa','softlens','aksesoris','customer','settings'],home:'dashboard'},
-  karyawan: {label:'Karyawan',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','frame','lensa','softlens','aksesoris','customer'],home:'invoice'}
+  admin:    {label:'Admin / Pemilik',icon:'ti-crown',color:'var(--gold)',pages:['dashboard','reports','cashflow','invoice','history','frame','lensa','softlens','aksesoris','customer','settings','profil'],home:'dashboard'},
+  karyawan: {label:'Karyawan',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','frame','lensa','softlens','aksesoris','customer','profil'],home:'invoice'}
 };
 let currentRole=null;
 let currentUser=null; // {uid, nama, email, role}
+let _shMyInv=false;
 
 function injectAuthUI(){
   const css=`
@@ -943,7 +965,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.8.0';
+const _RN_VERSION='8.9.0';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -1017,7 +1039,7 @@ injectAuthUI();
 // NAV
 function showPage(id,el){
   if(!currentRole||!ROLES[currentRole]||!ROLES[currentRole].pages.includes(id)){if(currentRole&&ROLES[currentRole])toast('Menu ini tidak tersedia untuk peran '+ROLES[currentRole].label,'e');return;}
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));document.getElementById('page-'+id).classList.add('on');if(el)el.classList.add('on');const m={dashboard:renderDashboard,reports:renderReports,cashflow:renderCashflow,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,invoice:()=>{genInvNo();const tgl=document.getElementById('inv-tanggal');if(tgl&&!tgl.value){const now=new Date();tgl.value=now.toISOString().slice(0,10);}renderCart();updateReceipt();}};if(m[id])m[id]();window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));document.getElementById('page-'+id).classList.add('on');if(el)el.classList.add('on');const m={dashboard:renderDashboard,reports:renderReports,cashflow:renderCashflow,history:renderHistory,frame:()=>renderProds('frame'),lensa:()=>renderProds('lensa'),softlens:()=>renderProds('softlens'),aksesoris:()=>renderProds('aksesoris'),customer:renderCustomers,settings:renderSettings,profil:renderProfil,invoice:()=>{genInvNo();const tgl=document.getElementById('inv-tanggal');if(tgl&&!tgl.value){const now=new Date();tgl.value=now.toISOString().slice(0,10);}renderCart();updateReceipt();}};if(m[id])m[id]();window.scrollTo({top:0,behavior:'smooth'});
 }
 function toggleDark(){darkMode=!darkMode;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';try{localStorage.setItem('optik_zada_theme',darkMode?'dark':'light');}catch(e){}}
 function toast(msg,type='s',dur=3000){const icons={s:'circle-check',e:'circle-x',w:'alert-triangle',i:'info-circle'};const el=document.createElement('div');el.className=`toast toast-${type}`;el.innerHTML=`<i class="ti ti-${icons[type]}"></i><span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;document.getElementById('toast-wrap').appendChild(el);setTimeout(()=>{el.style.animation='toastOut .3s ease forwards';setTimeout(()=>el.remove(),300)},dur);}
@@ -1331,7 +1353,7 @@ document.getElementById('modal-content').innerHTML=buildReceipt(inv)+auditHtml;c
 // delInvoice() → hapus invoice dari db
 // ════════════════════════════════════════════════
 // HISTORY
-function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
+function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';const myOnly=typeof _shMyInv!=='undefined'&&_shMyInv&&!!currentUser?.uid;let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm)&&(!myOnly||inv.createdBy?.uid===currentUser?.uid));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${inv.createdBy.nama}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
@@ -1378,10 +1400,10 @@ renderSiapAlert();renderDashboardStokAlert();}
 // renderDashboardStokAlert() → update stok banner & list di dashboard
 // ════════════════════════════════════════════════
 function renderDashboardStokAlert(){
-  if(currentRole&&currentRole!=='admin'){const _ae=document.getElementById('stok-alert-area');if(_ae)_ae.innerHTML='';return;}
   const low=allProds().filter(p=>(p.stok||0)<=3);
   const alertEl=document.getElementById('stok-alert-area');
   if(alertEl)alertEl.innerHTML=low.length?`<div class="stok-banner" onclick="showStokAlertModal()"><i class="ti ti-alert-triangle"></i><span><strong>${low.length} produk</strong> stok menipis / habis \u2014 klik untuk cek</span></div>`:'';
+  if(currentRole&&currentRole!=='admin'){return;}
   const sl=document.getElementById('d-stok-list');
   if(sl)sl.innerHTML=low.length?low.slice(0,5).map(p=>{
     const kat=db.frames.find(x=>x.id===p.id)?'frame':db.lensas.find(x=>x.id===p.id)?'lensa':db.softlens.find(x=>x.id===p.id)?'softlens':'aksesoris';
@@ -1513,6 +1535,48 @@ function fabAction(type){const m=document.getElementById('fab-menu');m.classList
 // clearTransactions(), resetAll(), exportCSV()
 // ════════════════════════════════════════════════
 // SETTINGS
+function renderProfil(){
+  const el=document.getElementById('profil-content');
+  if(!el)return;
+  if(!currentUser){el.innerHTML='<div class="empty"><i class="ti ti-user-off"></i><p>Tidak ada sesi aktif</p></div>';return;}
+  const ri=ROLES[currentUser.role]||{label:currentUser.role,icon:'ti-user',color:'var(--muted)'};
+  const initial=(currentUser.nama||currentUser.email||'?')[0].toUpperCase();
+  const tk=_tk();
+  el.innerHTML=`
+    <div class="card" style="max-width:520px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+        <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;flex-shrink:0">${initial}</div>
+        <div>
+          <div style="font-size:17px;font-weight:700">${currentUser.nama||'—'}</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:2px">${currentUser.email||''}</div>
+          <div style="margin-top:6px"><span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:${ri.color};color:${currentUser.role==='admin'?'#000':'#fff'}"><i class="ti ${ri.icon}" style="margin-right:4px"></i>${ri.label}</span></div>
+        </div>
+      </div>
+      ${Store.mode==='firebase'?`<button class="btn btn-outline btn-sm" onclick="doGantiPW()"><i class="ti ti-lock-open"></i> Kirim Email Ganti Password</button><p style="font-size:11.5px;color:var(--muted);margin-top:8px">Email akan dikirim ke <strong>${currentUser.email}</strong>. Klik link di email untuk mengatur password baru.</p>`:`<p style="font-size:12px;color:var(--muted)">Ganti password hanya tersedia di mode Cloud (Firebase).</p>`}
+    </div>
+    <div class="card" style="max-width:520px">
+      <div class="ct"><i class="ti ti-building-store"></i> Info Toko</div>
+      <div style="display:grid;gap:8px;font-size:13px;margin-top:4px">
+        <div style="display:flex;gap:8px"><i class="ti ti-building" style="color:var(--muted);flex-shrink:0;margin-top:2px"></i><span><strong>${tk.nama}</strong></span></div>
+        ${tk.alamat?`<div style="display:flex;gap:8px"><i class="ti ti-map-pin" style="color:var(--muted);flex-shrink:0;margin-top:2px"></i><span>${tk.alamat}${tk.kota?', '+tk.kota:''}</span></div>`:''}
+        ${tk.hp?`<div style="display:flex;gap:8px"><i class="ti ti-phone" style="color:var(--muted);flex-shrink:0;margin-top:2px"></i><span>${tk.hp}</span></div>`:''}
+        ${tk.jam?`<div style="display:flex;gap:8px"><i class="ti ti-clock" style="color:var(--muted);flex-shrink:0;margin-top:2px"></i><span>${tk.jam}</span></div>`:''}
+      </div>
+    </div>`;
+}
+async function doGantiPW(){
+  if(!currentUser?.email){toast('Email tidak tersedia','e');return;}
+  if(!Store._sendPasswordReset){toast('Fitur tidak tersedia di mode lokal','w');return;}
+  const btn=event.target.closest('button');if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Mengirim...';}
+  try{
+    await Store._sendPasswordReset(currentUser.email);
+    toast('Email reset password dikirim ke '+currentUser.email,'s',6000);
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Email Terkirim';}
+  }catch(e){
+    toast('Gagal kirim: '+(e.message||e),'e');
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-lock-open"></i> Kirim Email Ganti Password';}
+  }
+}
 function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)(db):db;const size=JSON.stringify(_cfgObj).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Config hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas config (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';const lbl=Store._migrated?'Config (produk & customer)':'Ukuran data';const limitTxt=Store._migrated?'Config: ~1 MB &nbsp;·&nbsp; Invoice: ∞':'Batas: ~1 MB';return`<div>${lbl}: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>${limitTxt}</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
   const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});
   const logEl=document.getElementById('action-log-content');

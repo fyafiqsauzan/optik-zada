@@ -24,7 +24,8 @@
 | **v8.7.1 Beta** | ✅ Dirilis | Autocomplete pencarian produk di form invoice |
 | **v8.7.2 Beta** | ✅ Dirilis | Filter/cari di master data semua kategori + import Excel pertahankan stok existing |
 | **v8.8.0 Beta** | ✅ Dirilis | Riwayat customer lengkap (#27), dark mode otomatis (#38), tooltip Rx/DP (#39) |
-| **v8.8 RC** | 📋 Planned | Polish & launch prep |
+| **v8.9.0 Beta** | ✅ Dirilis | Karyawan: halaman Profil Saya, filter Transaksi Saya di Riwayat, notif stok kritis di dashboard |
+| **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
 > **Skema:** patch (x.x.Y) = bugfix kecil · minor (x.Y.0) = fitur baru · major (Y.0.0) = perubahan arsitektur besar · RC = Release Candidate
@@ -160,10 +161,13 @@
 | 37 | Diskon Global / Promo | Feature | ⏭️ Skip | User prefer input diskon langsung per invoice (field sudah ada). Fitur global tidak diperlukan. |
 | 38 | Dark/Light Mode Toggle Otomatis | Enhancement | ✅ v8.8.0 | `prefers-color-scheme` digunakan jika belum ada pilihan manual. `matchMedia` listener — otomatis ikut sistem saat berubah. |
 | 39 | Tooltip / Help Onboarding | UX | ✅ v8.8.0 | Tooltip ikon `?` di semua field Rx (Sph, Cyl, Axis, Visus, PD, Add, Dm.A, Dm.B, DBL, TP) + field DP. |
+| 40 | Halaman Profil Karyawan | Feature | ✅ v8.9.0 | Halaman "Profil Saya" untuk semua role: nama, email, badge peran, info toko, tombol kirim email ganti password (Firebase mode). |
+| 41 | Filter "Transaksi Saya" di Riwayat | Feature | ✅ v8.9.0 | Toggle button di Riwayat Transaksi — filter hanya invoice yang dibuat oleh user yang login (`createdBy.uid`). |
+| 42 | Notif Stok Kritis untuk Karyawan | Enhancement | ✅ v8.9.0 | Banner stok menipis di Dashboard kini tampil untuk role karyawan (sebelumnya admin-only). |
 
 ---
 
-## 🚀 v8.8 → v9.0 — Launch Week (18–20 Juni)
+## 🚀 v8.9 → v9.0 — Launch Week (18–20 Juni)
 
 | # | Item | Detail |
 |---|------|--------|
