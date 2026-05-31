@@ -38,7 +38,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .gs-drop{position:absolute;top:calc(100%+6px);right:0;width:280px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow-md);display:none;max-height:280px;overflow-y:auto;z-index:400}
 .gs-item{padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;color:var(--text)}.gs-item:last-child{border-bottom:none}.gs-item:hover{background:var(--bg)}.gs-item i{color:var(--muted);font-size:16px;flex-shrink:0}
 .icon-btn{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.75);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .15s}.icon-btn:hover{background:rgba(255,255,255,.18);color:#fff}
-.main{margin-top:58px;margin-left:220px;padding:24px;min-height:calc(100vh - 58px);transition:margin-left .25s cubic-bezier(.22,1,.36,1)}
+.main{margin-top:58px;margin-left:220px;padding:24px 24px 100px;min-height:calc(100vh - 58px);transition:margin-left .25s cubic-bezier(.22,1,.36,1)}
 .main.sidebar-collapsed{margin-left:0}
 .page{display:none;animation:fadeUp .2s ease}.page.on{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -1192,7 +1192,7 @@ function renderProds(t){
   }).join(''):(q?'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted)"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:8px;opacity:.25"></i>Tidak ada produk yang cocok dengan &ldquo;<strong>'+esc(q)+'</strong>&rdquo;</td></tr>':'');
   let pgEl=document.getElementById(t+'-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id=t+'-pg';document.getElementById(c.tb).closest('.tbl-wrap').after(pgEl);}
-  pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;font-size:12px;color:var(--muted)">'
+  pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 80px 10px 4px;font-size:12px;color:var(--muted)">'
     +'<span>'+filtered.length+' produk \xb7 halaman '+pg+'/'+pgTotal+'</span>'
     +'<div style="display:flex;gap:6px">'
     +(pg>1?'<button class="btn btn-outline btn-xs" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
@@ -1339,7 +1339,7 @@ function renderCustomers(){
   }).join('');
   let pgEl=document.getElementById('cu-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id='cu-pg';document.getElementById('cu-tb').closest('.tbl-wrap').after(pgEl);}
-  pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;font-size:12px;color:var(--muted)">'
+  pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 80px 10px 4px;font-size:12px;color:var(--muted)">'
     +'<span>'+arr.length+' customer \xb7 halaman '+pg+'/'+pgTotal+'</span>'
     +'<div style="display:flex;gap:6px">'
     +(pg>1?'<button class="btn btn-outline btn-xs" onclick="_custPage--;renderCustomers()"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
@@ -1857,8 +1857,8 @@ const _cfCard=document.getElementById('rp-cashflow-card');if(_cfCard&&currentRol
 // ════════════════════════════════════════════════
 (function(){
   const css=`
-  #fab-wrap{position:fixed;bottom:24px;right:24px;z-index:450;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-  .fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:var(--shadow-md);transition:transform .2s}
+  #fab-wrap{position:fixed;bottom:24px;right:24px;z-index:450;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}
+  .fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:var(--shadow-md);transition:transform .2s;pointer-events:auto}
   .fab-btn:hover{transform:scale(1.06)}
   .fab-menu{display:flex;flex-direction:column;gap:6px;opacity:0;pointer-events:none;transform:translateY(10px) scale(.96);transform-origin:bottom right;transition:all .2s}
   .fab-menu.open{opacity:1;pointer-events:all;transform:none}
