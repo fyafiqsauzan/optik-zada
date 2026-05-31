@@ -4,6 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Optik ZADA</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
 <style>
 /* ════════════════════════════════════════════════
    CSS: RESET & CSS VARIABLES (tema warna, radius, shadow)
@@ -346,7 +347,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <div id="page-frame" class="page">
   <div class="ph"><div class="ph-left"><h2>Master Data Frame</h2><p>Kelola stok dan harga frame</p></div></div>
   <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Frame</div><div class="frow" style="grid-template-columns:2fr 1fr 1fr 80px 44px"><div class="fg"><label>Nama *</label><input id="fn" placeholder="Nama frame"></div><div class="fg"><label>Modal</label><input id="fm" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="fj" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="fs" type="number" placeholder="0" min="0" value="1"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addProduct('frame')"><i class="ti ti-plus"></i></button></div></div><div class="ct" style="margin-top:10px"><i class="ti ti-info-circle"></i> Detail Frame <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional — tampil di struk)</span></div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="fd-brand-m" placeholder="Brand"></div><div class="fg"><label>Material</label><input id="fd-mat-m" placeholder="Plastik/Titanium"></div><div class="fg"><label>Kode</label><input id="fd-code-m" placeholder="Kode produk"></div><div class="fg"><label>Warna</label><input id="fd-color-m" placeholder="Warna"></div></div></div>
-  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Frame</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Modal</th><th>Jual</th><th>Margin</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="fr-tb"></tbody></table><div id="fr-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
+  <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-table-import"></i> Import Data dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx atau .csv)</span></div><p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import massal dari file Excel. Data baru ditambahkan, nama yang sama diperbarui. Unduh template terlebih dahulu.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="downloadTemplate('frame')"><i class="ti ti-file-spreadsheet"></i> Unduh Template</button><label class="btn btn-primary btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Import Excel<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importProducts('frame',this)"></label></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Frame</div><div class="tbl-wrap"><table><thead><tr></tr></thead><tbody id="fr-tb"></tbody></table><div id="fr-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
 
@@ -356,7 +358,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <div id="page-lensa" class="page">
   <div class="ph"><div class="ph-left"><h2>Master Data Lensa</h2><p>Kelola stok dan harga lensa</p></div></div>
   <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Lensa</div><div class="frow" style="grid-template-columns:2fr 1fr 1fr 80px 44px"><div class="fg"><label>Nama *</label><input id="ln" placeholder="Nama lensa"></div><div class="fg"><label>Modal</label><input id="lm" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="lj" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="ls2" type="number" placeholder="0" min="0" value="1"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addProduct('lensa')"><i class="ti ti-plus"></i></button></div></div><div class="ct" style="margin-top:10px"><i class="ti ti-info-circle"></i> Detail Lensa <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional — tampil di struk)</span></div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ld-brand-m" placeholder="Brand"></div><div class="fg"><label>Fokus</label><select id="ld-focus-m"><option value="">-</option><option>SV</option><option>Prog</option><option>FT</option></select></div><div class="fg"><label>Tipe</label><input id="ld-type-m" placeholder="Tipe lensa"></div><div class="fg"><label>Warna</label><input id="ld-color-m" placeholder="Warna"></div></div></div>
-  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Lensa</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Modal</th><th>Jual</th><th>Margin</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="ls-tb"></tbody></table><div id="ls-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
+  <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-table-import"></i> Import Data dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx atau .csv)</span></div><p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import massal dari file Excel. Data baru ditambahkan, nama yang sama diperbarui. Unduh template terlebih dahulu.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="downloadTemplate('lensa')"><i class="ti ti-file-spreadsheet"></i> Unduh Template</button><label class="btn btn-primary btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Import Excel<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importProducts('lensa',this)"></label></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Lensa</div><div class="tbl-wrap"><table><thead><tr></tr></thead><tbody id="ls-tb"></tbody></table><div id="ls-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
 
@@ -366,7 +369,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <div id="page-softlens" class="page">
   <div class="ph"><div class="ph-left"><h2>Master Data Softlens</h2><p>Kelola stok dan harga softlens</p></div></div>
   <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Softlens</div><div class="frow" style="grid-template-columns:2fr 1fr 1fr 80px 44px"><div class="fg"><label>Nama *</label><input id="sn" placeholder="Nama softlens"></div><div class="fg"><label>Modal</label><input id="sm2" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="sj" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="ss2" type="number" placeholder="0" min="0" value="1"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addProduct('softlens')"><i class="ti ti-plus"></i></button></div></div><div class="ct" style="margin-top:10px"><i class="ti ti-info-circle"></i> Detail Softlens <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional — tampil di struk)</span></div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="sd-brand-m" placeholder="Brand"></div><div class="fg"><label>Tipe</label><select id="sd-type-m"><option value="">-</option><option>Daily</option><option>Monthly</option><option>2-Weekly</option><option>Yearly</option><option>Lainnya</option></select></div><div class="fg"><label>Warna</label><input id="sd-color-m" placeholder="Warna / Clear"></div><div class="fg"><label>Diameter</label><input id="sd-dia-m" placeholder="14.0mm"></div></div></div>
-  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Softlens</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Modal</th><th>Jual</th><th>Margin</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="sl-tb"></tbody></table><div id="sl-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
+  <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-table-import"></i> Import Data dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx atau .csv)</span></div><p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import massal dari file Excel. Data baru ditambahkan, nama yang sama diperbarui. Unduh template terlebih dahulu.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="downloadTemplate('softlens')"><i class="ti ti-file-spreadsheet"></i> Unduh Template</button><label class="btn btn-primary btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Import Excel<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importProducts('softlens',this)"></label></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Softlens</div><div class="tbl-wrap"><table><thead><tr></tr></thead><tbody id="sl-tb"></tbody></table><div id="sl-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
 
@@ -376,7 +380,8 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 <div id="page-aksesoris" class="page">
   <div class="ph"><div class="ph-left"><h2>Master Data Aksesoris</h2><p>Kelola stok dan harga aksesoris optik</p></div></div>
   <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Aksesoris</div><div class="frow" style="grid-template-columns:2fr 1fr 1fr 80px 44px"><div class="fg"><label>Nama *</label><input id="akn" placeholder="Nama aksesoris"></div><div class="fg"><label>Modal</label><input id="akm" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="akj" type="text" inputmode="numeric" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="aks" type="number" placeholder="0" min="0" value="1"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addProduct('aksesoris')"><i class="ti ti-plus"></i></button></div></div><div class="ct" style="margin-top:10px"><i class="ti ti-info-circle"></i> Detail <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></div><div class="frow" style="grid-template-columns:1fr 1fr"><div class="fg"><label>Kategori</label><select id="akd-cat"><option value="">-</option><option>Cairan Pembersih</option><option>Tempat Kacamata</option><option>Tali Kacamata</option><option>Kain Lap</option><option>Obeng & Alat</option><option>Lainnya</option></select></div><div class="fg"><label>Keterangan</label><input id="akd-note" placeholder="Keterangan tambahan"></div></div></div>
-  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Aksesoris</div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Nama</th><th>Kategori</th><th>Modal</th><th>Jual</th><th>Margin</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="ak-tb"></tbody></table><div id="ak-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
+  <div class="card admin-only" style="margin-bottom:14px"><div class="ct"><i class="ti ti-table-import"></i> Import Data dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx atau .csv)</span></div><p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import massal dari file Excel. Data baru ditambahkan, nama yang sama diperbarui. Unduh template terlebih dahulu.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm" onclick="downloadTemplate('aksesoris')"><i class="ti ti-file-spreadsheet"></i> Unduh Template</button><label class="btn btn-primary btn-sm" style="cursor:pointer"><i class="ti ti-upload"></i> Import Excel<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importProducts('aksesoris',this)"></label></div></div>
+  <div class="card"><div class="ct"><i class="ti ti-list"></i> Daftar Aksesoris</div><div class="tbl-wrap"><table><thead><tr></tr></thead><tbody id="ak-tb"></tbody></table><div id="ak-emp" class="empty" style="display:none"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
 </div>
 
 
@@ -398,7 +403,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.5.2</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.6</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
@@ -443,7 +448,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.5.2 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.6 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -461,15 +466,27 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.5.2 -->
+      <!-- New in v8.6 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v8.5.2 — Stok Produk untuk Karyawan</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.6 — Import Excel & View Karyawan</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Karyawan bisa lihat stok produk</strong> — Halaman Frame, Lensa, Softlens, dan Aksesoris kini bisa diakses oleh karyawan untuk mengecek ketersediaan stok sebelum melayani customer. Harga jual tetap terlihat.</span></div>
-          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Harga modal & margin tetap tersembunyi</strong> — Kolom harga modal, margin, dan HPP tidak terlihat untuk karyawan (tampil <code style="font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px">—</code>). Tombol tambah, edit, dan hapus produk tidak muncul.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-table-import" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Import Data dari Excel</strong> — Admin bisa input massal produk (Frame/Lensa/Softlens/Aksesoris) dari file .xlsx. Data baru ditambahkan, nama yang sama otomatis diperbarui. Preview sebelum commit.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Template Excel per Kategori</strong> — Tombol "Unduh Template" per halaman menghasilkan file .xlsx siap pakai dengan contoh data dan kolom yang sesuai format app.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>View Stok untuk Karyawan</strong> — Karyawan kini bisa akses halaman master data untuk cek stok terkini. Kolom Modal & Margin dihilangkan sepenuhnya dari tampilan karyawan (bukan sekadar diisi tanda —).</span></div>
+        </div>
+      </div>
+
+      <!-- v8.5.2 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.5.2</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Stok Produk untuk Karyawan</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Karyawan bisa akses halaman master data untuk cek stok. Harga jual terlihat, harga modal & margin tidak.</span></div>
         </div>
       </div>
 
@@ -874,7 +891,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.5.2';
+const _RN_VERSION='8.6';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -979,8 +996,108 @@ function _doDelProduct(t,id){db[PROD[t].arr]=db[PROD[t].arr].filter(x=>x.id!==id
 function editStok(t,id,d){const p=db[PROD[t].arr].find(x=>x.id===id);if(p){p.stok=Math.max(0,(p.stok||0)+d);renderProds(t);renderDashboardStokAlert();persist();}}
 function editProduct(t,id){if(currentRole!=='admin'){toast('Hanya Admin yang bisa mengedit produk','e');return;}const p=db[PROD[t].arr].find(x=>x.id===id);if(!p)return;const detailHtml=t==='frame'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Frame</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Material</label><input id="ed-mat" value="${(p.mat||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Kode</label><input id="ed-code" value="${(p.code||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div></div>`:t==='lensa'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Lensa</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Fokus</label><select id="ed-focus" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">-</option><option${p.focus==='SV'?' selected':''}>SV</option><option${p.focus==='Prog'?' selected':''}>Prog</option><option${p.focus==='FT'?' selected':''}>FT</option></select></div><div class="fg"><label>Tipe</label><input id="ed-type" value="${(p.type||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div></div>`:t==='softlens'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Softlens</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Tipe</label><select id="ed-type" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">-</option><option${p.type==='Daily'?' selected':''}>Daily</option><option${p.type==='Monthly'?' selected':''}>Monthly</option><option${p.type==='2-Weekly'?' selected':''}>2-Weekly</option><option${p.type==='Yearly'?' selected':''}>Yearly</option><option${p.type==='Lainnya'?' selected':''}>Lainnya</option></select></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Diameter</label><input id="ed-dia" value="${(p.dia||'').replace(/"/g,'&quot;')}"></div></div>`:'';document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-edit"></i> Edit Produk</div><div class="fg" style="margin-bottom:12px"><label>Nama</label><input id="ed-n" value="${p.nama.replace(/"/g,'&quot;')}"></div><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><div class="fg"><label>Modal</label><input id="ed-m" type="text" inputmode="numeric" value="${p.modal?parseInt(p.modal).toLocaleString('id-ID'):''}" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="ed-j" type="text" inputmode="numeric" value="${p.jual?parseInt(p.jual).toLocaleString('id-ID'):''}" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="ed-s" type="number" value="${p.stok}"></div></div>${detailHtml}`;document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-gold" onclick="saveEdit('${t}',${id})"><i class="ti ti-check"></i> Simpan</button>`;document.getElementById('modal').style.display='flex';}
 function saveEdit(t,id){const p=db[PROD[t].arr].find(x=>x.id===id);if(!p)return;p.nama=document.getElementById('ed-n').value.trim();p.modal=parseCurrencyInput('ed-m');p.jual=parseCurrencyInput('ed-j');p.stok=parseInt(document.getElementById('ed-s').value)||0;if(t==='frame'||t==='lensa'){p.brand=(document.getElementById('ed-brand')?.value||'').trim();p.color=(document.getElementById('ed-color')?.value||'').trim();}if(t==='frame'){p.mat=(document.getElementById('ed-mat')?.value||'').trim();p.code=(document.getElementById('ed-code')?.value||'').trim();}if(t==='lensa'){p.focus=document.getElementById('ed-focus')?.value||'';p.type=(document.getElementById('ed-type')?.value||'').trim();}if(t==='softlens'){p.brand=(document.getElementById('ed-brand')?.value||'').trim();p.type=document.getElementById('ed-type')?.value||'';p.color=(document.getElementById('ed-color')?.value||'').trim();p.dia=(document.getElementById('ed-dia')?.value||'').trim();}closeModal();renderProds(t);renderDashboardStokAlert();persist();toast('Produk diperbarui','s');}
-function renderProds(t){const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[c.arr];document.getElementById(c.emp).style.display=arr.length?'none':'block';const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const thead=document.querySelector(`#${c.tb}`).closest('table').querySelector('thead tr');if(showDetail&&thead&&!thead.querySelector('.th-detail')){const detailTh=document.createElement('th');detailTh.className='th-detail';detailTh.textContent='Detail';thead.insertBefore(detailTh,thead.children[thead.children.length-1]);}document.getElementById(c.tb).innerHTML=arr.map((p,i)=>{const mg=p.modal>0?Math.round((p.jual-p.modal)/p.modal*100):0;const bc=mg>=30?'bgreen':mg>=10?'bgold':'bred';const sk=p.stok<=0?'<span class="bred badge">Habis</span>':p.stok<=3?`<span class="borange badge">${p.stok}</span>`:`<span class="bgreen badge">${p.stok}</span>`;let detailCell='';if(t==='frame'){const parts=[p.brand,p.mat,p.code,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='lensa'){const parts=[p.brand,p.focus,p.type,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='softlens'){const parts=[p.brand,p.type,p.color,p.dia].filter(v=>v&&v!=='-');detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}const catCell=showCat?`<td><span class="badge bg" style="font-size:11px">${p.cat||'—'}</span></td>`:'';const _isAdm=currentRole==='admin';return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${p.nama}</strong>${p.note?`<div style="font-size:11px;color:var(--muted)">${p.note}</div>`:''}</td>${catCell}<td>${_isAdm?fmt(p.modal):'—'}</td><td><strong>${fmt(p.jual)}</strong></td><td>${_isAdm?`<span class="badge ${bc}">${mg}%</span>`:'—'}</td><td>${sk}</td>${detailCell}<td style="display:flex;gap:4px"><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},-1)"><i class="ti ti-minus"></i></button><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},1)"><i class="ti ti-plus"></i></button>${_isAdm?`<button class="btn btn-xs btn-outline" onclick="editProduct('${t}',${p.id})"><i class="ti ti-edit"></i></button><button class="btn btn-danger btn-xs" onclick="delProduct('${t}',${p.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join('');}
+function renderProds(t){const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[c.arr];document.getElementById(c.emp).style.display=arr.length?'none':'block';const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=currentRole==='admin';const thead=document.querySelector(`#${c.tb}`).closest('table').querySelector('thead tr');thead.innerHTML=`<th>#</th><th>Nama</th>${showCat?'<th>Kategori</th>':''}${_isAdm?'<th>Modal</th>':''}<th>Jual</th>${_isAdm?'<th>Margin</th>':''}<th>Stok</th>${showDetail?'<th>Detail</th>':''}<th>Aksi</th>`;document.getElementById(c.tb).innerHTML=arr.map((p,i)=>{const mg=p.modal>0?Math.round((p.jual-p.modal)/p.modal*100):0;const bc=mg>=30?'bgreen':mg>=10?'bgold':'bred';const sk=p.stok<=0?'<span class="bred badge">Habis</span>':p.stok<=3?`<span class="borange badge">${p.stok}</span>`:`<span class="bgreen badge">${p.stok}</span>`;let detailCell='';if(t==='frame'){const parts=[p.brand,p.mat,p.code,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='lensa'){const parts=[p.brand,p.focus,p.type,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='softlens'){const parts=[p.brand,p.type,p.color,p.dia].filter(v=>v&&v!=='-');detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}const catCell=showCat?`<td><span class="badge bg" style="font-size:11px">${p.cat||'—'}</span></td>`:'';return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${p.nama}</strong>${p.note?`<div style="font-size:11px;color:var(--muted)">${p.note}</div>`:''}</td>${catCell}${_isAdm?`<td>${fmt(p.modal)}</td>`:''}<td><strong>${fmt(p.jual)}</strong></td>${_isAdm?`<td><span class="badge ${bc}">${mg}%</span></td>`:''}<td>${sk}</td>${detailCell}<td style="display:flex;gap:4px"><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},-1)"><i class="ti ti-minus"></i></button><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},1)"><i class="ti ti-plus"></i></button>${_isAdm?`<button class="btn btn-xs btn-outline" onclick="editProduct('${t}',${p.id})"><i class="ti ti-edit"></i></button><button class="btn btn-danger btn-xs" onclick="delProduct('${t}',${p.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join('');}
 
+
+// ════════════════════════════════════════════════
+// SECTION 6.5 · IMPORT EXCEL PRODUK
+// downloadTemplate(t), importProducts(t,input), _doImportProducts(t,parsed)
+// ════════════════════════════════════════════════
+const _IMPORT_DEF={
+  frame:{
+    headers:['Nama','Modal','Jual','Stok','Brand','Material','Kode','Warna'],
+    example:[['Frame Titanium Bulat','250000','450000','10','Ray-Ban','Titanium','RB-001','Hitam'],['Frame Plastik Kotak','80000','180000','5','Oakley','Plastik','OAK-02','Coklat Tortoise']],
+    required:['Nama','Jual'],
+    map:r=>({nama:(r['Nama']||'').toString().trim(),modal:parseFloat((r['Modal']||'').toString().replace(/[^\d.]/g,''))||0,jual:parseFloat((r['Jual']||'').toString().replace(/[^\d.]/g,''))||0,stok:parseInt(r['Stok'])||0,brand:(r['Brand']||'').toString().trim(),mat:(r['Material']||'').toString().trim(),code:(r['Kode']||'').toString().trim(),color:(r['Warna']||'').toString().trim()})
+  },
+  lensa:{
+    headers:['Nama','Modal','Jual','Stok','Brand','Fokus','Tipe','Warna'],
+    example:[['Lensa Bluray SV 1.56','150000','300000','20','Essilor','SV','Bluray','Bening'],['Lensa Prog CR39','280000','550000','8','Hoya','Prog','Standar','Bening']],
+    required:['Nama','Jual'],
+    map:r=>({nama:(r['Nama']||'').toString().trim(),modal:parseFloat((r['Modal']||'').toString().replace(/[^\d.]/g,''))||0,jual:parseFloat((r['Jual']||'').toString().replace(/[^\d.]/g,''))||0,stok:parseInt(r['Stok'])||0,brand:(r['Brand']||'').toString().trim(),focus:(r['Fokus']||'').toString().trim(),type:(r['Tipe']||'').toString().trim(),color:(r['Warna']||'').toString().trim()})
+  },
+  softlens:{
+    headers:['Nama','Modal','Jual','Stok','Brand','Tipe','Warna','Diameter'],
+    example:[['Softlens Clear Monthly','30000','75000','15','Bausch & Lomb','Monthly','Clear','14.0mm'],['Softlens Hazel Daily','25000','60000','20','FreshKon','Daily','Hazel','14.2mm']],
+    required:['Nama','Jual'],
+    map:r=>({nama:(r['Nama']||'').toString().trim(),modal:parseFloat((r['Modal']||'').toString().replace(/[^\d.]/g,''))||0,jual:parseFloat((r['Jual']||'').toString().replace(/[^\d.]/g,''))||0,stok:parseInt(r['Stok'])||0,brand:(r['Brand']||'').toString().trim(),type:(r['Tipe']||'').toString().trim(),color:(r['Warna']||'').toString().trim(),dia:(r['Diameter']||'').toString().trim()})
+  },
+  aksesoris:{
+    headers:['Nama','Modal','Jual','Stok','Kategori','Keterangan'],
+    example:[['Cairan Pembersih 100ml','12000','30000','25','Cairan Pembersih','Cocok untuk semua jenis lensa'],['Tempat Kacamata Kulit','20000','45000','10','Tempat Kacamata','Bahan kulit sintetis']],
+    required:['Nama','Jual'],
+    map:r=>({nama:(r['Nama']||'').toString().trim(),modal:parseFloat((r['Modal']||'').toString().replace(/[^\d.]/g,''))||0,jual:parseFloat((r['Jual']||'').toString().replace(/[^\d.]/g,''))||0,stok:parseInt(r['Stok'])||0,cat:(r['Kategori']||'').toString().trim(),note:(r['Keterangan']||'').toString().trim()})
+  }
+};
+function downloadTemplate(t){
+  if(typeof XLSX==='undefined'){toast('Library Excel sedang dimuat, coba lagi sebentar','w');return;}
+  const def=_IMPORT_DEF[t];
+  const label={frame:'Frame',lensa:'Lensa',softlens:'Softlens',aksesoris:'Aksesoris'}[t];
+  const wb=XLSX.utils.book_new();
+  const wsData=[def.headers,...def.example];
+  const ws=XLSX.utils.aoa_to_sheet(wsData);
+  ws['!cols']=def.headers.map(h=>({wch:Math.max(h.length+2,16)}));
+  XLSX.utils.book_append_sheet(wb,ws,'Data '+label);
+  XLSX.writeFile(wb,'Template_'+label+'_OptikZada.xlsx');
+  toast('Template '+label+' diunduh','s');
+}
+function importProducts(t,input){
+  if(currentRole!=='admin'){toast('Hanya Admin yang bisa import data','e');input.value='';return;}
+  const file=input.files[0];if(!file){return;}
+  if(typeof XLSX==='undefined'){toast('Library Excel sedang dimuat, coba lagi sebentar','w');input.value='';return;}
+  const def=_IMPORT_DEF[t];
+  const label={frame:'Frame',lensa:'Lensa',softlens:'Softlens',aksesoris:'Aksesoris'}[t];
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+      if(!rows.length){toast('File kosong atau format tidak valid','e');input.value='';return;}
+      const firstRow=rows[0];
+      const missingCols=def.required.filter(h=>!(h in firstRow));
+      if(missingCols.length){toast('Kolom wajib tidak ditemukan: '+missingCols.join(', '),'e');input.value='';return;}
+      const arr=db[PROD[t].arr];
+      const parsed=[];const errors=[];
+      rows.forEach((r,i)=>{
+        const obj=def.map(r);
+        if(!obj.nama){errors.push('Baris '+(i+2)+': Nama kosong');return;}
+        if(!obj.jual){errors.push('Baris '+(i+2)+': Harga Jual kosong');return;}
+        parsed.push(obj);
+      });
+      if(!parsed.length){toast('Tidak ada data valid yang bisa diimpor','e');input.value='';return;}
+      let newCount=0,updateCount=0;
+      parsed.forEach(p=>{arr.find(x=>x.nama.toLowerCase()===p.nama.toLowerCase())?updateCount++:newCount++;});
+      const previewRows=parsed.slice(0,6).map(p=>{
+        const ex=arr.find(x=>x.nama.toLowerCase()===p.nama.toLowerCase());
+        return`<tr><td>${p.nama}</td><td>${fmt(p.jual)}</td><td>${p.stok}</td><td><span class="badge ${ex?'bgold':'bgreen'}" style="font-size:11px">${ex?'Update':'Baru'}</span></td></tr>`;
+      }).join('');
+      const moreText=parsed.length>6?`<p style="font-size:12px;color:var(--muted);margin-top:8px">...dan ${parsed.length-6} baris lainnya</p>`:'';
+      const errText=errors.length?`<p style="font-size:12px;color:var(--danger);margin-top:8px"><i class="ti ti-alert-triangle"></i> ${errors.length} baris dilewati</p>`:'';
+      document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-table-import" style="color:var(--gold)"></i> Preview Import ${label}</div><div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap"><span class="badge bgreen" style="font-size:12px;padding:4px 10px">${newCount} produk baru</span><span class="badge bgold" style="font-size:12px;padding:4px 10px">${updateCount} diperbarui</span><span class="badge bg" style="font-size:12px;padding:4px 10px">${parsed.length} total valid</span></div><div class="tbl-wrap"><table><thead><tr><th>Nama</th><th>Jual</th><th>Stok</th><th>Status</th></tr></thead><tbody>${previewRows}</tbody></table></div>${moreText}${errText}`;
+      document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal();window._importParsed=null;">Batal</button><button class="btn btn-gold" onclick="_doImportProducts('${t}')"><i class="ti ti-check"></i> Import Sekarang (${parsed.length} produk)</button>`;
+      window._importParsed={t,parsed};
+      document.getElementById('modal').style.display='flex';
+    }catch(err){toast('Gagal membaca file: '+err.message,'e');}
+    input.value='';
+  };
+  reader.readAsBinaryString(file);
+}
+function _doImportProducts(t){
+  const _d=window._importParsed;
+  if(!_d||_d.t!==t||!_d.parsed.length){closeModal();return;}
+  const arr=db[PROD[t].arr];
+  let newCount=0,updateCount=0;
+  const _base=Date.now();
+  _d.parsed.forEach((p,i)=>{
+    const ex=arr.find(x=>x.nama.toLowerCase()===p.nama.toLowerCase());
+    if(ex){Object.assign(ex,p);updateCount++;}
+    else{arr.push({id:_base+i,...p});newCount++;}
+  });
+  window._importParsed=null;
+  closeModal();renderProds(t);renderDashboardStokAlert();persist();
+  toast(`Import selesai: ${newCount} baru, ${updateCount} diperbarui`,'s',4000);
+}
 
 // ════════════════════════════════════════════════
 // SECTION 7 · DATA CUSTOMER

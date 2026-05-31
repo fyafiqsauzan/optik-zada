@@ -19,6 +19,7 @@
 | **v8.5 Beta** | ✅ Dirilis | Firestore per-document restructure — invoices/{id}, backward-compat migration UI |
 | **v8.5.1 Beta** | ✅ Dirilis | Hotfix: hapus produk & customer pakai modal in-app (bukan `confirm()` native — blocked oleh Chrome desktop) |
 | **v8.5.2 Beta** | ✅ Dirilis | Karyawan bisa lihat stok & harga jual produk (frame/lensa/softlens/aksesoris) — harga modal & margin tetap tersembunyi |
+| **v8.6 Beta** | ✅ Dirilis | Import massal produk dari Excel (.xlsx) per kategori + template Excel siap pakai; kolom Modal/Margin hilang sepenuhnya di view karyawan |
 | **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
