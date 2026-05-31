@@ -882,6 +882,9 @@ const Store={
 };
 let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
 let _histPage=1;const HIST_PER=25;
+const PROD_PER=50;const CUST_PER=50;
+let _framePage=1,_lensaPage=1,_slPage=1,_akPage=1,_custPage=1;
+let _prodSearchPrev={frame:'',lensa:'',softlens:'',aksesoris:''};let _custSearchPrev='';
 function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
 
 
@@ -1147,7 +1150,56 @@ function _doDelProduct(t,id){db[PROD[t].arr]=db[PROD[t].arr].filter(x=>x.id!==id
 function editStok(t,id,d){const p=db[PROD[t].arr].find(x=>x.id===id);if(p){p.stok=Math.max(0,(p.stok||0)+d);renderProds(t);renderDashboardStokAlert();persist();}}
 function editProduct(t,id){if(currentRole!=='admin'){toast('Hanya Admin yang bisa mengedit produk','e');return;}const p=db[PROD[t].arr].find(x=>x.id===id);if(!p)return;const detailHtml=t==='frame'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Frame</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Material</label><input id="ed-mat" value="${(p.mat||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Kode</label><input id="ed-code" value="${(p.code||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div></div>`:t==='lensa'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Lensa</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Fokus</label><select id="ed-focus" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">-</option><option${p.focus==='SV'?' selected':''}>SV</option><option${p.focus==='Prog'?' selected':''}>Prog</option><option${p.focus==='FT'?' selected':''}>FT</option></select></div><div class="fg"><label>Tipe</label><input id="ed-type" value="${(p.type||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div></div>`:t==='softlens'?`<div class="ct" style="margin-top:12px"><i class="ti ti-info-circle"></i> Detail Softlens</div><div class="frow" style="grid-template-columns:1fr 1fr 1fr 1fr"><div class="fg"><label>Brand</label><input id="ed-brand" value="${(p.brand||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Tipe</label><select id="ed-type" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">-</option><option${p.type==='Daily'?' selected':''}>Daily</option><option${p.type==='Monthly'?' selected':''}>Monthly</option><option${p.type==='2-Weekly'?' selected':''}>2-Weekly</option><option${p.type==='Yearly'?' selected':''}>Yearly</option><option${p.type==='Lainnya'?' selected':''}>Lainnya</option></select></div><div class="fg"><label>Warna</label><input id="ed-color" value="${(p.color||'').replace(/"/g,'&quot;')}"></div><div class="fg"><label>Diameter</label><input id="ed-dia" value="${(p.dia||'').replace(/"/g,'&quot;')}"></div></div>`:'';document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-edit"></i> Edit Produk</div><div class="fg" style="margin-bottom:12px"><label>Nama</label><input id="ed-n" value="${p.nama.replace(/"/g,'&quot;')}"></div><div class="frow" style="grid-template-columns:1fr 1fr 1fr"><div class="fg"><label>Modal</label><input id="ed-m" type="text" inputmode="numeric" value="${p.modal?parseInt(p.modal).toLocaleString('id-ID'):''}" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Jual</label><input id="ed-j" type="text" inputmode="numeric" value="${p.jual?parseInt(p.jual).toLocaleString('id-ID'):''}" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div><div class="fg"><label>Stok</label><input id="ed-s" type="number" value="${p.stok}"></div></div>${detailHtml}`;document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-gold" onclick="saveEdit('${t}',${id})"><i class="ti ti-check"></i> Simpan</button>`;document.getElementById('modal').style.display='flex';}
 function saveEdit(t,id){const p=db[PROD[t].arr].find(x=>x.id===id);if(!p)return;p.nama=document.getElementById('ed-n').value.trim();p.modal=parseCurrencyInput('ed-m');p.jual=parseCurrencyInput('ed-j');p.stok=parseInt(document.getElementById('ed-s').value)||0;if(t==='frame'||t==='lensa'){p.brand=(document.getElementById('ed-brand')?.value||'').trim();p.color=(document.getElementById('ed-color')?.value||'').trim();}if(t==='frame'){p.mat=(document.getElementById('ed-mat')?.value||'').trim();p.code=(document.getElementById('ed-code')?.value||'').trim();}if(t==='lensa'){p.focus=document.getElementById('ed-focus')?.value||'';p.type=(document.getElementById('ed-type')?.value||'').trim();}if(t==='softlens'){p.brand=(document.getElementById('ed-brand')?.value||'').trim();p.type=document.getElementById('ed-type')?.value||'';p.color=(document.getElementById('ed-color')?.value||'').trim();p.dia=(document.getElementById('ed-dia')?.value||'').trim();}closeModal();renderProds(t);renderDashboardStokAlert();persist();toast('Produk diperbarui','s');}
-function renderProds(t){const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[c.arr];const q=(document.getElementById(t+'-search')?.value||'').toLowerCase().trim();const filtered=q?arr.filter(p=>p.nama.toLowerCase().includes(q)||String(p.brand||'').toLowerCase().includes(q)||String(p.cat||'').toLowerCase().includes(q)):arr;document.getElementById(c.emp).style.display=arr.length?'none':'block';const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=currentRole==='admin';const thead=document.querySelector(`#${c.tb}`).closest('table').querySelector('thead tr');thead.innerHTML=`<th>#</th><th>Nama</th>${showCat?'<th>Kategori</th>':''}${_isAdm?'<th>Modal</th>':''}<th>Jual</th>${_isAdm?'<th>Margin</th>':''}<th>Stok</th>${showDetail?'<th>Detail</th>':''}<th>Aksi</th>`;document.getElementById(c.tb).innerHTML=filtered.length?filtered.map((p,i)=>{const mg=p.modal>0?Math.round((p.jual-p.modal)/p.modal*100):0;const bc=mg>=30?'bgreen':mg>=10?'bgold':'bred';const sk=p.stok<=0?'<span class="bred badge">Habis</span>':p.stok<=3?`<span class="borange badge">${p.stok}</span>`:`<span class="bgreen badge">${p.stok}</span>`;let detailCell='';if(t==='frame'){const parts=[p.brand,p.mat,p.code,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='lensa'){const parts=[p.brand,p.focus,p.type,p.color].filter(Boolean);detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}else if(t==='softlens'){const parts=[p.brand,p.type,p.color,p.dia].filter(v=>v&&v!=='-');detailCell=`<td style="font-size:12px;color:var(--muted)">${parts.join(' · ')||'—'}</td>`;}const catCell=showCat?`<td><span class="badge bg" style="font-size:11px">${p.cat||'—'}</span></td>`:'';return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${p.nama}</strong>${p.note?`<div style="font-size:11px;color:var(--muted)">${p.note}</div>`:''}</td>${catCell}${_isAdm?`<td>${fmt(p.modal)}</td>`:''}<td><strong>${fmt(p.jual)}</strong></td>${_isAdm?`<td><span class="badge ${bc}">${mg}%</span></td>`:''}<td>${sk}</td>${detailCell}<td style="display:flex;gap:4px"><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},-1)"><i class="ti ti-minus"></i></button><button class="btn btn-xs btn-outline" onclick="editStok('${t}',${p.id},1)"><i class="ti ti-plus"></i></button>${_isAdm?`<button class="btn btn-xs btn-outline" onclick="editProduct('${t}',${p.id})"><i class="ti ti-edit"></i></button><button class="btn btn-danger btn-xs" onclick="delProduct('${t}',${p.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join(''):(q?`<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted)"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:8px;opacity:.25"></i>Tidak ada produk yang cocok dengan "<strong>${q}</strong>"</td></tr>`:'');}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function renderProds(t){
+  const c=PROD[t];if(!db[c.arr])db[c.arr]=[];const arr=db[c.arr];
+  const q=(document.getElementById(t+'-search')?.value||'').toLowerCase().trim();
+  if(q!==_prodSearchPrev[t]){_prodSearchPrev[t]=q;window['_'+t+'Page']=1;}
+  const filtered=q?arr.filter(p=>p.nama.toLowerCase().includes(q)||String(p.brand||'').toLowerCase().includes(q)||String(p.cat||'').toLowerCase().includes(q)):arr;
+  document.getElementById(c.emp).style.display=arr.length?'none':'block';
+  const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=currentRole==='admin';
+  const thead=document.querySelector('#'+c.tb).closest('table').querySelector('thead tr');
+  thead.innerHTML='<th>#</th><th>Nama</th>'+(showCat?'<th>Kategori</th>':'')+(_isAdm?'<th>Modal</th>':'')+'<th>Jual</th>'+(_isAdm?'<th>Margin</th>':'')+'<th>Stok</th>'+(showDetail?'<th>Detail</th>':'')+'<th>Aksi</th>';
+  const pgTotal=Math.ceil(filtered.length/PROD_PER)||1;
+  let pg=window['_'+t+'Page']||1;if(pg>pgTotal)pg=1;window['_'+t+'Page']=pg;
+  const startIdx=(pg-1)*PROD_PER;const pageItems=filtered.slice(startIdx,startIdx+PROD_PER);
+  document.getElementById(c.tb).innerHTML=pageItems.length?pageItems.map((p,i)=>{
+    const mg=p.modal>0?Math.round((p.jual-p.modal)/p.modal*100):0;
+    const bc=mg>=30?'bgreen':mg>=10?'bgold':'bred';
+    const sk=p.stok<=0?'<span class="bred badge">Habis</span>':p.stok<=3?'<span class="borange badge">'+p.stok+'</span>':'<span class="bgreen badge">'+p.stok+'</span>';
+    let detailCell='';
+    if(t==='frame'){const parts=[p.brand,p.mat,p.code,p.color].filter(Boolean).map(esc);detailCell='<td style="font-size:12px;color:var(--muted)">'+(parts.join(' \xb7 ')||'—')+'</td>';}
+    else if(t==='lensa'){const parts=[p.brand,p.focus,p.type,p.color].filter(Boolean).map(esc);detailCell='<td style="font-size:12px;color:var(--muted)">'+(parts.join(' \xb7 ')||'—')+'</td>';}
+    else if(t==='softlens'){const parts=[p.brand,p.type,p.color,p.dia].filter(v=>v&&v!=='-').map(esc);detailCell='<td style="font-size:12px;color:var(--muted)">'+(parts.join(' \xb7 ')||'—')+'</td>';}
+    const catCell=showCat?'<td><span class="badge bg" style="font-size:11px">'+esc(p.cat||'—')+'</span></td>':'';
+    return '<tr>'
+      +'<td style="color:var(--muted)">'+(startIdx+i+1)+'</td>'
+      +'<td><strong>'+esc(p.nama)+'</strong>'+(p.note?'<div style="font-size:11px;color:var(--muted)">'+esc(p.note)+'</div>':'')+'</td>'
+      +catCell
+      +(_isAdm?'<td>'+fmt(p.modal)+'</td>':'')
+      +'<td><strong>'+fmt(p.jual)+'</strong></td>'
+      +(_isAdm?'<td><span class="badge '+bc+'">'+mg+'%</span></td>':'')
+      +'<td>'+sk+'</td>'
+      +detailCell
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',-1)"><i class="ti ti-minus"></i></button>'
+      +'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',1)"><i class="ti ti-plus"></i></button>'
+      +(_isAdm
+        ?'<button class="btn btn-xs btn-outline" onclick="editProduct(\''+t+'\','+p.id+')"><i class="ti ti-edit"></i></button>'
+         +'<button class="btn btn-danger btn-xs" onclick="delProduct(\''+t+'\','+p.id+')"><i class="ti ti-trash"></i></button>'
+        :'')
+      +'</td></tr>';
+  }).join(''):(q?'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted)"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:8px;opacity:.25"></i>Tidak ada produk yang cocok dengan &ldquo;<strong>'+esc(q)+'</strong>&rdquo;</td></tr>':'');
+  let pgEl=document.getElementById(t+'-pg');
+  if(!pgEl){pgEl=document.createElement('div');pgEl.id=t+'-pg';document.getElementById(c.tb).closest('.tbl-wrap').after(pgEl);}
+  pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;font-size:12px;color:var(--muted)">'
+    +'<span>'+filtered.length+' produk \xb7 halaman '+pg+'/'+pgTotal+'</span>'
+    +'<div style="display:flex;gap:6px">'
+    +(pg>1?'<button class="btn btn-outline btn-xs" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
+    +(pg<pgTotal?'<button class="btn btn-outline btn-xs" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']+1;renderProds(\''+t+'\')"><i class="ti ti-chevron-right"></i></button>':'<span style="width:26px"></span>')
+    +'</div></div>':'';
+}
+
 
 
 // ════════════════════════════════════════════════
@@ -1259,7 +1311,42 @@ function addCustomerManual(){const n=document.getElementById('cn').value.trim();
 function saveCustomer(nama,hp,alamat,usia,jk){const ex=db.customers.find(c=>c.nama.toLowerCase()===nama.toLowerCase());if(!ex)db.customers.push({id:Date.now(),nama,hp:hp||'',alamat:alamat||'',usia:usia||0,jk:jk||''});else{if(hp&&!ex.hp)ex.hp=hp;if(alamat&&!ex.alamat)ex.alamat=alamat;if(usia&&!ex.usia)ex.usia=usia;if(jk&&!ex.jk)ex.jk=jk;}}
 function delCustomer(id){const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trash" style="color:var(--danger)"></i> Hapus Customer</div><p style="margin:12px 0 4px">Hapus customer <strong>${c.nama}</strong>?</p><p style="font-size:12px;color:var(--muted)">Data customer dihapus dari daftar. Riwayat invoice tidak terpengaruh.</p>`;document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-danger" onclick="_doDelCustomer(${id})"><i class="ti ti-trash"></i> Hapus</button>`;document.getElementById('modal').style.display='flex';}
 function _doDelCustomer(id){db.customers=db.customers.filter(x=>x.id!==id);renderCustomers();persist();closeModal();toast('Customer dihapus','w');}
-function renderCustomers(){const q=(document.getElementById('c-q')?.value||'').toLowerCase();const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));document.getElementById('cu-emp').style.display=arr.length?'none':'block';document.getElementById('cu-tb').innerHTML=arr.map((c,i)=>{const txs=activeInvs().filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase());const totalBelanja=txs.reduce((s,x)=>s+x.tot,0);return`<tr><td style="color:var(--muted)">${i+1}</td><td><strong>${c.nama}</strong></td><td>${c.hp||'—'}</td><td>${c.alamat||'—'}</td><td>${c.usia||'—'}</td><td><span class="badge bblue">${txs.length} txn</span></td><td><strong>${txs.length?fmt(totalBelanja):'—'}</strong></td><td style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="rxHistory(${c.id})" title="Riwayat Transaksi &amp; Resep"><i class="ti ti-history"></i></button>${currentRole==='admin'?`<button class="btn btn-danger btn-xs" onclick="delCustomer(${c.id})"><i class="ti ti-trash"></i></button>`:''}</td></tr>`;}).join('');}
+function renderCustomers(){
+  const q=(document.getElementById('c-q')?.value||'').toLowerCase();
+  if(q!==_custSearchPrev){_custSearchPrev=q;_custPage=1;}
+  const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));
+  document.getElementById('cu-emp').style.display=arr.length?'none':'block';
+  const txsMap={};
+  activeInvs().forEach(inv=>{const k=inv.customer.toLowerCase();if(!txsMap[k])txsMap[k]={count:0,total:0};txsMap[k].count++;txsMap[k].total+=inv.tot;});
+  const pgTotal=Math.ceil(arr.length/CUST_PER)||1;
+  if(_custPage>pgTotal)_custPage=pgTotal;
+  const pg=_custPage;const startIdx=(pg-1)*CUST_PER;
+  const pageItems=arr.slice(startIdx,startIdx+CUST_PER);
+  document.getElementById('cu-tb').innerHTML=pageItems.map((c,i)=>{
+    const txs=txsMap[c.nama.toLowerCase()]||{count:0,total:0};
+    return '<tr>'
+      +'<td style="color:var(--muted)">'+(startIdx+i+1)+'</td>'
+      +'<td><strong>'+esc(c.nama)+'</strong></td>'
+      +'<td>'+esc(c.hp||'—')+'</td>'
+      +'<td>'+esc(c.alamat||'—')+'</td>'
+      +'<td>'+(c.usia||'—')+'</td>'
+      +'<td><span class="badge bblue">'+txs.count+' txn</span></td>'
+      +'<td><strong>'+(txs.count?fmt(txs.total):'—')+'</strong></td>'
+      +'<td style="display:flex;gap:4px">'
+      +'<button class="btn btn-outline btn-xs" onclick="rxHistory('+c.id+')" title="Riwayat Transaksi &amp; Resep"><i class="ti ti-history"></i></button>'
+      +(currentRole==='admin'?'<button class="btn btn-danger btn-xs" onclick="delCustomer('+c.id+')"><i class="ti ti-trash"></i></button>':'')
+      +'</td></tr>';
+  }).join('');
+  let pgEl=document.getElementById('cu-pg');
+  if(!pgEl){pgEl=document.createElement('div');pgEl.id='cu-pg';document.getElementById('cu-tb').closest('.tbl-wrap').after(pgEl);}
+  pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 4px;font-size:12px;color:var(--muted)">'
+    +'<span>'+arr.length+' customer \xb7 halaman '+pg+'/'+pgTotal+'</span>'
+    +'<div style="display:flex;gap:6px">'
+    +(pg>1?'<button class="btn btn-outline btn-xs" onclick="_custPage--;renderCustomers()"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
+    +(pg<pgTotal?'<button class="btn btn-outline btn-xs" onclick="_custPage++;renderCustomers()"><i class="ti ti-chevron-right"></i></button>':'<span style="width:26px"></span>')
+    +'</div></div>':'';
+}
+
 
 // ════════════════════════════════════════════════
 // IMPORT HISTORIS CUSTOMER DARI EXCEL
