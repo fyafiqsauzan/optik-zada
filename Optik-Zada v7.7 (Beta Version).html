@@ -398,7 +398,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.5.1</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.5.2</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
@@ -443,7 +443,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.5.1 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.5.2 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -461,11 +461,23 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.5.1 -->
+      <!-- New in v8.5.2 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
-          <span style="font-size:13px;font-weight:700">Pembaruan v8.5.1 — Hotfix Konfirmasi Hapus</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.5.2 — Stok Produk untuk Karyawan</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-eye" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Karyawan bisa lihat stok produk</strong> — Halaman Frame, Lensa, Softlens, dan Aksesoris kini bisa diakses oleh karyawan untuk mengecek ketersediaan stok sebelum melayani customer. Harga jual tetap terlihat.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Harga modal & margin tetap tersembunyi</strong> — Kolom harga modal, margin, dan HPP tidak terlihat untuk karyawan (tampil <code style="font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px">—</code>). Tombol tambah, edit, dan hapus produk tidak muncul.</span></div>
+        </div>
+      </div>
+
+      <!-- v8.5.1 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.5.1</span>
+          <span style="font-size:13px;font-weight:700;color:var(--muted)">Hotfix Konfirmasi Hapus</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
           <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-bug-off" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Hapus Produk & Customer di Desktop</strong> — Dialog konfirmasi hapus produk dan hapus customer diganti dari <code style="font-size:11px;background:var(--bg2);padding:1px 5px;border-radius:4px">confirm()</code> native browser ke modal in-app. Sebelumnya, Chrome di desktop bisa memblokir dialog konfirmasi secara diam-diam sehingga tombol hapus terasa tidak berfungsi</span></div>
@@ -731,7 +743,7 @@ function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
 // ════════════════════════════════════════════════
 const ROLES={
   admin:    {label:'Admin / Pemilik',icon:'ti-crown',color:'var(--gold)',pages:['dashboard','reports','cashflow','invoice','history','frame','lensa','softlens','aksesoris','customer','settings'],home:'dashboard'},
-  karyawan: {label:'Karyawan',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','customer'],home:'invoice'}
+  karyawan: {label:'Karyawan',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','frame','lensa','softlens','aksesoris','customer'],home:'invoice'}
 };
 let currentRole=null;
 let currentUser=null; // {uid, nama, email, role}
@@ -862,7 +874,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.5.1';
+const _RN_VERSION='8.5.2';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -1307,7 +1319,7 @@ const _cfCard=document.getElementById('rp-cashflow-card');if(_cfCard&&currentRol
   document.addEventListener('click',e=>{if(!e.target.closest('#fab-wrap')){const m=document.getElementById('fab-menu');if(m&&m.classList.contains('open')){m.classList.remove('open');document.getElementById('fab-icon').className='ti ti-plus';}}});
 })();
 function toggleFab(){const m=document.getElementById('fab-menu');const open=m.classList.toggle('open');document.getElementById('fab-icon').className=open?'ti ti-x':'ti ti-plus';}
-function renderFabForRole(){const m=document.getElementById('fab-menu');if(!m||!currentRole)return;const isAdmin=currentRole==='admin';const adminOnly=['frame','reports','backup'];m.querySelectorAll('button').forEach(btn=>{const a=btn.getAttribute('onclick')?.match(/fabAction\('([^']+)'\)/)?.[1];if(a)btn.style.display=(!adminOnly.includes(a)||isAdmin)?'':'none';});}
+function renderFabForRole(){const m=document.getElementById('fab-menu');if(!m||!currentRole)return;const isAdmin=currentRole==='admin';const adminOnly=['reports','backup'];m.querySelectorAll('button').forEach(btn=>{const a=btn.getAttribute('onclick')?.match(/fabAction\('([^']+)'\)/)?.[1];if(a)btn.style.display=(!adminOnly.includes(a)||isAdmin)?'':'none';});}
 function fabAction(type){const m=document.getElementById('fab-menu');m.classList.remove('open');document.getElementById('fab-icon').className='ti ti-plus';if(type==='export')return exportCSV();if(type==='backup')return backupData();if(currentRole&&!ROLES[currentRole].pages.includes(type)){toast('Menu ini tidak tersedia untuk peran '+ROLES[currentRole].label,'e');return;}const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+type+"'"));showPage(type,btn);}
 
 
