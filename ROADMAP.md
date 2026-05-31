@@ -29,6 +29,7 @@
 | **v8.9.2 Beta** | ✅ Dirilis | Manajemen supplier lensa di Pengaturan + Order ke Supplier via WhatsApp langsung dari modal invoice |
 | **v8.9.3 Beta** | ✅ Dirilis | Fix: detail lensa double di struk + button invoice overflow di layar kecil |
 | **v8.9.4 Beta** | ✅ Dirilis | PD, Dm.A/B, DBL, TP dipisah dari form invoice → diisi post-facto di Riwayat, tidak tampil di struk customer |
+| **v8.9.5 Beta** | ✅ Dirilis | Fix tombol aksi master data (FAB pointer-events), HTML escape nama produk/customer, paginasi tengah |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -172,6 +173,7 @@
 | 44 | Manajemen Supplier + Order via WhatsApp | Feature | ✅ v8.9.2 | Admin kelola daftar supplier lensa (nama, WA, catatan) dari Pengaturan. Di modal invoice, tombol truk membuka picker supplier → app buka WA dengan pesan order otomatis berisi detail Rx + ukuran lensa + info customer. |
 | 45 | Fix Struk & Button Invoice | Bug Fix | ✅ v8.9.3 | (1) Detail lensa di struk tidak lagi double jika lensa diambil dari katalog item. (2) Button WA/Supplier/Thermal dijadikan ikon-only dengan tooltip agar tidak overflow di layar kecil. |
 | 46 | Pengukuran Lensa Dipisah dari Invoice | Feature | ✅ v8.9.4 | PD, Dm.A(T), Dm.B(L), DBL, TP dihapus dari form invoice. Diisi post-facto dari modal Riwayat (section "Pengukuran Lensa – Internal / Supplier"). Data tetap diteruskan ke supplier via WA order. Struk customer lebih bersih. |
+| 47 | Fix Tombol Aksi + Paginasi Rapi | Bug Fix | ✅ v8.9.5 | (1) FAB container diberi `pointer-events:none` sehingga tidak menutupi tombol tabel di bawahnya. (2) Nama produk/customer di-escape HTML untuk mencegah injeksi. (3) Pagination bar diubah jadi layout tengah ← Hal X/Y · N item → konsisten di semua tabel. |
 
 ---
 
@@ -272,7 +274,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 31 Mei 2026 | v8.9.2 | Feat: manajemen supplier lensa di Pengaturan + order ke supplier via WhatsApp dari modal invoice |
 | 31 Mei 2026 | v8.9.3 | Fix: detail lensa double di struk + button WA/Supplier/Thermal jadi ikon-only agar tidak overflow |
 | 31 Mei 2026 | v8.9.4 | Feat: PD/Dm.A/B/DBL/TP dipisah dari form invoice → isi post-facto di Riwayat, tidak tampil di struk customer |
+| 31 Mei 2026 | v8.9.5 | Fix: FAB pointer-events + HTML escape nama produk/customer + pagination layout tengah |
 
 ---
 
-*Last updated: 31 Mei 2026 · Optik Zada Management System v8.9.4 Beta*
+*Last updated: 31 Mei 2026 · Optik Zada Management System v8.9.5 Beta*

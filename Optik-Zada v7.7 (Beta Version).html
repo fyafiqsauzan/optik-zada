@@ -418,7 +418,7 @@ body,html{background:#fff!important}}
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.4</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.5</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card admin-only" style="margin-bottom:16px">
@@ -485,7 +485,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.4 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.5 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -503,10 +503,23 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.4 -->
+      <!-- New in v8.9.5 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.5 — Perbaikan Tombol Aksi &amp; Navigasi Halaman</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-click" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Tombol Aksi Master Data Berfungsi Kembali</strong> — Diperbaiki bug di mana tombol Edit/Hapus pada produk ke-113+ (Lensa) dan customer ke-147+ tidak bisa diklik akibat area transparan FAB yang menutupi tabel. Kini semua tombol aktif di semua role.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Keamanan Nama Produk &amp; Customer</strong> — Karakter khusus (<code>&lt; &gt; &amp; "</code>) pada nama produk atau customer kini di-escape dengan benar sehingga tidak merusak tampilan tabel.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-layout-navbar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Navigasi Paginasi Lebih Rapi</strong> — Tombol ← Hal X / Y → kini tampil tengah dan konsisten di semua tabel (Produk & Customer), tidak lagi terpotong atau tertutup FAB di sudut kanan bawah.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.4 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.4</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.9.4 — Pengukuran Lensa Dipisah dari Invoice</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -1192,12 +1205,11 @@ function renderProds(t){
   }).join(''):(q?'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted)"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:8px;opacity:.25"></i>Tidak ada produk yang cocok dengan &ldquo;<strong>'+esc(q)+'</strong>&rdquo;</td></tr>':'');
   let pgEl=document.getElementById(t+'-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id=t+'-pg';document.getElementById(c.tb).closest('.tbl-wrap').after(pgEl);}
-  pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 80px 10px 4px;font-size:12px;color:var(--muted)">'
-    +'<span>'+filtered.length+' produk \xb7 halaman '+pg+'/'+pgTotal+'</span>'
-    +'<div style="display:flex;gap:6px">'
-    +(pg>1?'<button class="btn btn-outline btn-xs" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
-    +(pg<pgTotal?'<button class="btn btn-outline btn-xs" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']+1;renderProds(\''+t+'\')"><i class="ti ti-chevron-right"></i></button>':'<span style="width:26px"></span>')
-    +'</div></div>':'';
+  pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;border-top:1px solid var(--border);font-size:12px">'
+    +(pg>1?'<button class="btn btn-outline btn-sm" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'')
+    +'<span style="color:var(--muted)">Hal '+pg+' / '+pgTotal+' &nbsp;&middot;&nbsp; '+filtered.length+' produk</span>'
+    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']+1;renderProds(\''+t+'\')"><i class="ti ti-chevron-right"></i></button>':'')
+    +'</div>':'';
 }
 
 
@@ -1339,12 +1351,11 @@ function renderCustomers(){
   }).join('');
   let pgEl=document.getElementById('cu-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id='cu-pg';document.getElementById('cu-tb').closest('.tbl-wrap').after(pgEl);}
-  pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 80px 10px 4px;font-size:12px;color:var(--muted)">'
-    +'<span>'+arr.length+' customer \xb7 halaman '+pg+'/'+pgTotal+'</span>'
-    +'<div style="display:flex;gap:6px">'
-    +(pg>1?'<button class="btn btn-outline btn-xs" onclick="_custPage--;renderCustomers()"><i class="ti ti-chevron-left"></i></button>':'<span style="width:26px"></span>')
-    +(pg<pgTotal?'<button class="btn btn-outline btn-xs" onclick="_custPage++;renderCustomers()"><i class="ti ti-chevron-right"></i></button>':'<span style="width:26px"></span>')
-    +'</div></div>':'';
+  pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;border-top:1px solid var(--border);font-size:12px">'
+    +(pg>1?'<button class="btn btn-outline btn-sm" onclick="_custPage--;renderCustomers()"><i class="ti ti-chevron-left"></i></button>':'')
+    +'<span style="color:var(--muted)">Hal '+pg+' / '+pgTotal+' &nbsp;&middot;&nbsp; '+arr.length+' customer</span>'
+    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" onclick="_custPage++;renderCustomers()"><i class="ti ti-chevron-right"></i></button>':'')
+    +'</div>':'';
 }
 
 
