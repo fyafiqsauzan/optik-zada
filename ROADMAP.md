@@ -20,7 +20,8 @@
 | **v8.5.1 Beta** | ✅ Dirilis | Hotfix: hapus produk & customer pakai modal in-app (bukan `confirm()` native — blocked oleh Chrome desktop) |
 | **v8.5.2 Beta** | ✅ Dirilis | Karyawan bisa lihat stok & harga jual produk (frame/lensa/softlens/aksesoris) — harga modal & margin tetap tersembunyi |
 | **v8.6 Beta** | ✅ Dirilis | Import massal produk dari Excel (.xlsx) per kategori + template Excel siap pakai; kolom Modal/Margin hilang sepenuhnya di view karyawan |
-| **v8.8 RC** | 📋 Planned | Polish: mobile audit, email verification, laporan profit, print customization |
+| **v8.7 Beta** | ✅ Dirilis | Mobile responsive audit (#33), verifikasi email akun baru (#35), laporan profit per produk (#36) |
+| **v8.8 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
 > **Skema:** patch (x.x.Y) = bugfix kecil · minor (x.Y.0) = fitur baru · major (Y.0.0) = perubahan arsitektur besar · RC = Release Candidate
@@ -144,10 +145,10 @@
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
 | 32 | Custom Domain Setup | Infrastructure | v8.7 | Ganti URL default Firebase ke domain sendiri (misal `optikzada.com`). |
-| 33 | Mobile Responsive Audit | Polish | v8.7 | Audit semua halaman di layar HP/tablet — terutama Invoice form dan Riwayat. |
-| 34 | Kompresi Aset (logo.png) | Performance | v8.7 | `assets/logo.png` ~1MB → <100KB via [squoosh.app](https://squoosh.app). Manual oleh user. |
-| 35 | Konfirmasi Email Akun Baru | Security | v8.8 | Email verification sebelum akun karyawan aktif. |
-| 36 | Laporan Profit per Produk | Feature | v8.8 | Breakdown margin per kategori (frame, lensa, softlens) di halaman Laporan. |
+| 33 | Mobile Responsive Audit | Polish | ✅ v8.7 | `.frow` kolaps ke 1 kolom di <600px, `.modal-box` tidak overflow layar mobile, modal padding dikurangi. |
+| 34 | Kompresi Aset (logo.png) | Performance | v8.8 | `assets/logo.png` ~1MB → <100KB via [squoosh.app](https://squoosh.app). Manual oleh user. |
+| 35 | Konfirmasi Email Akun Baru | Security | ✅ v8.7 | `requiresEmailVerification:true` di Firestore → verifikasi screen saat login pertama. Email kirim otomatis + tombol resend. |
+| 36 | Laporan Profit per Produk | Feature | ✅ v8.7 | Tabel per produk di halaman Laporan (admin): qty terjual, omzet, profit, margin. Diurutkan omzet terbesar. |
 
 ### 🟢 NICE TO HAVE
 

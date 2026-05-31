@@ -133,7 +133,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 .stok-banner i{font-size:18px;flex-shrink:0}
 /* ── KOMPONEN: MODAL DIALOG ── */
 .modal-ov{display:none;position:fixed;inset:0;background:rgba(5,15,35,.55);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
-.modal-box{background:var(--card);border-radius:var(--radius);padding:28px;width:560px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:var(--shadow-md);animation:fadeUp .2s ease}
+.modal-box{background:var(--card);border-radius:var(--radius);padding:28px;width:560px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto;position:relative;box-shadow:var(--shadow-md);animation:fadeUp .2s ease}
 .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1;padding:2px}.modal-close:hover{color:var(--danger)}
 .modal-title{font-size:17px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .empty{text-align:center;padding:48px 20px;color:var(--muted)}.empty i{font-size:48px;display:block;margin-bottom:10px;opacity:.3}.empty p{font-size:13px}
@@ -150,7 +150,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 /* ── RESPONSIVE: BREAKPOINTS ── */
 @media(max-width:1100px){.sidebar{transform:translateX(-220px)}.sidebar.collapsed{transform:translateX(-220px)}.sidebar.mobile-open{transform:translateX(0)}.main{margin-left:0}.main.sidebar-collapsed{margin-left:0}}
 @media(max-width:960px){.g4{grid-template-columns:1fr 1fr}.inv-layout{grid-template-columns:1fr}.live-receipt{position:static;margin-bottom:14px}.item-row{grid-template-columns:1fr 55px;gap:6px}.rx-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.top-search{display:none}}
+@media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.top-search{display:none}.frow{grid-template-columns:1fr!important}.modal-box{padding:20px}}
 @media print{.topbar,.sidebar,.sidebar-overlay,#toast-wrap,#scrtop,.no-print{display:none!important}.main{margin-top:0!important;margin-left:0!important}}
 /* ── KOMPONEN: SIDEBAR DP BADGE & SIAP AMBIL BANNER ── */
 .dp-badge{display:none;margin-left:auto;min-width:18px;height:18px;border-radius:9px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;align-items:center;justify-content:center;padding:0 4px;flex-shrink:0;line-height:1}
@@ -239,6 +239,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-chart-donut"></i> Kontribusi per Kategori</div><div id="r-cat"><div class="empty" style="padding:20px"><i class="ti ti-chart-donut"></i><p>Belum ada data</p></div></div></div>
   <div class="card"><div class="ct"><i class="ti ti-calendar-stats"></i> Laporan Per Hari</div><div class="tbl-wrap"><table><thead><tr><th>Tanggal</th><th>Transaksi</th><th>Kas Masuk</th><th>Profit</th><th>Margin</th></tr></thead><tbody id="r-daily"></tbody></table><div id="r-daily-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-inbox"></i><p>Belum ada data</p></div></div></div>
   <div class="card admin-only" style="margin-top:16px"><div class="ct"><i class="ti ti-receipt-2"></i> Piutang Belum Lunas <span id="rp-piutang-badge" class="badge bred" style="margin-left:6px"></span></div><div class="tbl-wrap"><table><thead><tr><th>Invoice</th><th>Tanggal</th><th>Customer</th><th>Total</th><th>DP Dibayar</th><th style="color:var(--danger)">Sisa Tagihan</th><th></th></tr></thead><tbody id="r-piutang"></tbody></table><div id="r-piutang-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-check-circle" style="color:var(--success);font-size:28px"></i><p>Semua transaksi sudah lunas</p></div></div></div>
+  <div class="card admin-only" style="margin-top:16px"><div class="ct"><i class="ti ti-chart-bar"></i> Laporan Profit per Produk <span id="r-profit-prod-count" class="badge bgreen" style="margin-left:4px"></span></div><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Produk</th><th>Kategori</th><th>Qty Terjual</th><th>Omzet</th><th>Profit</th><th>Margin</th></tr></thead><tbody id="r-prod-profit"></tbody></table><div id="r-prod-profit-emp" class="empty" style="display:none;padding:20px"><i class="ti ti-inbox"></i><p>Belum ada data transaksi</p></div></div></div>
 </div>
 
 
@@ -403,7 +404,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.6</button></div>
+    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.7</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
@@ -448,7 +449,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.6 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.7 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -466,10 +467,23 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
         </div>
       </div>
 
-      <!-- New in v8.6 -->
+      <!-- New in v8.7 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.7 — Mobile Responsive, Verifikasi Email & Laporan Profit</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-device-mobile" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Mobile Responsive Audit</strong> — Form input otomatis kolaps ke 1 kolom di layar kecil (&lt;600px). Modal dialog tidak lagi overflow keluar layar. Tampilan lebih rapi di HP.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-mail-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Verifikasi Email Akun Baru (#35)</strong> — Akun karyawan yang baru dibuat wajib verifikasi email sebelum bisa masuk. Email verifikasi dikirim otomatis saat pertama login, dengan tombol resend dan opsi kembali ke login.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-chart-bar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Laporan Profit per Produk (#36)</strong> — Section baru di halaman Laporan (admin): tabel semua produk yang pernah terjual, lengkap dengan kategori, qty, omzet, profit, dan margin per produk. Diurutkan berdasarkan omzet terbesar.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.6 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.6</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.6 — Import Excel & View Karyawan</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -683,7 +697,7 @@ const Store={
       const app=(a.getApps&&a.getApps().length)?a.getApp():a.initializeApp(FIREBASE_CONFIG);
       const fdb=f.getFirestore(app);const auth=au.getAuth(app);
       try{await au.setPersistence(auth,au.browserLocalStoragePersistence);}catch(e){}
-      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email,{url:'https://optik-zada.store',handleCodeInApp:false});this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._usernameDoc=(uname)=>f.doc(fdb,'usernames',uname);this._fbSnap=f.onSnapshot;this._configRef=f.doc(fdb,'optik-zada','config');this._metaRef=f.doc(fdb,'optik-zada','meta');this._invoicesCol=f.collection(fdb,'invoices');this._invDoc=(id)=>f.doc(fdb,'invoices',String(id));
+      this._auth=auth;this._docRef=f.doc(fdb,'optik-zada','main');this._setDoc=f.setDoc;this._serverTs=f.serverTimestamp;this._getDoc=f.getDoc;this._getDocs=f.getDocs;this._deleteDoc=f.deleteDoc;this._collection=(path)=>f.collection(fdb,path);this._userDoc=(uid)=>f.doc(fdb,'users',uid);this._pendingDoc=(key)=>f.doc(fdb,'pendingUsers',key);this._signIn=(e,p)=>au.signInWithEmailAndPassword(auth,e,p);this._signOut=()=>au.signOut(auth);this._onAuth=(cb)=>au.onAuthStateChanged(auth,cb);this._sendPasswordReset=(email)=>au.sendPasswordResetEmail(auth,email,{url:'https://optik-zada.store',handleCodeInApp:false});this._createUser=(e,p)=>au.createUserWithEmailAndPassword(auth,e,p);this._updateCurrentUser=(user)=>au.updateCurrentUser(auth,user);this._usernameDoc=(uname)=>f.doc(fdb,'usernames',uname);this._fbSnap=f.onSnapshot;this._configRef=f.doc(fdb,'optik-zada','config');this._metaRef=f.doc(fdb,'optik-zada','meta');this._invoicesCol=f.collection(fdb,'invoices');this._invDoc=(id)=>f.doc(fdb,'invoices',String(id));this._sendEmailVerification=(u)=>au.sendEmailVerification(u);
       return true;
     }catch(e){return false;}
   },
@@ -891,7 +905,7 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.6';
+const _RN_VERSION='8.7';
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
@@ -1402,6 +1416,17 @@ const custTot={};inv.forEach(inv2=>{if(!custTot[inv2.customer])custTot[inv2.cust
 const catTot=catTotal.Frame+catTotal.Lensa+catTotal.Softlens+catTotal.Aksesoris;document.getElementById('r-cat').innerHTML=catTot>0?Object.entries(catTotal).filter(([,v])=>v>0).map(([k,v])=>`<div class="prog-row"><div class="prog-label"><span style="font-size:13px;font-weight:500">${k}</span><strong>${fmt(v)} · ${pct(v,catTot)}%</strong></div><div class="prog-bar"><div class="prog-fill" style="width:${pct(v,catTot)}%;background:${k==='Frame'?'var(--navy2)':k==='Lensa'?'var(--gold)':k==='Softlens'?'var(--info)':'var(--success)'}"></div></div></div>`).join(''):'<div class="empty" style="padding:20px"><i class="ti ti-chart-donut"></i><p>Belum ada data</p></div>';
 const daily={};inv.forEach(inv2=>{if(!daily[inv2.tanggal])daily[inv2.tanggal]={count:0,kas:0,profit:0};daily[inv2.tanggal].count++;daily[inv2.tanggal].kas+=(inv2.dpAmount||0);daily[inv2.tanggal].profit+=inv2.profit;if(inv2.lunasDate&&inv2.lunasAmount){if(!daily[inv2.lunasDate])daily[inv2.lunasDate]={count:0,kas:0,profit:0};daily[inv2.lunasDate].kas+=inv2.lunasAmount;}});const dailyArr=Object.entries(daily).sort((a,b)=>{const pd=s=>{const p=s.split('/');return new Date(p[2],p[1]-1,p[0]);};return pd(b[0])-pd(a[0]);});document.getElementById('r-daily-emp').style.display=dailyArr.length?'none':'block';document.getElementById('r-daily').innerHTML=dailyArr.map(([d,v])=>`<tr><td><strong>${d}</strong></td><td><span class="badge bblue">${v.count} txn</span></td><td><strong>${fmt(v.kas)}</strong></td><td style="color:var(--success)">+${fmt(v.profit)}</td><td><span class="badge bgreen">${pct(v.profit,v.kas)}%</span></td></tr>`).join('');
 const _dpInv=activeInvs().filter(x=>x.payStatus==='dp').sort((a,b)=>(b.ts||0)-(a.ts||0));const _totalSisa=_dpInv.reduce((s,x)=>s+(x.sisa||0),0);const _pb=document.getElementById('rp-piutang-badge');if(_pb)_pb.textContent=_dpInv.length?`${_dpInv.length} · ${fmt(_totalSisa)}`:'';const _pe=document.getElementById('r-piutang-emp');if(_pe)_pe.style.display=_dpInv.length?'none':'block';const _pt=document.getElementById('r-piutang');if(_pt)_pt.innerHTML=_dpInv.map(x=>`<tr><td><strong>${x.no}</strong></td><td>${x.tanggal}</td><td>${x.customer}</td><td>${fmt(x.tot)}</td><td>${fmt(x.dpAmount||0)}</td><td style="color:var(--danger);font-weight:700">${fmt(x.sisa||0)}</td><td><button class="btn btn-sm btn-gold" onclick="event.stopPropagation();lunaskan(${x.id})"><i class="ti ti-check"></i> Lunas</button></td></tr>`).join('');
+// #36 Laporan Profit per Produk (admin only)
+if(currentRole==='admin'){
+  const prodProfit={};
+  const _procItems=(items,kategori)=>{items.forEach(x=>{if(!x.nama)return;if(!prodProfit[x.nama])prodProfit[x.nama]={kategori,qty:0,omzet:0,profit:0,hasModal:false};prodProfit[x.nama].qty+=x.qty;prodProfit[x.nama].omzet+=x.jual*x.qty;if(x.modal>0){prodProfit[x.nama].profit+=(x.jual-x.modal)*x.qty;prodProfit[x.nama].hasModal=true;}});};
+  inv.forEach(inv2=>{_procItems(inv2.items.frame,'Frame');_procItems(inv2.items.lensa,'Lensa');_procItems(inv2.items.softlens,'Softlens');_procItems(inv2.items.aksesoris||[],'Aksesoris');});
+  const prodList=Object.entries(prodProfit).map(([nama,d])=>({nama,...d})).sort((a,b)=>b.omzet-a.omzet);
+  const _ppc=document.getElementById('r-profit-prod-count');if(_ppc)_ppc.textContent=prodList.length>0?prodList.length+' produk':'';
+  const _ppe=document.getElementById('r-prod-profit-emp');if(_ppe)_ppe.style.display=prodList.length?'none':'block';
+  const _ppt=document.getElementById('r-prod-profit');
+  if(_ppt)_ppt.innerHTML=prodList.map((p,i)=>{const margin=p.omzet>0&&p.hasModal?pct(p.profit,p.omzet):null;const bc=margin===null?'bg':margin>=40?'bgreen':margin>=20?'bgold':margin>=0?'borange':'bred';const catCls=p.kategori==='Frame'?'bblue':p.kategori==='Lensa'?'bgold':p.kategori==='Softlens'?'bpurple':'bg';return`<tr><td>${i+1}</td><td><strong>${p.nama}</strong></td><td><span class="badge ${catCls}">${p.kategori}</span></td><td>${p.qty}</td><td>${fmt(p.omzet)}</td><td style="color:var(--success);font-weight:600">${p.hasModal?'+'+fmt(p.profit):'<span style="color:var(--muted)">—</span>'}</td><td>${margin!==null?`<span class="badge ${bc}">${margin}%</span>`:'<span style="color:var(--muted)">—</span>'}</td></tr>`;}).join('');
+}
 // Cashflow integration on reports page (admin only)
 const _cfCard=document.getElementById('rp-cashflow-card');if(_cfCard&&currentRole==='admin'){_cfInit();const _c=_cfCalc(period);_cfCard.innerHTML=`<div class="card"><div class="ct"><i class="ti ti-wallet"></i> Ringkasan Cashflow${period!=='all'?' — '+(months[period]||period):''}</div><div class="grid g3" style="margin-top:12px;gap:10px"><div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Profit Kotor</div><div style="font-size:18px;font-weight:700;color:var(--success)">${fmt(_c.profitKotor)}</div><div style="font-size:11px;color:var(--muted)">setelah HPP produk</div></div><div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Pengeluaran Operasional</div><div style="font-size:18px;font-weight:700;color:var(--danger)">${fmt(_c.pengeluaran)}</div><div style="font-size:11px;color:var(--muted)">${_c.exps.length} entri tercatat</div></div><div style="background:var(--bg);border:2px solid ${_c.profitBersih>=0?'var(--success)':'var(--danger)'};border-radius:var(--radius-sm);padding:14px;text-align:center"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Profit Bersih</div><div style="font-size:20px;font-weight:800;color:${_c.profitBersih>=0?'var(--success)':'var(--danger)'}">${_c.profitBersih<0?'−':''}${fmt(Math.abs(_c.profitBersih))}</div><div style="font-size:11px;color:var(--muted)">${_c.pengeluaran===0?'Belum ada pengeluaran':'profit kotor − pengeluaran'}</div></div></div></div>`;}}
 
@@ -1881,6 +1906,13 @@ async function doAuthLogin(){
     const data=snap.data();
     const role=data.role;
     if(!ROLES[role]){showAuthErr('Peran tidak valid. Hubungi Admin.');await Store._signOut();return;}
+    if(data.requiresEmailVerification&&!cred.user.emailVerified){
+      _verifyState={user:cred.user,uid,data,role};
+      if(Store._sendEmailVerification){try{await Store._sendEmailVerification(cred.user);}catch(e){}}
+      _showVerifyScreen(cred.user.email);
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}
+      return;
+    }
     currentUser={uid,nama:(data.nama&&data.nama.trim())||cred.user.email,email:cred.user.email,role};
     login(role);
   }catch(e){
@@ -1889,6 +1921,49 @@ async function doAuthLogin(){
   }finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}}
 }
 function showAuthErr(msg){const e=document.getElementById('auth-err');if(e){e.removeAttribute('style');e.textContent=msg;e.style.display=msg?'block':'none';}}
+let _verifyState=null;
+function _showVerifyScreen(email){
+  const brow=document.querySelector('.lp-eyebrow');const title=document.querySelector('.lp-title');const form=document.querySelector('.lp-form');
+  if(brow)brow.textContent='Verifikasi Email';
+  if(title)title.innerHTML='Cek inbox<br>kamu';
+  if(form)form.innerHTML=`<div style="background:#e8f7ee;border:1px solid #b2dfcc;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;color:#1a6a3a;display:flex;gap:10px;align-items:flex-start"><i class="ti ti-mail-check" style="font-size:20px;flex-shrink:0;margin-top:1px"></i><div>Email verifikasi dikirim ke <strong>${email}</strong>. Buka link di email lalu klik tombol di bawah.</div></div><div id="verify-err" style="display:none;font-size:12px;padding:6px 0"></div><button class="btn btn-gold" id="verify-btn" onclick="_doCheckVerify()" style="width:100%;padding:11px;font-size:14px;margin-bottom:8px"><i class="ti ti-refresh"></i> Saya Sudah Verifikasi</button><button class="btn btn-outline" id="resend-btn" onclick="_doResendVerify()" style="width:100%;padding:10px;font-size:13px"><i class="ti ti-send"></i> Kirim Ulang Email</button><div style="text-align:center;margin-top:8px"><button type="button" onclick="_cancelVerify()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit">Kembali ke Login</button></div>`;
+}
+async function _doCheckVerify(){
+  if(!_verifyState)return;
+  const btn=document.getElementById('verify-btn');const verr=document.getElementById('verify-err');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Memeriksa...';}
+  try{
+    await _verifyState.user.reload();
+    if(_verifyState.user.emailVerified){
+      const {user,uid,data,role}=_verifyState;_verifyState=null;
+      try{await Store._setDoc(Store._userDoc(uid),{...data,requiresEmailVerification:false});}catch(e){}
+      currentUser={uid,nama:(data.nama&&data.nama.trim())||user.email,email:user.email,role};
+      login(role);
+    }else{
+      if(verr){verr.style.cssText='display:block;color:var(--danger)';verr.textContent='Email belum diverifikasi. Buka link di email yang dikirim dan coba lagi.';}
+      if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-refresh"></i> Saya Sudah Verifikasi';}
+    }
+  }catch(e){
+    if(verr){verr.style.cssText='display:block;color:var(--danger)';verr.textContent='Gagal memeriksa. Periksa koneksi internet.';}
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-refresh"></i> Saya Sudah Verifikasi';}
+  }
+}
+async function _doResendVerify(){
+  if(!_verifyState||!Store._sendEmailVerification)return;
+  const btn=document.getElementById('resend-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2 lp-spin"></i> Mengirim...';}
+  try{await Store._sendEmailVerification(_verifyState.user);toast('Email verifikasi dikirim ulang','s');}
+  catch(e){toast('Gagal kirim ulang: '+(e.message||e.code),'e');}
+  finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-send"></i> Kirim Ulang Email';}}
+}
+function _cancelVerify(){
+  if(_verifyState&&Store._signOut)Store._signOut().catch(()=>{});
+  _verifyState=null;
+  const brow=document.querySelector('.lp-eyebrow');const title=document.querySelector('.lp-title');const form=document.querySelector('.lp-form');
+  if(brow)brow.textContent='Selamat Datang';
+  if(title)title.innerHTML='Masuk ke<br>sistem';
+  if(form)form.innerHTML=`<div class="lp-field"><label>Username</label><input type="text" id="auth-email" placeholder="username atau email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div><div class="lp-field"><label>Password</label><div class="lp-pass-wrap"><input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLogin()"><button type="button" class="lp-eye" onclick="toggleAuthPass()"><i class="ti ti-eye" id="auth-eye-icon"></i></button></div></div><div id="auth-err" class="lp-err"></div><button class="btn btn-gold" id="auth-btn" onclick="doAuthLogin()" style="width:100%;padding:11px;font-size:14px"><i class="ti ti-login"></i> Masuk</button><div style="text-align:center;margin-top:4px"><button type="button" id="forgot-btn" onclick="doForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit">Lupa password?</button></div>`;
+}
 async function doForgotPassword(){
   const rawInput=(document.getElementById('auth-email')?.value||'').trim();
   const errEl=document.getElementById('auth-err');
@@ -1957,7 +2032,7 @@ async function addPendingUser(){
     const tempPass=Math.random().toString(36).slice(2,10)+Math.random().toString(36).slice(2,5).toUpperCase()+'!7';
     const cred=await Store._createUser(email,tempPass);
     const newUid=cred.user.uid;
-    await Store._setDoc(Store._userDoc(newUid),{role,nama,email,username,createdAt:new Date().toISOString()});
+    await Store._setDoc(Store._userDoc(newUid),{role,nama,email,username,createdAt:new Date().toISOString(),requiresEmailVerification:true});
     await Store._setDoc(Store._usernameDoc(username),{uid:newUid,email});
     try{await Store._sendPasswordReset(email);}catch(e){}
     if(adminUser&&Store._updateCurrentUser){try{await Store._updateCurrentUser(adminUser);}catch(e){}}
