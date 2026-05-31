@@ -1046,11 +1046,14 @@ function login(role){
   toast('Masuk sebagai '+r.label,'s');
   renderFabForRole();
   startSessionWatch();
+  setupVersionWatcher();
   setTimeout(showReleaseNotes,700);
 }
 
 function logout(){
   stopSessionWatch();
+  if(_unsubVersionWatcher){_unsubVersionWatcher();_unsubVersionWatcher=null;}
+  const _ub=document.getElementById('update-banner');if(_ub)_ub.remove();
   if(Store._signOut)Store._signOut().catch(()=>{});
   currentRole=null;currentUser=null;
   document.getElementById('role-badge').style.display='none';
@@ -1058,7 +1061,30 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.4';
+const _RN_VERSION='8.9.5';
+const APP_VERSION='8.9.5';
+let _unsubVersionWatcher=null;
+function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
+function setupVersionWatcher(){
+  if(Store.mode!=='firebase'||!Store._metaRef||!Store._fbSnap||!Store._getDoc||!Store._setDoc)return;
+  Store._getDoc(Store._metaRef).then(snap=>{
+    const stored=snap.exists()?(snap.data().appVersion||'0'):'0';
+    if(_semverGt(APP_VERSION,stored))Store._setDoc(Store._metaRef,{appVersion:APP_VERSION},{merge:true}).catch(()=>{});
+  }).catch(()=>{});
+  _unsubVersionWatcher=Store._fbSnap(Store._metaRef,snap=>{
+    if(!snap.exists())return;
+    const latest=snap.data().appVersion;
+    if(latest&&_semverGt(latest,APP_VERSION))showUpdateBanner(latest);
+  },()=>{});
+}
+function showUpdateBanner(newVer){
+  if(document.getElementById('update-banner'))return;
+  const b=document.createElement('div');b.id='update-banner';
+  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--gold);color:#000;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.3);gap:12px';
+  b.innerHTML='<span><i class="ti ti-sparkles" style="margin-right:6px"></i>Versi baru <strong>v'+newVer+'</strong> tersedia — ada fitur &amp; perbaikan terbaru</span>'
+    +'<button onclick="location.reload()" style="flex-shrink:0;background:#000;color:var(--gold);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px"><i class="ti ti-refresh" style="margin-right:4px"></i>Refresh Sekarang</button>';
+  document.body.prepend(b);
+}
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
