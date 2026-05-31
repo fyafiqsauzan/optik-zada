@@ -21,6 +21,9 @@
 | **v8.5.2 Beta** | ✅ Dirilis | Karyawan bisa lihat stok & harga jual produk (frame/lensa/softlens/aksesoris) — harga modal & margin tetap tersembunyi |
 | **v8.6 Beta** | ✅ Dirilis | Import massal produk dari Excel (.xlsx) per kategori + template Excel siap pakai; kolom Modal/Margin hilang sepenuhnya di view karyawan |
 | **v8.7 Beta** | ✅ Dirilis | Mobile responsive audit (#33), verifikasi email akun baru (#35), laporan profit per produk (#36) |
+| **v8.7.1 Beta** | ✅ Dirilis | Autocomplete pencarian produk di form invoice |
+| **v8.7.2 Beta** | ✅ Dirilis | Filter/cari di master data semua kategori + import Excel pertahankan stok existing |
+| **v8.8.0 Beta** | ✅ Dirilis | Promo global (#37), riwayat customer lengkap (#27), dark mode otomatis (#38), tooltip Rx/DP (#39) |
 | **v8.8 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -124,7 +127,7 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 27 | Riwayat Resep per Customer | Feature | v8.2 | Customer → klik nama → lihat semua invoice + resep mata historis. Berguna untuk repeat customer. |
+| 27 | Riwayat Resep per Customer | Feature | ✅ v8.8.0 | Customer → tombol riwayat → semua invoice (item, total, Rx), diurutkan terbaru. Invoice dengan Rx ditandai badge biru. |
 | 28 | List DP Outstanding + WA Blast Reminder | Feature | ⏭️ Skip | Sama konsepnya dengan tombol WA yang sudah ada di riwayat invoice. Tidak perlu duplikasi. |
 | 29 | Notif "Siap Diambil" — badge sidebar | Enhancement | ✅ v8.3 | Badge emas di sidebar Riwayat — hitung invoice DP yang sudah lewat tglSiap. Terpisah dari badge merah total DP. |
 | 30 | Print Nota Customization | Feature | ✅ v8.4 | Admin edit nama/alamat/HP/jam/footer dari Pengaturan → otomatis update struk modal, print thermal, dan WA. |
@@ -154,9 +157,9 @@
 
 | # | Item | Tipe | Target Versi | Detail |
 |---|------|------|-------------|--------|
-| 37 | Diskon Global / Promo | Feature | v8.8+ | Setting diskon persentase global sementara (misal promo Lebaran). |
-| 38 | Dark/Light Mode Toggle Otomatis | Enhancement | v8.8+ | Ikuti `prefers-color-scheme` sistem secara default. |
-| 39 | Tooltip / Help Onboarding | UX | v8.8+ | Tooltip singkat di field kompleks (Rx, DP) untuk bantu user baru. |
+| 37 | Diskon Global / Promo | Feature | ✅ v8.8.0 | Setting promo di Pengaturan (label + jumlah Rp). Aktif → semua invoice baru dapat diskon otomatis, tampil di struk & live preview. |
+| 38 | Dark/Light Mode Toggle Otomatis | Enhancement | ✅ v8.8.0 | `prefers-color-scheme` digunakan jika belum ada pilihan manual. `matchMedia` listener — otomatis ikut sistem saat berubah. |
+| 39 | Tooltip / Help Onboarding | UX | ✅ v8.8.0 | Tooltip ikon `?` di semua field Rx (Sph, Cyl, Axis, Visus, PD, Add, Dm.A, Dm.B, DBL, TP) + field DP. |
 
 ---
 
