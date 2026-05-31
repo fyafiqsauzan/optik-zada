@@ -1053,7 +1053,7 @@ function login(role){
 function logout(){
   stopSessionWatch();
   if(_unsubVersionWatcher){_unsubVersionWatcher();_unsubVersionWatcher=null;}
-  const _ub=document.getElementById('update-banner');if(_ub)_ub.remove();
+  ['update-banner','update-mini','_ub-css'].forEach(id=>{const el=document.getElementById(id);if(el)el.remove();});
   if(Store._signOut)Store._signOut().catch(()=>{});
   currentRole=null;currentUser=null;
   document.getElementById('role-badge').style.display='none';
@@ -1079,11 +1079,34 @@ function setupVersionWatcher(){
 }
 function showUpdateBanner(newVer){
   if(document.getElementById('update-banner'))return;
+  if(!document.getElementById('_ub-css')){
+    const s=document.createElement('style');s.id='_ub-css';
+    s.textContent='@keyframes _ubIn{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}'
+      +'@keyframes _ubGlow{0%,100%{box-shadow:0 4px 24px rgba(212,175,55,.35)}50%{box-shadow:0 4px 32px rgba(212,175,55,.75)}}'
+      +'@keyframes _ubBtn{0%,90%,100%{transform:rotate(0)}92%{transform:rotate(-10deg)}96%{transform:rotate(10deg)}98%{transform:rotate(-5deg)}}'
+      +'@keyframes _ubMini{0%,100%{opacity:1;transform:translateX(0)}50%{opacity:.75;transform:translateX(3px)}}'
+      +'#update-banner{animation:_ubIn .4s cubic-bezier(.22,1,.36,1),_ubGlow 2.5s ease-in-out 1s infinite}'
+      +'#_ub-ref i{display:inline-block;animation:_ubBtn 3s ease-in-out 2s infinite}'
+      +'#update-mini{animation:_ubMini 1.8s ease-in-out infinite}';
+    document.head.appendChild(s);
+  }
   const b=document.createElement('div');b.id='update-banner';
-  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--gold);color:#000;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.3);gap:12px';
-  b.innerHTML='<span><i class="ti ti-sparkles" style="margin-right:6px"></i>Versi baru <strong>v'+newVer+'</strong> tersedia — ada fitur &amp; perbaikan terbaru</span>'
-    +'<button onclick="location.reload()" style="flex-shrink:0;background:#000;color:var(--gold);border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px"><i class="ti ti-refresh" style="margin-right:4px"></i>Refresh Sekarang</button>';
-  document.body.prepend(b);
+  b.style.cssText='position:fixed;top:58px;left:0;right:0;z-index:295;background:linear-gradient(90deg,#b8860b,var(--gold),#ffd040,var(--gold),#b8860b);background-size:300% 100%;color:#000;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;font-size:13.5px;font-weight:600;gap:12px;border-bottom:2.5px solid rgba(0,0,0,.18)';
+  b.innerHTML='<div style="display:flex;align-items:center;gap:10px;min-width:0;overflow:hidden">'
+    +'<span style="flex-shrink:0;background:#000;color:var(--gold);font-size:9px;font-weight:900;padding:3px 8px;border-radius:10px;letter-spacing:.8px;white-space:nowrap">✦ UPDATE</span>'
+    +'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Versi baru <strong>v'+newVer+'</strong> sudah tersedia — refresh untuk fitur &amp; perbaikan terbaru</span>'
+    +'</div>'
+    +'<div style="display:flex;align-items:center;gap:8px;flex-shrink:0">'
+    +'<button id="_ub-ref" onclick="location.reload()" style="background:#000;color:var(--gold);border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:7px;white-space:nowrap"><i class="ti ti-refresh"></i>Refresh Sekarang</button>'
+    +'<button onclick="document.getElementById(\'update-banner\').style.display=\'none\';document.getElementById(\'update-mini\').style.display=\'flex\'" style="background:rgba(0,0,0,.18);color:#000;border:none;padding:7px 11px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap">Nanti</button>'
+    +'</div>';
+  document.body.appendChild(b);
+  const m=document.createElement('div');m.id='update-mini';
+  m.onclick=()=>{b.style.display='flex';m.style.display='none';};
+  m.title='Klik untuk lihat pembaruan';
+  m.style.cssText='position:fixed;bottom:90px;left:0;z-index:295;background:var(--gold);color:#000;padding:9px 14px 9px 12px;border-radius:0 10px 10px 0;cursor:pointer;font-size:12px;font-weight:700;display:none;align-items:center;gap:6px;box-shadow:2px 2px 14px rgba(0,0,0,.35)';
+  m.innerHTML='<i class="ti ti-sparkles"></i> v'+newVer+' tersedia';
+  document.body.appendChild(m);
 }
 function showReleaseNotes(){
   if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
