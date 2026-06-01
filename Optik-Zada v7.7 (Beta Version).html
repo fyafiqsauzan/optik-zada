@@ -443,13 +443,13 @@ body,html{background:#fff!important}}
     <div id="user-list" style="font-size:13px;color:var(--muted);margin-bottom:16px">Memuat...</div>
     <div style="border-top:1px solid var(--border);padding-top:14px">
       <div style="font-size:13px;font-weight:700;margin-bottom:6px"><i class="ti ti-user-plus"></i> Daftarkan Pengguna Baru</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Akun langsung dibuat otomatis. Karyawan login pakai <b>username</b> yang kamu buat, dan akan terima email untuk set password sendiri.</p>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Akun langsung dibuat otomatis. Staff/Admin login pakai <b>username</b> yang kamu buat, dan akan terima email untuk set password sendiri.</p>
       <div style="display:grid;gap:8px">
         <input id="nu-nama" placeholder="Nama lengkap" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
         <input id="nu-username" placeholder="Username untuk login (contoh: budi_kasir)" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
         <input id="nu-email" type="email" placeholder="Email (untuk set password)" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none;width:100%">
         <select id="nu-role" style="padding:9px 12px;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--bg);color:var(--text);font-family:inherit;outline:none">
-          <option value="karyawan">Karyawan</option>
+          <option value="karyawan">Staff</option>
           <option value="admin">Admin</option>
         </select>
         <button id="nu-btn" class="btn btn-primary btn-sm" onclick="addPendingUser()"><i class="ti ti-user-plus"></i> Buat Akun & Kirim Email</button>
@@ -485,7 +485,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.5 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.9 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -503,10 +503,61 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.5 -->
+      <!-- New in v8.9.9 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.9 — Tampilan Peran &amp; Topbar Baru</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-badge" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Penamaan Peran Diperbarui</strong> — Sebutan "Karyawan" diubah jadi <em>Staff</em> dan "Admin / Pemilik" jadi <em>Admin</em> di seluruh tampilan. Tidak ada perubahan data — nama internal tidak berubah.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-layout-navbar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Topbar Lebih Bersih</strong> — Pojok kanan atas kini menampilkan nama pengguna, tombol versi (klik untuk buka Release Notes), dan tombol logout. Indikator peran dihapus agar tampilan lebih rapi.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-sparkles" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Release Notes di Topbar</strong> — Staff &amp; Admin bisa buka Release Notes kapan saja via tombol versi di pojok kanan atas — tidak lagi muncul otomatis saat login.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-door-enter" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Toast Login Lebih Ramah</strong> — Notifikasi masuk sekarang menampilkan "Selamat datang, [nama]!" alih-alih peran pengguna.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.8 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.8</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.8 — Import Historis Tanpa Invoice Palsu</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-table-import" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Import Hanya Simpan Resep Mata</strong> — Data historis yang diimport dari Excel kini disimpan sebagai riwayat resep di profil customer, bukan sebagai invoice. Tidak ada lagi transaksi Rp0 palsu di Riwayat.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-history" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Riwayat Customer Dipisah Dua Seksi</strong> — Profil customer kini menampilkan <em>Transaksi</em> (invoice nyata) dan <em>Riwayat Resep Mata (Historis)</em> (data import) secara terpisah dan rapi.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-chart-bar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Laporan &amp; Dashboard Akurat</strong> — Omzet, profit, dan filter bulan di Laporan hanya menghitung transaksi nyata — data historis tidak lagi masuk ke statistik keuangan.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.7 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.7</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.7 — Fix Tanggal Historis &amp; Filter Laporan</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-calendar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Tahun 2-Digit Tidak Lagi Jadi 1900-an</strong> — Tanggal berformat "14/03/26" kini dibaca sebagai 2026, bukan 1926. Filter bulan di Laporan tidak lagi menampilkan tahun-tahun aneh dari data lama.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-filter" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Laporan Hanya Hitung Transaksi Nyata</strong> — Dashboard, Laporan, dan Cashflow kini menggunakan filter khusus yang mengecualikan data historis dari semua perhitungan keuangan.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.6 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.6</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.6 — Fix Export Cashflow &amp; Global Search</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Export Cashflow Berfungsi Kembali</strong> — Tombol "Export Excel" di Cashflow sebelumnya tidak mengunduh file di semua browser. Kini diperbaiki — klik langsung mengunduh file .csv.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-search" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Global Search Kini Redirect dengan Benar</strong> — Klik hasil pencarian di kotak search kanan atas kini langsung membawa ke halaman, produk, atau invoice yang dicari — tidak lagi diam di tempat.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.5 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.5</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.9.5 — Perbaikan Tombol Aksi &amp; Navigasi Halaman</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -926,8 +977,8 @@ function salesInvs(){return activeInvs().filter(x=>!x.isHistoris);}
 // login() → set currentRole, applyPermissions() → hide/show nav
 // ════════════════════════════════════════════════
 const ROLES={
-  admin:    {label:'Admin / Pemilik',icon:'ti-crown',color:'var(--gold)',pages:['dashboard','reports','cashflow','invoice','history','frame','lensa','softlens','aksesoris','customer','settings','profil'],home:'dashboard'},
-  karyawan: {label:'Karyawan',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','frame','lensa','softlens','aksesoris','customer','profil'],home:'invoice'}
+  admin:    {label:'Admin',icon:'ti-crown',color:'var(--gold)',pages:['dashboard','reports','cashflow','invoice','history','frame','lensa','softlens','aksesoris','customer','settings','profil'],home:'dashboard'},
+  karyawan: {label:'Staff',icon:'ti-user-check',color:'var(--success)',pages:['dashboard','invoice','history','cashflow','frame','lensa','softlens','aksesoris','customer','profil'],home:'invoice'}
 };
 let currentRole=null;
 let currentUser=null; // {uid, nama, email, role}
@@ -964,10 +1015,12 @@ function injectAuthUI(){
   .role-card .rt b{display:block;font-size:14px;font-weight:700;color:var(--text)}
   .role-card .rt span{font-size:12px;color:var(--muted)}
   .lp-footer{font-size:11px;color:var(--muted);margin-top:20px;text-align:center;line-height:1.5}
-  .role-badge{display:none;align-items:center;gap:7px;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 10px 5px 6px;color:#fff;font-size:12px;font-weight:600;white-space:nowrap}
-  .role-badge .rdot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
-  .role-badge button{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:15px;padding:0;display:flex}
-  .role-badge button:hover{color:#fff}
+  .role-badge{display:none;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:20px;padding:5px 10px 5px 12px;color:#fff;font-size:12px;font-weight:600;white-space:nowrap}
+  .role-badge .rb-name{font-size:13px;font-weight:600}
+  .role-badge .rb-ver{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:2px 8px;font-size:11px;color:rgba(255,255,255,.85);cursor:pointer;font-weight:700;font-family:inherit;transition:background .15s}
+  .role-badge .rb-ver:hover{background:rgba(255,255,255,.28)}
+  .role-badge .rb-logout{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;font-size:15px;padding:0;display:flex}
+  .role-badge .rb-logout:hover{color:#fff}
   @media(max-width:640px){.login-split{flex-direction:column;max-height:95vh;overflow-y:auto}.login-brand{padding:32px 28px}.lb-name{font-size:22px;letter-spacing:2px}.lb-tagline,.lb-divider,.lb-info{display:none}.login-panel{padding:32px 28px}}
   .lp-form{display:flex;flex-direction:column;gap:14px}
   .lp-field label{display:block;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
@@ -1040,15 +1093,14 @@ function login(role){
   const r=ROLES[role];
   const badge=document.getElementById('role-badge');
   badge.style.display='flex';
-  badge.innerHTML=`<div class="rdot" style="background:${r.color}"><i class="ti ${r.icon}"></i></div><span>${r.label}</span><button onclick="logout()" title="Ganti peran / keluar"><i class="ti ti-logout"></i></button>`;
+  badge.innerHTML=`<span class="rb-name">${esc(currentUser?.nama||r.label)}</span><button class="rb-ver" onclick="showReleaseNotes(true)" title="Release Notes">v${APP_VERSION}</button><button class="rb-logout" onclick="logout()" title="Keluar"><i class="ti ti-logout"></i></button>`;
   const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+r.home+"'"));
   showPage(r.home,btn);
   updateDPBadge();
-  toast('Masuk sebagai '+r.label,'s');
+  toast('Selamat datang, '+(currentUser?.nama||r.label)+'!','s');
   renderFabForRole();
   startSessionWatch();
   setupVersionWatcher();
-  setTimeout(showReleaseNotes,700);
 }
 
 function logout(){
@@ -1062,8 +1114,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.5';
-const APP_VERSION='8.9.5';
+const _RN_VERSION='8.9.9';
+const APP_VERSION='8.9.9';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -1109,8 +1161,8 @@ function showUpdateBanner(newVer){
   m.innerHTML='<i class="ti ti-sparkles"></i> v'+newVer+' tersedia';
   document.body.appendChild(m);
 }
-function showReleaseNotes(){
-  if(localStorage.getItem('rn_seen')===_RN_VERSION)return;
+function showReleaseNotes(force){
+  if(!force&&localStorage.getItem('rn_seen')===_RN_VERSION)return;
   const el=document.getElementById('rn-modal');
   if(el){el.style.display='flex';document.getElementById('rn-dontshow').checked=false;}
 }
@@ -2672,12 +2724,12 @@ async function loadUserList(){
     let rows='';
     uSnap.forEach(d=>{
       const {role,nama,email,username}=d.data();const isMe=d.id===myUid;
-      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}${username?` <span style="font-size:11px;color:var(--muted);font-weight:400">@${username}</span>`:''}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
+      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}${username?` <span style="font-size:11px;color:var(--muted);font-weight:400">@${username}</span>`:''}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${ROLES[role]?.label||role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
     });
     let pending='';
     pSnap.forEach(d=>{
       const {role,nama}=d.data();const emailDisp=d.id.replace(/_/g,'.');
-      pending+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama}</div><div style="font-size:11px;color:var(--muted)">${emailDisp} · <i>menunggu login pertama</i></div></div><span class="badge" style="font-size:11px;background:var(--border);color:var(--muted);white-space:nowrap">${role}</span><button class="btn btn-outline btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="cancelPendingUser('${d.id}')"><i class="ti ti-x"></i></button></div>`;
+      pending+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama}</div><div style="font-size:11px;color:var(--muted)">${emailDisp} · <i>menunggu login pertama</i></div></div><span class="badge" style="font-size:11px;background:var(--border);color:var(--muted);white-space:nowrap">${ROLES[role]?.label||role}</span><button class="btn btn-outline btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="cancelPendingUser('${d.id}')"><i class="ti ti-x"></i></button></div>`;
     });
     el.innerHTML=(rows||'<div style="color:var(--muted);font-size:12px;padding:6px 0">Belum ada pengguna terdaftar.</div>')+(pending?`<div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:12px;margin-bottom:2px;letter-spacing:.5px">MENUNGGU AKTIVASI</div>${pending}`:'');
   }catch(e){el.innerHTML=`<span style="color:var(--danger);font-size:12px">Gagal memuat: ${e.message||e.code||''}</span>`;}

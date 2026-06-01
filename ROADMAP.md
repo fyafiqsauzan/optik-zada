@@ -30,6 +30,10 @@
 | **v8.9.3 Beta** | ✅ Dirilis | Fix: detail lensa double di struk + button invoice overflow di layar kecil |
 | **v8.9.4 Beta** | ✅ Dirilis | PD, Dm.A/B, DBL, TP dipisah dari form invoice → diisi post-facto di Riwayat, tidak tampil di struk customer |
 | **v8.9.5 Beta** | ✅ Dirilis | Fix tombol aksi master data (FAB pointer-events), HTML escape nama produk/customer, paginasi tengah |
+| **v8.9.6 Beta** | ✅ Dirilis | Fix export Cashflow (cross-browser), fix Global Search tidak redirect saat klik hasil |
+| **v8.9.7 Beta** | ✅ Dirilis | Fix tanggal 2-digit tahun (1926→2026), salesInvs() filter historis dari semua kalkulasi keuangan |
+| **v8.9.8 Beta** | ✅ Dirilis | Import historis simpan ke rxHistory[] customer (bukan invoice), Riwayat & statistik tidak lagi tercemar data import |
+| **v8.9.9 Beta** | ✅ Dirilis | Rename peran: Staff & Admin; topbar baru (nama + versi + logout); Release Notes bisa dibuka kapan saja; toast login lebih ramah |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -174,6 +178,10 @@
 | 45 | Fix Struk & Button Invoice | Bug Fix | ✅ v8.9.3 | (1) Detail lensa di struk tidak lagi double jika lensa diambil dari katalog item. (2) Button WA/Supplier/Thermal dijadikan ikon-only dengan tooltip agar tidak overflow di layar kecil. |
 | 46 | Pengukuran Lensa Dipisah dari Invoice | Feature | ✅ v8.9.4 | PD, Dm.A(T), Dm.B(L), DBL, TP dihapus dari form invoice. Diisi post-facto dari modal Riwayat (section "Pengukuran Lensa – Internal / Supplier"). Data tetap diteruskan ke supplier via WA order. Struk customer lebih bersih. |
 | 47 | Fix Tombol Aksi + Paginasi Rapi | Bug Fix | ✅ v8.9.5 | (1) FAB container diberi `pointer-events:none` sehingga tidak menutupi tombol tabel di bawahnya. (2) Nama produk/customer di-escape HTML untuk mencegah injeksi. (3) Pagination bar diubah jadi layout tengah ← Hal X/Y · N item → konsisten di semua tabel. |
+| 48 | Fix Export Cashflow + Global Search | Bug Fix | ✅ v8.9.6 | (1) Export CSV Cashflow kini pakai `appendChild/click/removeChild` — berfungsi di semua browser. (2) Global search redirect pakai `onmousedown` (sebelum blur) sehingga klik hasil langsung navigasi ke halaman/produk/invoice. |
+| 49 | Fix Tanggal Historis + Filter Finansial | Bug Fix | ✅ v8.9.7 | (1) `monthKeyOf()` normalisasi tahun 2-digit (e.g. "26" → 2026). (2) `salesInvs()` — filter baru yang mengecualikan data historis dari semua kalkulasi Dashboard, Laporan, Cashflow. |
+| 50 | Import Historis Tanpa Invoice Palsu | Feature | ✅ v8.9.8 | Import historis kini menyimpan data ke `customer.rxHistory[]`, bukan membuat invoice Rp0. Riwayat Transaksi bersih. Profil customer tampil dua seksi: Transaksi & Riwayat Resep Mata (Historis). Backward compat: data lama `isHistoris:true` tetap terbaca. |
+| 51 | Rename Peran + Topbar Baru + Login UX | Enhancement | ✅ v8.9.9 | (1) Label peran: "Karyawan" → Staff, "Admin / Pemilik" → Admin (internal key tidak berubah). (2) Topbar badge baru: nama pengguna + tombol versi (klik = Release Notes) + tombol logout. Indikator peran dihapus. (3) Release Notes kini bisa dibuka kapan saja via tombol versi — tidak muncul otomatis saat login. (4) Toast login: "Selamat datang, [nama]!". |
 
 ---
 
@@ -275,7 +283,11 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 31 Mei 2026 | v8.9.3 | Fix: detail lensa double di struk + button WA/Supplier/Thermal jadi ikon-only agar tidak overflow |
 | 31 Mei 2026 | v8.9.4 | Feat: PD/Dm.A/B/DBL/TP dipisah dari form invoice → isi post-facto di Riwayat, tidak tampil di struk customer |
 | 31 Mei 2026 | v8.9.5 | Fix: FAB pointer-events + HTML escape nama produk/customer + pagination layout tengah |
+| 1 Jun 2026 | v8.9.6 | Fix: export cashflow cross-browser + global search redirect via onmousedown |
+| 1 Jun 2026 | v8.9.7 | Fix: monthKeyOf() normalisasi tahun 2-digit + salesInvs() filter historis dari finansial |
+| 1 Jun 2026 | v8.9.8 | Feat: import historis → rxHistory[] customer (bukan invoice); profil customer 2 seksi; Riwayat bersih |
+| 1 Jun 2026 | v8.9.9 | Enhancement: Staff/Admin rename + topbar badge baru + Release Notes via tombol versi + toast login ramah |
 
 ---
 
-*Last updated: 31 Mei 2026 · Optik Zada Management System v8.9.5 Beta*
+*Last updated: 1 Jun 2026 · Optik Zada Management System v8.9.9 Beta*
