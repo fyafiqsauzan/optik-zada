@@ -1608,7 +1608,35 @@ async function _doImportHistoris(){
 // AUTOCOMPLETE
 function autocompleteC(q){const drop=document.getElementById('ac-drop');if(!q.trim()){drop.style.display='none';return;}const m=db.customers.filter(c=>c.nama.toLowerCase().includes(q.toLowerCase()));if(!m.length){drop.style.display='none';return;}drop.style.display='block';drop.innerHTML=m.map(c=>`<div class="ac-item" onmousedown="fillC(${c.id})"><i class="ti ti-user"></i><div><strong>${c.nama}</strong><div style="font-size:11px;color:var(--muted)">${c.hp||''}</div></div></div>`).join('');}
 function fillC(id){const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('inv-nama').value=c.nama;const gEl=document.getElementById('inv-gelar');if(gEl){const m=c.nama.match(/^(Tn\.|Ny\.|Nn\.|An\.|TN\.|NY\.|NN\.|AN\.)\s/i);const MAP={'TN.':'Tn.','NY.':'Ny.','NN.':'Nn.','AN.':'An.'};gEl.value=m?(MAP[m[1].toUpperCase()]||m[1]):''}document.getElementById('inv-hp').value=c.hp||'';document.getElementById('inv-usia').value=c.usia||'';document.getElementById('inv-alamat').value=c.alamat||'';document.getElementById('inv-jk').value=c.jk||'';document.getElementById('ac-drop').style.display='none';updateReceipt();}
-function globalSearch(q){const drop=document.getElementById('gs-drop');if(!q.trim()){drop.style.display='none';return;}const ql=q.toLowerCase();const r=[];allProds().forEach(p=>{if(p.nama.toLowerCase().includes(ql))r.push({icon:'ti-tag',label:p.nama,sub:p.cat+' · '+fmt(p.jual)})});db.customers.forEach(c=>{if(c.nama.toLowerCase().includes(ql))r.push({icon:'ti-user',label:c.nama,sub:c.hp||'customer'})});activeInvs().forEach(inv=>{if(inv.customer.toLowerCase().includes(ql)||inv.no.toLowerCase().includes(ql))r.push({icon:'ti-receipt',label:inv.no+' – '+inv.customer,sub:fmt(inv.tot)})});drop.innerHTML=r.length?r.slice(0,8).map(x=>`<div class="gs-item"><i class="ti ${x.icon}"></i><div><div style="font-weight:600">${x.label}</div><div style="font-size:11px;color:var(--muted)">${x.sub}</div></div></div>`).join(''):'<div class="gs-item" style="color:var(--muted)">Tidak ditemukan</div>';drop.style.display='block';}
+function _gsClose(){document.getElementById('gs-drop').style.display='none';document.getElementById('gs-inp').value='';}
+function _gsNav(type,id,cat){
+  _gsClose();
+  if(type==='prod'){
+    const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+cat+"'"));
+    showPage(cat,btn);
+    setTimeout(()=>{const q=document.getElementById(cat+'-q');if(q){const p=allProds().find(x=>x.id===id);if(p){q.value=p.nama;window['_'+cat+'Page']=1;renderProds(cat);}}},80);
+  }else if(type==='cust'){
+    const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'customer'"));
+    showPage('customer',btn);
+    setTimeout(()=>{const c=db.customers.find(x=>x.id===id);const q=document.getElementById('c-q');if(c&&q){q.value=c.nama;_custPage=1;renderCustomers();}},80);
+  }else if(type==='inv'){
+    const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'history'"));
+    showPage('history',btn);
+    setTimeout(()=>viewInvoice(id),150);
+  }
+}
+function globalSearch(q){
+  const drop=document.getElementById('gs-drop');
+  if(!q.trim()){drop.style.display='none';return;}
+  const ql=q.toLowerCase();const r=[];
+  allProds().forEach(p=>{if(p.nama.toLowerCase().includes(ql))r.push({icon:'ti-tag',label:esc(p.nama),sub:p.cat+' · '+fmt(p.jual),action:`_gsNav('prod',${p.id},'${p.cat}')`});});
+  db.customers.forEach(c=>{if(c.nama.toLowerCase().includes(ql))r.push({icon:'ti-user',label:esc(c.nama),sub:c.hp||'customer',action:`_gsNav('cust',${c.id},'')`});});
+  activeInvs().forEach(inv=>{if(inv.customer.toLowerCase().includes(ql)||inv.no.toLowerCase().includes(ql))r.push({icon:'ti-receipt',label:esc(inv.no)+' – '+esc(inv.customer),sub:fmt(inv.tot),action:`_gsNav('inv',${inv.id},'')`});});
+  drop.innerHTML=r.length
+    ?r.slice(0,8).map(x=>`<div class="gs-item" onmousedown="${x.action}" style="cursor:pointer"><i class="ti ${x.icon}"></i><div><div style="font-weight:600">${x.label}</div><div style="font-size:11px;color:var(--muted)">${x.sub}</div></div></div>`).join('')
+    :'<div class="gs-item" style="color:var(--muted)">Tidak ditemukan</div>';
+  drop.style.display='block';
+}
 
 
 // ════════════════════════════════════════════════
@@ -2004,7 +2032,7 @@ function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)
   }
   if(currentRole==='admin')loadUserList();
   renderSupplierList();}
-function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.click();toast('Backup diunduh');}
+function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Backup diunduh');}
 function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;await Store.save();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
 async function seedMasterData(){
   if(!confirm('Reset data master produk & customer ke data demo?\n\nTransaksi (invoice) tidak akan dihapus.'))return;
@@ -2062,7 +2090,7 @@ async function migrateToV2(){
     toast('Migrasi gagal: '+e.message,'e',5000);
   }
 }
-function exportCSV(){if(!activeInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(T)','Dm.B(L)','DBL','TP','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.tp||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
+function exportCSV(){if(!activeInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(T)','Dm.B(L)','DBL','TP','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.tp||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
 
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -2208,7 +2236,7 @@ function exportExpensesCSV(monthKey){
   const csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`cashflow-${monthKey==='all'?'semua':monthKey}.csv`;a.click();
+  const a=document.createElement('a');a.href=url;a.download=`cashflow-${monthKey==='all'?'semua':monthKey}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url),5000);
   toast('CSV cashflow diekspor','s');
 }
