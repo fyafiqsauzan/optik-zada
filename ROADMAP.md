@@ -36,6 +36,7 @@
 | **v8.9.9 Beta** | ✅ Dirilis | Rename peran: Staff & Admin; topbar baru (nama + versi + logout); Release Notes bisa dibuka kapan saja; toast login lebih ramah |
 | **v8.9.10 Beta** | ✅ Dirilis | Role baru "Keluarga" — akses penuh kecuali Cashflow & setting sensitif; class `admin-strict` untuk bagian berbahaya di Pengaturan |
 | **v8.9.11 Beta** | ✅ Dirilis | Fix bug Hapus Transaksi (renderHistory + error surfacing); Zona Berbahaya redesign; form Customer fix; hapus Release Notes dari Pengaturan |
+| **v8.9.12 Beta** | ✅ Dirilis | Template Excel untuk import customer (kolom BON/NAMA/Rx kanan-kiri/PD/ADD); klarifikasi import = data customer + riwayat resep, bukan transaksi |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
