@@ -400,7 +400,7 @@ body,html{background:#fff!important}}
      ════════════════════════════════════════════════ -->
 <div id="page-customer" class="page">
   <div class="ph"><div class="ph-left"><h2>Data Customer</h2><p>Seluruh customer terdaftar</p></div></div>
-  <div class="card" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Customer</div><div class="frow" style="grid-template-columns:80px 2fr 1fr 1fr 80px 44px"><div class="fg"><label>Gelar</label><select id="cg" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">—</option><option value="Tn.">Tn.</option><option value="Ny.">Ny.</option><option value="Nn.">Nn.</option><option value="An.">An.</option></select></div><div class="fg"><label>Nama *</label><input id="cn" placeholder="Nama lengkap"></div><div class="fg"><label>No. HP</label><input id="chp" placeholder="+628xxx"></div><div class="fg"><label>Tempat Tinggal</label><input id="ca" placeholder="Kota / alamat"></div><div class="fg"><label>Usia</label><input id="cu" type="number" min="1" max="120" placeholder="Thn"></div><div class="fg"><label>&nbsp;</label><button class="btn btn-primary" onclick="addCustomerManual()"><i class="ti ti-plus"></i> Tambah</button></div></div></div>
+  <div class="card" style="margin-bottom:14px"><div class="ct"><i class="ti ti-plus"></i> Tambah Customer</div><div class="frow" style="grid-template-columns:80px 2fr 1fr 1fr 80px"><div class="fg"><label>Gelar</label><select id="cg" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none"><option value="">—</option><option value="Tn.">Tn.</option><option value="Ny.">Ny.</option><option value="Nn.">Nn.</option><option value="An.">An.</option></select></div><div class="fg"><label>Nama *</label><input id="cn" placeholder="Nama lengkap"></div><div class="fg"><label>No. HP</label><input id="chp" placeholder="+628xxx"></div><div class="fg"><label>Tempat Tinggal</label><input id="ca" placeholder="Kota / alamat"></div><div class="fg"><label>Usia</label><input id="cu" type="number" min="1" max="120" placeholder="Thn"></div></div><div style="margin-top:10px;display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" onclick="addCustomerManual()"><i class="ti ti-plus"></i> Tambah Customer</button></div></div>
   <div class="card admin-only" style="margin-bottom:14px">
     <div class="ct"><i class="ti ti-table-import"></i> Import Historis dari Excel <span style="font-size:11px;font-weight:400;color:var(--muted)">(.xlsx)</span></div>
     <p style="font-size:12.5px;color:var(--muted);margin:8px 0 12px">Import data pasien dari file Excel lama dengan kolom <strong>BON, Nama, Usia, contact, Pembelian, Rx (S/C/Axis/Visus), PD, Add</strong>. Otomatis deteksi kolom. Preview dulu sebelum diimport.</p>
@@ -418,7 +418,6 @@ body,html{background:#fff!important}}
   <div class="grid g2" style="margin-bottom:16px">
     <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
-    <div class="card"><div class="ct"><i class="ti ti-sparkles"></i> Release Notes</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Lihat daftar fitur &amp; pembaruan aplikasi, serta panduan penggunaan.</p><button class="btn btn-outline btn-sm" onclick="localStorage.removeItem('rn_seen');showReleaseNotes()"><i class="ti ti-notes"></i> Lihat Release Notes v8.9.5</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card admin-only" style="margin-bottom:16px">
@@ -459,7 +458,23 @@ body,html{background:#fff!important}}
   </div>
   <div class="card admin-only admin-strict" id="action-log-card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-clipboard-list"></i> Log Audit Tindakan</div><div id="action-log-content" style="font-size:13px;color:var(--muted)">Memuat...</div></div>
   <div class="card admin-only admin-strict" id="migrate-card" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database-export"></i> Migrasi Struktur Data <span style="font-size:10px;font-weight:800;background:var(--gold);color:#000;padding:1px 7px;border-radius:20px;margin-left:6px;letter-spacing:.3px">v8.5</span></div><div id="migrate-info" style="font-size:13px;color:var(--muted);margin-bottom:12px">Memeriksa status...</div><div id="migrate-actions"></div></div>
-  <div class="card admin-strict" style="border-color:#f5d782"><div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Hapus transaksi atau reset semua data. Backup dulu!</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-outline btn-sm admin-only" onclick="showArchivedInvoices()"><i class="ti ti-archive"></i> Lihat Invoice Terhapus</button><button class="btn btn-outline btn-sm admin-only" onclick="seedMasterData()" style="border-color:var(--warn);color:var(--warn)"><i class="ti ti-database-import"></i> Reset Master Data & Customer</button><button class="btn btn-danger btn-sm admin-only" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Semua Transaksi</button><button class="btn btn-danger btn-sm admin-only" onclick="resetAll()"><i class="ti ti-alert-octagon"></i> Reset Semua Data</button></div></div>
+  <div class="card admin-strict" style="border-color:rgba(239,68,68,.35)">
+    <div class="ct" style="color:var(--danger)"><i class="ti ti-alert-triangle"></i> Zona Berbahaya</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Pastikan sudah Backup data sebelum melakukan tindakan di bawah. Semua tindakan tercatat di log audit.</p>
+    <div style="margin-bottom:14px"><button class="btn btn-outline btn-sm admin-only" onclick="showArchivedInvoices()"><i class="ti ti-archive"></i> Lihat Invoice Terhapus</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px"><i class="ti ti-trash" style="color:var(--danger);margin-right:4px"></i>Hapus Semua Transaksi</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Seluruh riwayat invoice dihapus permanen. Produk &amp; data customer tidak terpengaruh.</div>
+        <button class="btn btn-danger btn-sm admin-only" style="width:100%;justify-content:center" onclick="clearTransactions()"><i class="ti ti-trash"></i> Hapus Transaksi</button>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px"><i class="ti ti-database-import" style="color:var(--warn);margin-right:4px"></i>Reset Produk &amp; Customer</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Kembalikan katalog produk &amp; data customer ke kondisi awal. Riwayat transaksi tidak dihapus.</div>
+        <button class="btn btn-outline btn-sm admin-only" style="width:100%;justify-content:center;border-color:var(--warn);color:var(--warn)" onclick="seedMasterData()"><i class="ti ti-database-import"></i> Reset Data</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- PROFIL PAGE -->
@@ -486,7 +501,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.10 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.11 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -504,10 +519,24 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.10 -->
+      <!-- New in v8.9.11 -->
       <div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.11 — Perbaikan UI & Bug Hapus Transaksi</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-trash" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Hapus Semua Transaksi Sekarang Benar-Benar Bersih</strong> — Riwayat Transaksi kini langsung kosong setelah penghapusan tanpa perlu refresh. Error Firestore juga kini ditampilkan jika ada masalah, bukan diam-diam gagal.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Zona Berbahaya Lebih Rapi</strong> — Tombol-tombol berbahaya dipisah ke kartu masing-masing dengan deskripsi jelas. Tombol "Reset Semua Data" dihapus karena redundan (sudah terwakili oleh dua tombol lainnya).</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-users" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Form Tambah Customer Diperbaiki</strong> — Tombol "Tambah Customer" tidak lagi terpotong. Tata letak form lebih rapi dengan tombol di bawah baris input.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-settings" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Release Notes Dihapus dari Pengaturan</strong> — Sudah tersedia via tombol versi di topbar kapan saja, jadi tidak perlu duplikasi di halaman Pengaturan.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.10 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--bg2,#1a2233);color:var(--muted);font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0;border:1px solid var(--border)">v8.9.10</span>
           <span style="font-size:13px;font-weight:700">Pembaruan v8.9.10 — Role Baru: Keluarga</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:7px">
@@ -1129,8 +1158,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.10';
-const APP_VERSION='8.9.10';
+const _RN_VERSION='8.9.11';
+const APP_VERSION='8.9.11';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -2119,16 +2148,18 @@ async function seedMasterData(){
   toast('Master data & customer berhasil direset ke data demo · dicatat: '+_log.by,'s',3000);
 }
 async function clearTransactions(){
-  if(!confirm('Hapus SEMUA transaksi?\n\nTindakan ini akan dicatat di log audit.'))return;
+  if(!confirm('Hapus SEMUA transaksi?\n\nTindakan ini tidak bisa dibatalkan dan akan dicatat di log audit.'))return;
   const _log={action:'clearTransactions',label:'Hapus Semua Transaksi',by:currentUser?(currentUser.nama||currentUser.email||'Admin'):'Admin',byEmail:currentUser?currentUser.email:'',ts:Date.now()};
+  let fsErr=null;
   if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc){
-    try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){}
+    try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){fsErr=e;}
   }
+  if(fsErr){toast('Gagal hapus dari Firestore: '+(fsErr.message||fsErr.code||'error'),'e',6000);return;}
   db.invoices=[];db.counter=1;
   if(!db.actionLog)db.actionLog=[];db.actionLog.unshift(_log);if(db.actionLog.length>20)db.actionLog=db.actionLog.slice(0,20);
   await Store.save();
-  renderSettings();renderDashboard();
-  toast('Transaksi dihapus · dicatat: '+_log.by,'w',4000);
+  renderHistory();renderSettings();renderDashboard();
+  toast('Semua transaksi dihapus · dicatat: '+_log.by,'w',4000);
 }
 async function resetAll(){
   if(!confirm('RESET SEMUA DATA?\n\nSemua transaksi, produk, customer, dan pengeluaran akan dihapus.\nTindakan ini akan dicatat di log audit.'))return;
