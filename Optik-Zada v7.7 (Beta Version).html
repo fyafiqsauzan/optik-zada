@@ -1093,7 +1093,7 @@ function login(role){
   const r=ROLES[role];
   const badge=document.getElementById('role-badge');
   badge.style.display='flex';
-  badge.innerHTML=`<span class="rb-name">${esc(currentUser?.nama||r.label)}</span><button class="rb-ver" onclick="showReleaseNotes(true)" title="Release Notes">v${APP_VERSION}</button><button class="rb-logout" onclick="logout()" title="Keluar"><i class="ti ti-logout"></i></button>`;
+  badge.innerHTML=`<button class="rb-ver" onclick="showReleaseNotes(true)" title="Release Notes">v${APP_VERSION}</button><div style="width:1px;height:16px;background:rgba(255,255,255,.2);flex-shrink:0"></div><span class="rb-name">${esc(currentUser?.nama||r.label)}</span><button class="rb-logout" onclick="logout()" title="Keluar"><i class="ti ti-logout"></i></button>`;
   const btn=[...document.querySelectorAll('.nl')].find(b=>(b.getAttribute('onclick')||'').includes("'"+r.home+"'"));
   showPage(r.home,btn);
   updateDPBadge();
