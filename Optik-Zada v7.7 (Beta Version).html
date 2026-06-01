@@ -899,6 +899,7 @@ const PROD_PER=50;const CUST_PER=50;
 let _framePage=1,_lensaPage=1,_slPage=1,_akPage=1,_custPage=1;
 let _prodSearchPrev={frame:'',lensa:'',softlens:'',aksesoris:''};let _custSearchPrev='';
 function activeInvs(){return(db.invoices||[]).filter(x=>!x.deletedAt);}
+function salesInvs(){return activeInvs().filter(x=>!x.isHistoris);}
 
 
 // ════════════════════════════════════════════════
@@ -1378,7 +1379,7 @@ function renderCustomers(){
   const arr=db.customers.filter(c=>c.nama.toLowerCase().includes(q));
   document.getElementById('cu-emp').style.display=arr.length?'none':'block';
   const txsMap={};
-  activeInvs().forEach(inv=>{const k=inv.customer.toLowerCase();if(!txsMap[k])txsMap[k]={count:0,total:0};txsMap[k].count++;txsMap[k].total+=inv.tot;});
+  salesInvs().forEach(inv=>{const k=inv.customer.toLowerCase();if(!txsMap[k])txsMap[k]={count:0,total:0};txsMap[k].count++;txsMap[k].total+=inv.tot;});
   const pgTotal=Math.ceil(arr.length/CUST_PER)||1;
   if(_custPage>pgTotal)_custPage=pgTotal;
   const pg=_custPage;const startIdx=(pg-1)*CUST_PER;
@@ -1492,7 +1493,7 @@ function importHistorisCustomer(input){
         }else if(typeof tglRaw==='number'&&tglRaw>1){
           const d=new Date(Math.round((tglRaw-25569)*864e5));
           if(d.getFullYear()>1990)tanggal=d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});
-        }else if(tglRaw){tanggal=String(tglRaw).trim();}
+        }else if(tglRaw){const _s=String(tglRaw).trim();const _p=_s.split('/');if(_p.length===3){let _y=parseInt(_p[2])||0;if(_y<100)_y+=2000;tanggal=[_p[0].padStart(2,'0'),_p[1].padStart(2,'0'),String(_y)].join('/');}else{tanggal=_s;}}
 
         // Parse Rx — preserve "Plano", numbers, and empty strings
         const _rv=col=>col>=0&&r[col]!==''&&r[col]!==undefined&&r[col]!==null?String(r[col] instanceof Date?'':r[col]).trim():'';
@@ -1813,14 +1814,14 @@ function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)ret
 // Filter berdasarkan periode bulan
 // ════════════════════════════════════════════════
 // DASHBOARD
-function monthKeyOf(inv){const parts=(inv.tanggal||'').split('/');if(parts.length===3){const m=parts[1],y=parts[2];return y+'-'+m.padStart(2,'0');}const d=new Date(inv.ts||Date.now());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
-function renderDashboard(){const now=new Date();const currentMK=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');const currentMLabel=now.toLocaleDateString('id-ID',{month:'long',year:'numeric'});const lbl=document.getElementById('dash-month-label');if(lbl)lbl.textContent=currentMLabel;const inv=activeInvs().filter(x=>monthKeyOf(x)===currentMK);const period=currentMK;
-const kas=inv.reduce((s,x)=>s+(x.dpAmount||0)+(x.lunasAmount||0),0);const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);document.getElementById('d-tx').textContent=inv.length;if(currentRole==='admin'){document.getElementById('d-omzet').textContent=fmt(kas);document.getElementById('d-omzet').style.color='var(--gold)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Kas Masuk';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML=`<i class="ti ti-trending-up"></i>uang diterima · ${currentMLabel}`;}else{const _tod=new Date().toISOString().slice(0,10);const _tc=activeInvs().filter(x=>new Date(x.ts||0).toISOString().slice(0,10)===_tod).length;document.getElementById('d-omzet').textContent=_tc+' txn';document.getElementById('d-omzet').style.color='var(--info)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Transaksi Hari Ini';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML='<i class="ti ti-calendar-check"></i>hari ini';}document.getElementById('d-profit').textContent=fmt(profit);document.getElementById('d-cust').textContent=db.customers.length;document.getElementById('d-margin-sub').textContent=`margin ${pct(profit,tot)}% · ${currentMLabel}`;document.getElementById('d-prod-sub').textContent=`${db.frames.length+db.lensas.length+db.softlens.length} produk`;document.getElementById('d-tx-sub').textContent=currentMLabel;
+function monthKeyOf(inv){const parts=(inv.tanggal||'').split('/');if(parts.length===3){const m=parts[1];let y=parseInt(parts[2])||0;if(y<100)y+=2000;return y+'-'+m.padStart(2,'0');}const d=new Date(inv.ts||Date.now());return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function renderDashboard(){const now=new Date();const currentMK=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');const currentMLabel=now.toLocaleDateString('id-ID',{month:'long',year:'numeric'});const lbl=document.getElementById('dash-month-label');if(lbl)lbl.textContent=currentMLabel;const inv=salesInvs().filter(x=>monthKeyOf(x)===currentMK);const period=currentMK;
+const kas=inv.reduce((s,x)=>s+(x.dpAmount||0)+(x.lunasAmount||0),0);const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);document.getElementById('d-tx').textContent=inv.length;if(currentRole==='admin'){document.getElementById('d-omzet').textContent=fmt(kas);document.getElementById('d-omzet').style.color='var(--gold)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Kas Masuk';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML=`<i class="ti ti-trending-up"></i>uang diterima · ${currentMLabel}`;}else{const _tod=new Date().toISOString().slice(0,10);const _tc=salesInvs().filter(x=>new Date(x.ts||0).toISOString().slice(0,10)===_tod).length;document.getElementById('d-omzet').textContent=_tc+' txn';document.getElementById('d-omzet').style.color='var(--info)';const _ol=document.getElementById('d-omzet-label');if(_ol)_ol.textContent='Transaksi Hari Ini';const _os=document.getElementById('d-omzet-sub');if(_os)_os.innerHTML='<i class="ti ti-calendar-check"></i>hari ini';}document.getElementById('d-profit').textContent=fmt(profit);document.getElementById('d-cust').textContent=db.customers.length;document.getElementById('d-margin-sub').textContent=`margin ${pct(profit,tot)}% · ${currentMLabel}`;document.getElementById('d-prod-sub').textContent=`${db.frames.length+db.lensas.length+db.softlens.length} produk`;document.getElementById('d-tx-sub').textContent=currentMLabel;
 const statGrid=document.querySelector('#page-dashboard .grid.g4');if(statGrid)statGrid.className=`grid ${currentRole==='admin'?'g4':'g3'}`;
 // Parse tanggal format DD/MM/YYYY ke timestamp untuk sorting
 const _parseD=s=>{const p=(s||'').split('/');if(p.length===3)return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0])).getTime();return 0;};
 const _cashEvents=[];
-activeInvs().forEach(x=>{
+salesInvs().forEach(x=>{
   // Event DP / bayar pertama — pakai ts invoice sebagai sort key
   _cashEvents.push({id:x.id,c:x.customer,no:x.no,d:x.tanggal,amt:x.dpAmount||0,
     bg:x.payStatus==='dp'?'borange':(x.lunasAmount?'bblue':'bgreen'),
@@ -1895,11 +1896,11 @@ function showStokAlertModal(){
 // REPORTS
 function renderReports(){
   const sel=document.getElementById('report-period');const prev=sel?sel.value||'all':'all';
-  const months={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(!months[k]){const[y,m]=k.split('-');months[k]=new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});
+  const months={};salesInvs().forEach(inv=>{const k=monthKeyOf(inv);if(!months[k]){const[y,m]=k.split('-');months[k]=new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});
   const keys=Object.keys(months).sort().reverse();
   if(sel){sel.innerHTML='<option value="all">Semua Waktu</option>'+keys.map(k=>`<option value="${k}">${months[k]}</option>`).join('');sel.value=(prev==='all'||keys.includes(prev))?prev:'all';}
   const period=sel?sel.value:'all';
-  const inv=period==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===period);
+  const inv=period==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===period);
   const kas=inv.reduce((s,x)=>s+(x.dpAmount||0)+(x.lunasAmount||0),0);
   const tot=inv.reduce((s,x)=>s+x.tot,0);const profit=inv.reduce((s,x)=>s+x.profit,0);
   document.getElementById('rp-tx').textContent=inv.length;
@@ -2090,7 +2091,7 @@ async function migrateToV2(){
     toast('Migrasi gagal: '+e.message,'e',5000);
   }
 }
-function exportCSV(){if(!activeInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(T)','Dm.B(L)','DBL','TP','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.tp||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
+function exportCSV(){if(!salesInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(T)','Dm.B(L)','DBL','TP','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.tp||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
 
 
 // \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
@@ -2107,7 +2108,7 @@ const EXPENSE_CATS={
 };
 function _cfInit(){if(!db.expenses)db.expenses=[];if(!db.closedMonths)db.closedMonths=[];}
 function _cfMonthLabel(k){if(!k)return'';const[y,m]=k.split('-');return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}
-function _cfCalc(monthKey){_cfInit();const inv=monthKey==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===monthKey);const omzet=inv.reduce((s,x)=>s+x.tot,0);const profitKotor=inv.reduce((s,x)=>s+(x.profit||0),0);const exps=monthKey==='all'?(db.expenses||[]):(db.expenses||[]).filter(e=>e.tanggal&&e.tanggal.startsWith(monthKey));const pengeluaran=exps.reduce((s,e)=>s+(e.nominal||0),0);return{omzet,profitKotor,pengeluaran,profitBersih:profitKotor-pengeluaran,exps};}
+function _cfCalc(monthKey){_cfInit();const inv=monthKey==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===monthKey);const omzet=inv.reduce((s,x)=>s+x.tot,0);const profitKotor=inv.reduce((s,x)=>s+(x.profit||0),0);const exps=monthKey==='all'?(db.expenses||[]):(db.expenses||[]).filter(e=>e.tanggal&&e.tanggal.startsWith(monthKey));const pengeluaran=exps.reduce((s,e)=>s+(e.nominal||0),0);return{omzet,profitKotor,pengeluaran,profitBersih:profitKotor-pengeluaran,exps};}
 
 function renderCashflow(){_cfInit();if(currentRole==='admin')_renderCashflowAdmin();else _renderCashflowKaryawan();}
 
@@ -2115,7 +2116,7 @@ function _renderCashflowAdmin(){
   const now=new Date();
   const currentMK=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   const months={};
-  activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!months[k])months[k]=_cfMonthLabel(k);});
+  salesInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!months[k])months[k]=_cfMonthLabel(k);});
   (db.expenses||[]).forEach(e=>{if(e.tanggal){const k=e.tanggal.substring(0,7);if(!months[k])months[k]=_cfMonthLabel(k);}});
   if(!months[currentMK])months[currentMK]=_cfMonthLabel(currentMK);
   const keys=Object.keys(months).sort().reverse();
@@ -2428,7 +2429,7 @@ function renderSiapAlert(){
 
 function renderMonthlyChart(){
   const monthly={};
-  activeInvs().forEach(inv=>{const k=monthKeyOf(inv);monthly[k]=(monthly[k]||0)+inv.tot;});
+  salesInvs().forEach(inv=>{const k=monthKeyOf(inv);monthly[k]=(monthly[k]||0)+inv.tot;});
   const keys=Object.keys(monthly).sort();
   const last12=keys.slice(-12);
   const vals=last12.map(k=>monthly[k]);
@@ -2452,11 +2453,11 @@ function _getFilteredInv(source){
   if(source==='dashboard'){
     const now=new Date();
     const mk=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
-    return activeInvs().filter(x=>monthKeyOf(x)===mk);
+    return salesInvs().filter(x=>monthKeyOf(x)===mk);
   }
   const sel=document.getElementById('report-period');
   const period=sel?sel.value:'all';
-  return period==='all'?activeInvs():activeInvs().filter(x=>monthKeyOf(x)===period);
+  return period==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===period);
 }
 
 function showKasMasukModal(source){
