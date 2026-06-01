@@ -1574,7 +1574,7 @@ async function _doImportHistoris(){
   if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Mengimport...';}
   const baseTs=Date.now();
   const existingNames=new Set(db.customers.map(c=>c.nama.toLowerCase().trim()));
-  let addedC=0,addedI=0;
+  let addedC=0,addedRx=0;
 
   // Insert new customers
   data.trulyNew.forEach((c,i)=>{
@@ -1584,20 +1584,21 @@ async function _doImportHistoris(){
     }
   });
 
-  // Insert invoice records
-  const offset=data.trulyNew.length+1;
-  data.valid.forEach((row,i)=>{
-    const inv={id:baseTs+offset+i,no:row.bonKey,tanggal:row.tanggal||'—',ts:baseTs+offset+i,customer:row.nama,hp:row.hp,usia:row.usia,jk:'',alamat:'',tipe:row.tipe||'Kacamata',tglSiap:'',ro:{nama:'',siro:''},rx:row.rx,frameDetail:{brand:'',mat:'',code:'',color:''},lensDetail:{brand:'',focus:'',type:'',color:''},items:{frame:[],lensa:[],softlens:[],aksesoris:[]},sub:0,disc:0,tot:0,mod:0,profit:0,pay:'Historis',payStatus:'lunas',dpAmount:0,sisa:0,catatan:'Import dari data historis Excel',isHistoris:true,createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email,role:currentUser.role}:null,createdTs:baseTs+offset+i};
-    db.invoices.push(inv);
-    if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});
-    addedI++;
+  // Save Rx history directly to customer record — no fake invoice creation
+  data.valid.forEach(row=>{
+    if(!row.hasRx&&!row.tanggal)return;
+    const cust=db.customers.find(c=>c.nama.toLowerCase().trim()===row.nama.toLowerCase().trim());
+    if(!cust)return;
+    if(!cust.rxHistory)cust.rxHistory=[];
+    if(row.bon&&cust.rxHistory.find(r=>r.bon===row.bon))return; // skip duplicate
+    cust.rxHistory.push({bon:row.bon||'',tanggal:row.tanggal||'',tipe:row.tipe||'Kacamata',rx:row.rx,importedAt:baseTs});
+    addedRx++;
   });
 
-  db.invoices.sort((a,b)=>(b.ts||0)-(a.ts||0));
   await persist();
   delete window._importHistorisData;
   closeModal();renderCustomers();
-  toast(`Import selesai! ${addedC} customer baru & ${addedI} invoice historis ditambahkan`,'s',5000);
+  toast(`Import selesai! ${addedC} customer baru & ${addedRx} resep mata tersimpan`,'s',5000);
 }
 
 
@@ -1798,7 +1799,7 @@ const _pmv=inv.rx||{};const _showPm=inv.tipe==='Kacamata'||inv.tipe==='Lensa'||!
 // ════════════════════════════════════════════════
 // HISTORY
 function savePengukuran(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;if(!inv.rx)inv.rx={};const _gv=el=>document.getElementById(el)?.value||'';inv.rx.pd=_gv('pm-pd');inv.rx.dma=_gv('pm-dma');inv.rx.dmb=_gv('pm-dmb');inv.rx.dbl=_gv('pm-dbl');inv.rx.tp=_gv('pm-tp');persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});toast('Pengukuran lensa disimpan','s');}
-function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};activeInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';const myOnly=typeof _shMyInv!=='undefined'&&_shMyInv&&!!currentUser?.uid;let arr=activeInvs().filter(inv=>(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm)&&(!myOnly||inv.createdBy?.uid===currentUser?.uid));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
+function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};salesInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';const myOnly=typeof _shMyInv!=='undefined'&&_shMyInv&&!!currentUser?.uid;let arr=activeInvs().filter(inv=>!inv.isHistoris&&(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm)&&(!myOnly||inv.createdBy?.uid===currentUser?.uid));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=currentRole==='admin';const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${inv.createdBy.nama}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':inv.pay==='Historis'?'bg':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
@@ -2387,13 +2388,26 @@ function _kirimOrderWA(invId,supplierId){
 }
 
 function rxHistory(custId){
-  const c=db.customers.find(x=>x.id===custId);
-  if(!c)return;
-  const allInvs=[...activeInvs().filter(x=>x.customer.toLowerCase()===c.nama.toLowerCase())].sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
-  const _hasRx=inv=>inv.rx&&(inv.rx.rs||inv.rx.rc||inv.rx.ls||inv.rx.lc||inv.rx.pd||inv.rx.add||inv.rx.dma||inv.rx.dmb||inv.rx.dbl||inv.rx.tp);
-  const _rxHtml=inv=>{if(!_hasRx(inv))return'';const r=inv.rx;return`<div style="background:var(--bg2);border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px;font-family:'Courier New',monospace;font-size:11.5px;line-height:1.9">${r.rs||r.rc?`<div>OD Sph <b>${r.rs||'Pl'}</b> Cyl <b>${r.rc||'\u2014'}</b> Ax <b>${r.ra||'\u2014'}\u00B0</b>${r.rv?` Vis:<b>${r.rv}</b>`:''}</div>`:''}${r.ls||r.lc?`<div>OS Sph <b>${r.ls||'Pl'}</b> Cyl <b>${r.lc||'\u2014'}</b> Ax <b>${r.la||'\u2014'}\u00B0</b>${r.lv?` Vis:<b>${r.lv}</b>`:''}</div>`:''}${r.pd?`<div>PD: <b>${r.pd}</b></div>`:''}${r.add?`<div>Add: <b>${r.add}</b></div>`:''}${r.dma?`<div>Dm.A: <b>${r.dma}</b> mm</div>`:''}${r.dmb?`<div>Dm.B: <b>${r.dmb}</b> mm</div>`:''}${r.dbl?`<div>DBL: <b>${r.dbl}</b> mm</div>`:''}${r.tp?`<div>TP: <b>${r.tp}</b> mm</div>`:''}  </div>`;};
+  const c=db.customers.find(x=>x.id===custId);if(!c)return;
+  const _hasRx=rx=>rx&&(rx.rs||rx.rc||rx.ls||rx.lc||rx.pd||rx.add||rx.dma||rx.dmb||rx.dbl||rx.tp);
+  const _rxBlock=rx=>{if(!_hasRx(rx))return'';const r=rx;return`<div style="background:var(--bg2);border-radius:var(--radius-sm);padding:8px 10px;margin-top:6px;font-family:'Courier New',monospace;font-size:11.5px;line-height:1.9">${r.rs||r.rc?`<div>OD Sph <b>${r.rs||'Pl'}</b> Cyl <b>${r.rc||'\u2014'}</b> Ax <b>${r.ra||'\u2014'}\u00B0</b>${r.rv?` Vis:<b>${r.rv}</b>`:''}</div>`:''}${r.ls||r.lc?`<div>OS Sph <b>${r.ls||'Pl'}</b> Cyl <b>${r.lc||'\u2014'}</b> Ax <b>${r.la||'\u2014'}\u00B0</b>${r.lv?` Vis:<b>${r.lv}</b>`:''}</div>`:''}${r.pd?`<div>PD: <b>${r.pd}</b></div>`:''}${r.add?`<div>Add: <b>${r.add}</b></div>`:''}${r.dma?`<div>Dm.A: <b>${r.dma}</b> mm</div>`:''}${r.dmb?`<div>Dm.B: <b>${r.dmb}</b> mm</div>`:''}${r.dbl?`<div>DBL: <b>${r.dbl}</b> mm</div>`:''}${r.tp?`<div>TP: <b>${r.tp}</b> mm</div>`:''}</div>`;};
   const _items=inv=>[...(inv.items?.frame||[]),...(inv.items?.lensa||[]),...(inv.items?.softlens||[]),...(inv.items?.aksesoris||[])].filter(x=>x.nama);
-  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-history"></i> Riwayat Transaksi &amp; Resep \u2014 ${c.nama}</div>${!allInvs.length?'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi untuk customer ini</p></div>':allInvs.map(inv=>{const items=_items(inv);const rxBadge=_hasRx(inv)?`<span style="font-size:10px;font-weight:700;background:rgba(99,179,237,.15);color:var(--info);border:1px solid rgba(99,179,237,.3);padding:1px 7px;border-radius:20px;margin-left:6px">Rx</span>`:'';return`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;background:var(--bg)"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><strong style="font-size:13px">${inv.no}</strong>${rxBadge}${inv.tipe?` <span class="badge bg" style="font-size:10px">${inv.tipe}</span>`:''}</div><div style="text-align:right;flex-shrink:0;margin-left:8px"><div style="font-size:12px;color:var(--muted)">${inv.tanggal}</div><div style="font-size:13px;font-weight:700;color:var(--success)">${fmt(inv.tot)}</div></div></div>${items.length?`<div style="font-size:12px;color:var(--muted)">${items.map(x=>x.nama+(x.qty>1?' \xd7'+x.qty:'')).join(' \u00B7 ')}</div>`:''}${_rxHtml(inv)}</div>`;}).join('')}`;
+  const nam=c.nama.toLowerCase();
+  // Real transactions only
+  const realInvs=[...salesInvs().filter(x=>x.customer.toLowerCase()===nam)].sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
+  // Rx history from customer record (new format)
+  const rxHist=[...(c.rxHistory||[])].sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||''));
+  // Old historis invoices (backward compat \u2014 data imported before this fix)
+  const histInvs=[...activeInvs().filter(x=>x.isHistoris&&x.customer.toLowerCase()===nam)].sort((a,b)=>b.tanggal.localeCompare(a.tanggal));
+
+  const secLabel=(icon,txt,count)=>`<div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;display:flex;align-items:center;gap:6px"><i class="ti ${icon}" style="font-size:13px"></i>${txt}${count!==undefined?` <span style="font-weight:400">(${count})</span>`:''}</div>`;
+  const txHtml=realInvs.length?realInvs.map(inv=>{
+    const items=_items(inv);
+    return`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;background:var(--bg)"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><strong style="font-size:13px">${inv.no}</strong>${_hasRx(inv.rx)?`<span style="font-size:10px;font-weight:700;background:rgba(99,179,237,.15);color:var(--info);border:1px solid rgba(99,179,237,.3);padding:1px 7px;border-radius:20px;margin-left:6px">Rx</span>`:''} ${inv.tipe?`<span class="badge bg" style="font-size:10px">${inv.tipe}</span>`:''}</div><div style="text-align:right;flex-shrink:0;margin-left:8px"><div style="font-size:12px;color:var(--muted)">${inv.tanggal}</div><div style="font-size:13px;font-weight:700;color:var(--success)">${fmt(inv.tot)}</div></div></div>${items.length?`<div style="font-size:12px;color:var(--muted);margin-bottom:4px">${items.map(x=>x.nama+(x.qty>1?'\xd7'+x.qty:'')).join(' \xb7 ')}</div>`:''}${_rxBlock(inv.rx)}</div>`;
+  }).join(''):`<p style="font-size:13px;color:var(--muted);padding:4px 0">Belum ada transaksi untuk customer ini.</p>`;
+  const rxHistHtml=[...rxHist.map(r=>`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;background:var(--bg)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px"><span style="font-size:12px;font-weight:600">${r.bon?'BON '+r.bon:'\u2014'}${r.tipe?' \xb7 '+r.tipe:''}</span><span style="font-size:12px;color:var(--muted)">${r.tanggal||'\u2014'}</span></div>${_rxBlock(r.rx)}</div>`),...histInvs.map(inv=>`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;background:var(--bg)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px"><span style="font-size:12px;font-weight:600">${inv.no}${inv.tipe?' \xb7 '+inv.tipe:''}</span><span style="font-size:12px;color:var(--muted)">${inv.tanggal||'\u2014'}</span></div>${_rxBlock(inv.rx)}</div>`)].join('');
+  const hasRxSec=rxHist.length||histInvs.length;
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-history"></i> Riwayat &amp; Resep \u2014 ${esc(c.nama)}</div>${secLabel('ti-receipt','Transaksi',realInvs.length)}${txHtml}${hasRxSec?secLabel('ti-eye','Riwayat Resep Mata (Historis)',rxHist.length+histInvs.length)+rxHistHtml:''}`;
   document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
   document.getElementById('modal').style.display='flex';
 }
