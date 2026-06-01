@@ -34,6 +34,7 @@
 | **v8.9.7 Beta** | ✅ Dirilis | Fix tanggal 2-digit tahun (1926→2026), salesInvs() filter historis dari semua kalkulasi keuangan |
 | **v8.9.8 Beta** | ✅ Dirilis | Import historis simpan ke rxHistory[] customer (bukan invoice), Riwayat & statistik tidak lagi tercemar data import |
 | **v8.9.9 Beta** | ✅ Dirilis | Rename peran: Staff & Admin; topbar baru (nama + versi + logout); Release Notes bisa dibuka kapan saja; toast login lebih ramah |
+| **v8.9.10 Beta** | ✅ Dirilis | Role baru "Keluarga" — akses penuh kecuali Cashflow & setting sensitif; class `admin-strict` untuk bagian berbahaya di Pengaturan |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -182,6 +183,7 @@
 | 49 | Fix Tanggal Historis + Filter Finansial | Bug Fix | ✅ v8.9.7 | (1) `monthKeyOf()` normalisasi tahun 2-digit (e.g. "26" → 2026). (2) `salesInvs()` — filter baru yang mengecualikan data historis dari semua kalkulasi Dashboard, Laporan, Cashflow. |
 | 50 | Import Historis Tanpa Invoice Palsu | Feature | ✅ v8.9.8 | Import historis kini menyimpan data ke `customer.rxHistory[]`, bukan membuat invoice Rp0. Riwayat Transaksi bersih. Profil customer tampil dua seksi: Transaksi & Riwayat Resep Mata (Historis). Backward compat: data lama `isHistoris:true` tetap terbaca. |
 | 51 | Rename Peran + Topbar Baru + Login UX | Enhancement | ✅ v8.9.9 | (1) Label peran: "Karyawan" → Staff, "Admin / Pemilik" → Admin (internal key tidak berubah). (2) Topbar badge baru: nama pengguna + tombol versi (klik = Release Notes) + tombol logout. Indikator peran dihapus. (3) Release Notes kini bisa dibuka kapan saja via tombol versi — tidak muncul otomatis saat login. (4) Toast login: "Selamat datang, [nama]!". |
+| 52 | Role Baru: Keluarga | Feature | ✅ v8.9.10 | Peran baru antara Admin dan Staff. Akses penuh ke semua fitur kecuali: Cashflow, Kelola Pengguna, Log Audit, Migrasi Data, Zona Berbahaya, Status Penyimpanan. Diimplementasi via class `admin-strict` di HTML dan helper `_isAdminLike()` yang mencakup admin+keluarga di semua logika render. |
 
 ---
 
@@ -287,7 +289,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 1 Jun 2026 | v8.9.7 | Fix: monthKeyOf() normalisasi tahun 2-digit + salesInvs() filter historis dari finansial |
 | 1 Jun 2026 | v8.9.8 | Feat: import historis → rxHistory[] customer (bukan invoice); profil customer 2 seksi; Riwayat bersih |
 | 1 Jun 2026 | v8.9.9 | Enhancement: Staff/Admin rename + topbar badge baru + Release Notes via tombol versi + toast login ramah |
+| 1 Jun 2026 | v8.9.10 | Feat: role Keluarga (admin-like minus cashflow & setting sensitif); admin-strict class; _isAdminLike() helper |
 
 ---
 
-*Last updated: 1 Jun 2026 · Optik Zada Management System v8.9.9 Beta*
+*Last updated: 1 Jun 2026 · Optik Zada Management System v8.9.10 Beta*
