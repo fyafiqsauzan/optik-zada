@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.12 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.13 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,18 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.13 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.13 — Stabilisasi Data & Bug Fix</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Error Cloud Kini Tampil, Bukan Ditelan Diam-Diam</strong> — Sebelumnya jika koneksi bermasalah saat simpan invoice, lunas DP, arsip, atau pengukuran — app diam saja. Sekarang muncul notifikasi merah agar bisa segera tindak lanjut.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-bug" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Bug Import Historis Customer</strong> — Variabel deteksi baris sub-header Rx tidak pernah dideklarasikan (bug laten). Diperbaiki agar import Excel customer lebih andal untuk format header kompleks.</span></div>
         </div>
       </div>
 
@@ -995,14 +1007,16 @@ const Store={
   async save(){
     if(this.mode==='firebase'){
       if(this._migrated&&this._configRef){
-        try{const{invoices:_i,...cfg}=db;await this._setDoc(this._configRef,{...cfg,updatedAt:this._serverTs()});}catch(e){}
+        try{const{invoices:_i,...cfg}=db;await this._setDoc(this._configRef,{...cfg,updatedAt:this._serverTs()});}
+        catch(e){if(Date.now()-_saveErrTs>30000){_saveErrTs=Date.now();toast('Gagal simpan ke cloud — cek koneksi internet','e',6000);}}
       }else if(this._docRef){
-        try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}catch(e){}
+        try{await this._setDoc(this._docRef,{data:JSON.stringify(db),updatedAt:this._serverTs()});}
+        catch(e){if(Date.now()-_saveErrTs>30000){_saveErrTs=Date.now();toast('Gagal simpan ke cloud — cek koneksi internet','e',6000);}}
       }
     }else{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}}
   }
 };
-let saveTimer=null;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
+let saveTimer=null;let _saveErrTs=0;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
 let _histPage=1;const HIST_PER=25;
 const PROD_PER=50;const CUST_PER=50;
 let _framePage=1,_lensaPage=1,_slPage=1,_akPage=1,_custPage=1;
@@ -1174,8 +1188,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.12';
-const APP_VERSION='8.9.12';
+const _RN_VERSION='8.9.13';
+const APP_VERSION='8.9.13';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -1567,10 +1581,12 @@ function importHistorisCustomer(input){
 
       // ── Detect Rx sub-header row (has >=2 "s" cells AND "axis"/"visus") ──
       let rxCol={rs:-1,rc:-1,ra:-1,rv:-1,ls:-1,lc:-1,la:-1,lv:-1,pd:-1,add:-1};
+      let rxHdrRow=-1;
       for(let i=mainHdrRow+1;i<=mainHdrRow+4&&i<raw.length;i++){
         const cells=raw[i].map(cell=>String(cell instanceof Date?'':cell||'').toLowerCase().trim());
         const sIdxes=[];cells.forEach((c,j)=>{if(c==='s')sIdxes.push(j);});
         if(sIdxes.length>=2||(cells.includes('axis')&&cells.includes('visus'))){
+          rxHdrRow=i;
           // Assign R and L column positions
           if(sIdxes.length>=1)rxCol.rs=sIdxes[0];
           if(sIdxes.length>=2)rxCol.ls=sIdxes[1];
@@ -1840,7 +1856,7 @@ if(_isAdminLike()&&all.some(x=>!(x.modal>0))){toast('Ada item tanpa harga modal 
 cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});
 const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}`:pay;
 const ro=getRO();const _invNo='INV-'+String(db.counter).padStart(4,'0');document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
-db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
+db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('⚠️ Invoice disimpan di perangkat ini tapi GAGAL ke cloud! Jangan refresh halaman. ('+e.message+')','e',10000);});updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
 
 
 // ════════════════════════════════════════════════
@@ -1898,7 +1914,7 @@ function doLunas(id){
   inv.lunasAmount=inv.sisa;inv.payStatus='lunas';inv.sisa=0;
   inv.lunasDate=lunasDateFormatted;inv.lunasPay=payLunas;inv.lunasTs=Date.now();
   inv.lunasBy=currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null;
-  if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});
+  if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('⚠️ Pelunasan disimpan di perangkat ini tapi GAGAL ke cloud! Jangan refresh. ('+e.message+')','e',10000);});
   closeModal();renderHistory();renderDashboard();persist();updateDPBadge();toast('Invoice '+inv.no+' LUNAS via '+payLunas+'!','s');
 }
 
@@ -1929,15 +1945,15 @@ const _pmv=inv.rx||{};const _showPm=inv.tipe==='Kacamata'||inv.tipe==='Lensa'||!
 // delInvoice() → hapus invoice dari db
 // ════════════════════════════════════════════════
 // HISTORY
-function savePengukuran(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;if(!inv.rx)inv.rx={};const _gv=el=>document.getElementById(el)?.value||'';inv.rx.pd=_gv('pm-pd');inv.rx.dma=_gv('pm-dma');inv.rx.dmb=_gv('pm-dmb');inv.rx.dbl=_gv('pm-dbl');inv.rx.tp=_gv('pm-tp');persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});toast('Pengukuran lensa disimpan','s');}
+function savePengukuran(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;if(!inv.rx)inv.rx={};const _gv=el=>document.getElementById(el)?.value||'';inv.rx.pd=_gv('pm-pd');inv.rx.dma=_gv('pm-dma');inv.rx.dmb=_gv('pm-dmb');inv.rx.dbl=_gv('pm-dbl');inv.rx.tp=_gv('pm-tp');persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('Pengukuran gagal ke cloud: '+e.message,'e',6000);});toast('Pengukuran lensa disimpan','s');}
 function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').toLowerCase();const fs=document.getElementById('sh-status')?.value||'';const fp=document.getElementById('sh-pay')?.value||'';const srt=document.getElementById('sh-sort')?.value||'newest';const _smEl=document.getElementById('sh-month');const _smPrev=_smEl?_smEl.value||'':'';const _mkeys={};salesInvs().forEach(inv=>{const k=monthKeyOf(inv);if(k&&!_mkeys[k]){const[y,mo]=k.split('-');_mkeys[k]=new Date(parseInt(y),parseInt(mo)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});}});if(_smEl){const _sk=Object.keys(_mkeys).sort().reverse();_smEl.innerHTML='<option value="">Semua Bulan</option>'+_sk.map(k=>`<option value="${k}"${_smPrev===k?' selected':''}>${_mkeys[k]}</option>`).join('');}const fm=_smEl?_smEl.value||'':'';const myOnly=typeof _shMyInv!=='undefined'&&_shMyInv&&!!currentUser?.uid;let arr=activeInvs().filter(inv=>!inv.isHistoris&&(inv.customer.toLowerCase().includes(q)||inv.no.toLowerCase().includes(q))&&(!fs||inv.payStatus===fs)&&(!fp||inv.pay.includes(fp))&&(!fm||monthKeyOf(inv)===fm)&&(!myOnly||inv.createdBy?.uid===currentUser?.uid));if(srt==='oldest')arr=[...arr].reverse();else if(srt==='highest')arr=[...arr].sort((a,b)=>b.tot-a.tot);else if(srt==='lowest')arr=[...arr].sort((a,b)=>a.tot-b.tot);const _pgTotal=Math.ceil(arr.length/HIST_PER)||1;if(_histPage>_pgTotal)_histPage=_pgTotal;const pageArr=arr.slice((_histPage-1)*HIST_PER,_histPage*HIST_PER);document.getElementById('h-empty').style.display=arr.length?'none':'block';
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=_isAdminLike();const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${inv.createdBy.nama}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${inv.lunasBy.nama}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':inv.pay==='Historis'?'bg':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
 const _pgEl=document.getElementById('h-pagination');if(_pgEl){if(_pgTotal>1){let _ph='';if(_histPage>1)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage--;renderHistory()"><i class="ti ti-chevron-left"></i></button>';_ph+='<span style="font-size:12px;color:var(--muted);padding:0 8px">Hal '+_histPage+' / '+_pgTotal+' &nbsp;&#xb7;&nbsp; '+arr.length+' transaksi</span>';if(_histPage<_pgTotal)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage++;renderHistory()"><i class="ti ti-chevron-right"></i></button>';_pgEl.innerHTML=_ph;}else _pgEl.innerHTML='';}const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=_isAdminLike()?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
-function delInvoice(id){if(!confirm('Arsipkan invoice ini? Invoice bisa dipulihkan dari Settings.'))return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(()=>{});}closeModal();renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
+function delInvoice(id){if(!confirm('Arsipkan invoice ini? Invoice bisa dipulihkan dari Settings.'))return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(e=>{toast('Gagal arsip ke cloud: '+e.message,'e',6000);});}closeModal();renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
 function showArchivedInvoices(){const deleted=db.invoices.filter(x=>x.deletedAt).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));document.getElementById('modal-content').innerHTML='<div class="modal-title"><i class="ti ti-archive"></i> Invoice Terhapus ('+deleted.length+')</div>'+(deleted.length?deleted.map(inv=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600">'+inv.no+' — '+inv.customer+'</div><div style="font-size:11px;color:var(--muted)">'+inv.tanggal+' · '+fmt(inv.tot)+' · '+inv.pay+'</div></div><button class="btn btn-success btn-xs" onclick="restoreInvoice('+inv.id+')"><i class="ti ti-refresh"></i> Pulihkan</button></div>').join(''):'<div class="empty" style="padding:24px"><i class="ti ti-check-circle" style="font-size:32px;color:var(--success)"></i><p>Tidak ada invoice terhapus</p></div>');document.getElementById('modal-actions').innerHTML='<button class="btn btn-outline" onclick="closeModal()">Tutup</button>';document.getElementById('modal').style.display='flex';}
-function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(()=>{});persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
+function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('Gagal pulihkan ke cloud: '+e.message,'e',6000);});persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
 
 
 // ════════════════════════════════════════════════
