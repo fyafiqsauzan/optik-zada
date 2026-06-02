@@ -39,6 +39,7 @@
 | **v8.9.12 Beta** | ✅ Dirilis | Template Excel untuk import customer (kolom BON/NAMA/Rx kanan-kiri/PD/ADD); klarifikasi import = data customer + riwayat resep, bukan transaksi |
 | **v8.9.13 Beta** | ✅ Dirilis | Stabilisasi prod: surface Firestore write errors (invoice/lunas/arsip/pengukuran) via toast; fix rxHdrRow undeclared bug di importHistorisCustomer |
 | **v8.9.14 Beta** | ✅ Dirilis | Item GRATIS (jual=Rp0) bisa masuk invoice jika ada kata "GRATIS" di nama; struk tampil "GRATIS" bukan "Rp0"; stok & profit tetap terhitung |
+| **v8.9.15 Beta** | ✅ Dirilis | Cash-basis accounting fix: kas masuk & profit dicatat sesuai kapan uang diterima, bukan tanggal invoice; profit DP invoice dibagi proporsional (dpRatio × profit → bulan DP, lunasRatio × profit → bulan pelunasan) |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
