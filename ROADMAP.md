@@ -41,6 +41,7 @@
 | **v8.9.14 Beta** | ✅ Dirilis | Item GRATIS (jual=Rp0) bisa masuk invoice jika ada kata "GRATIS" di nama; struk tampil "GRATIS" bukan "Rp0"; stok & profit tetap terhitung |
 | **v8.9.15 Beta** | ✅ Dirilis | Cash-basis accounting fix: kas masuk & profit dicatat sesuai kapan uang diterima, bukan tanggal invoice; profit DP invoice dibagi proporsional (dpRatio × profit → bulan DP, lunasRatio × profit → bulan pelunasan) |
 | **v8.9.16 Beta** | ✅ Dirilis | Fix Cashflow: `_cfCalc` sekarang cash-basis (dpAmount/lunasAmount bukan tot); profit kotor proporsional; dropdown bulan tambah lunasDate months; bar chart Dashboard ikut tampilkan cross-month pelunasan |
+| **v8.9.17 Beta** | ✅ Dirilis | Cashflow transparan: kartu "Alur Kas" waterfall (Penjualan Baru per kategori + Pelunasan Piutang → Kas Masuk → HPP → Profit Kotor → Pengeluaran → Profit Bersih); kartu Pelunasan Piutang di modal Kas Masuk (Dashboard & Laporan); export PDF Cashflow; export CSV Cashflow lebih lengkap (ringkasan + detail invoice + pelunasan + pengeluaran) |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
