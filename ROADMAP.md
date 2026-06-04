@@ -44,6 +44,7 @@
 | **v8.9.17 Beta** | ✅ Dirilis | Cashflow transparan: kartu "Alur Kas" waterfall (Penjualan Baru per kategori + Pelunasan Piutang → Kas Masuk → HPP → Profit Kotor → Pengeluaran → Profit Bersih); kartu Pelunasan Piutang di modal Kas Masuk (Dashboard & Laporan); export PDF Cashflow; export CSV Cashflow lebih lengkap (ringkasan + detail invoice + pelunasan + pengeluaran) |
 | **v8.9.18 Beta** | ✅ Dirilis | Optimasi kritis Firestore: (1) Enable IndexedDB offline cache — page load berikutnya instant dari cache; (2) Fix bug: config onSnapshot tidak lagi re-fetch semua invoice setiap ada perubahan kecil (hemat 90%+ reads); (3) Tambah invoice onSnapshot inkremental untuk multi-device sync real-time |
 | **v8.9.19 Beta** | ✅ Dirilis | Cache lokal otomatis ke localStorage — jika Firestore quota habis/no internet, tampilkan data cache terakhir (≤48 jam) alih-alih halaman kosong; notif error spesifik saat quota habis (reset jam 07.00 WIB); sederhanakan kode initializeFirestore |
+| **v8.9.20 Beta** | ✅ Dirilis | Hotfix: revert `initializeFirestore + persistentLocalCache` yang ditambahkan v8.9.18 — menyebabkan app hang di beberapa browser karena setup IndexedDB memblokir koneksi Firestore; kembali ke `getFirestore()` standar |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
