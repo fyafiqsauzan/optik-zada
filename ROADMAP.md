@@ -47,6 +47,7 @@
 | **v8.9.20 Beta** | ✅ Dirilis | Hotfix: revert `initializeFirestore + persistentLocalCache` yang ditambahkan v8.9.18 — menyebabkan app hang di beberapa browser karena setup IndexedDB memblokir koneksi Firestore; kembali ke `getFirestore()` standar |
 | **v8.9.21 Beta** | ✅ Dirilis | Diagnostic: tambah toast error di semua jalur load — meta_not_found, migrated=false silent, dan Firestore read error kini tampil sebagai toast dengan pesan spesifik untuk memudahkan debugging |
 | **v8.9.22 Beta** | ✅ Dirilis | Versi tampil di topbar (konfirmasi deploy); fix silent Rp0: path `optik-zada/config` tidak ada kini munculkan toast merah (sebelumnya diam-diam reset ke seedDB + save, berpotensi timpa data); APP_VERSION sinkron ke 8.9.22 |
+| **v8.9.23 Beta** | ✅ Dirilis | HOTFIX: spinner login 15s → 5s (mencegah user stuck di spinner jika refresh sebelum form muncul); error login lebih jelas (Firestore errors sebelumnya muncul sebagai "username/password salah"); error sesi auto-login kini tampil di form login dengan kode error spesifik |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 

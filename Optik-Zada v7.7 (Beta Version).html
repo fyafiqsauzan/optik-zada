@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.22</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.23</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.22 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.23 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,19 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.23 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.23 — Hotfix: Login Lebih Responsif + Error Jelas</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-loader" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Spinner Login Lebih Cepat</strong> — Loading spinner "Menghubungkan ke server" kini hilang dalam 5 detik (sebelumnya 15 detik). Jika sempat refresh sebelum spinner hilang, form login tidak akan pernah muncul — ini kemungkinan penyebab "tidak bisa klik apapun".</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-circle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Error Login Lebih Jelas</strong> — Sebelumnya error koneksi database tampil sebagai "Username atau password salah" yang menyesatkan. Kini tampil pesan yang tepat: "Server database tidak bisa dijangkau" / "Koneksi internet bermasalah" / kode error spesifik.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Error Sesi Auto-Login</strong> — Jika sesi tersimpan di browser tapi gagal terverifikasi (Firestore error), kini muncul pesan di form login dengan kode error spesifik alih-alih diam tanpa feedback.</span></div>
         </div>
       </div>
 
@@ -1157,7 +1170,7 @@ function salesInvs(){return activeInvs().filter(x=>!x.isHistoris);}
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');const _sysDark=!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);const _useDark=_t?_t==='dark':_sysDark;if(_useDark){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{if(!localStorage.getItem('optik_zada_theme')){darkMode=e.matches;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';}});}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
   const _hideAuthCheck=()=>{const _ac=document.getElementById('auth-checking');if(_ac)_ac.style.display='none';};
-  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(!user){_hideAuthCheck();return;}if(currentRole)return;try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);return;}}}catch(e){}if(!currentRole)_hideAuthCheck();});setTimeout(_hideAuthCheck,6000);}else{_hideAuthCheck();}
+  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(!user){_hideAuthCheck();return;}if(currentRole)return;try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);return;}}else if(!currentRole&&!s.exists()){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Sesi ditemukan tapi akun belum terdaftar. Coba login manual.';_ae.style.display='block';}}}catch(e){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Gagal terhubung ke database ('+(e&&e.code?e.code:String(e))+') — cek koneksi lalu refresh.';_ae.style.display='block';}}if(!currentRole)_hideAuthCheck();});setTimeout(_hideAuthCheck,3000);}else{_hideAuthCheck();}
   window.addEventListener('scroll',()=>{document.getElementById('scrtop').style.display=window.scrollY>300?'flex':'none';});
   document.addEventListener('click',e=>{if(!e.target.closest('.ac-wrap')){document.getElementById('ac-drop').style.display='none';document.querySelectorAll('[id^="ac-drop-"]').forEach(d=>d.style.display='none');}if(!e.target.closest('.top-search'))document.getElementById('gs-drop').style.display='none';});
   _initNetworkBanner();
@@ -1250,7 +1263,7 @@ function injectAuthUI(){
       </div>
     </div>
     <div class="login-panel">
-      <div id="auth-checking"><div class="ac-spin"></div><div class="ac-txt">Memeriksa sesi aktif...</div></div>
+      <div id="auth-checking"><div class="ac-spin"></div><div class="ac-txt">Menghubungkan ke server...<br><span style="font-size:10px;opacity:.6">Harap tunggu sebentar</span></div></div>
       <div class="lp-eyebrow">Selamat Datang</div>
       <div class="lp-title">Masuk ke<br>sistem</div>
       <div class="lp-form">
@@ -1273,7 +1286,7 @@ function injectAuthUI(){
     </div>
   </div>`;
   document.body.appendChild(ov);
-  setTimeout(()=>{const _ac=document.getElementById('auth-checking');if(_ac&&_ac.style.display!=='none')_ac.style.display='none';},15000);
+  setTimeout(()=>{const _ac=document.getElementById('auth-checking');if(_ac&&_ac.style.display!=='none')_ac.style.display='none';},5000);
   const badge=document.createElement('div');badge.id='role-badge';badge.className='role-badge';
   document.querySelector('.top-right').prepend(badge);
 }
@@ -1310,8 +1323,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.22';
-const APP_VERSION='8.9.22';
+const _RN_VERSION='8.9.23';
+const APP_VERSION='8.9.23';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -2912,8 +2925,8 @@ async function doAuthLogin(){
     currentUser={uid,nama:(data.nama&&data.nama.trim())||cred.user.email,email:cred.user.email,role};
     login(role);
   }catch(e){
-    const msgs={'auth/user-not-found':'Username atau password salah','auth/wrong-password':'Username atau password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Username atau password salah','auth/network-request-failed':'Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.'};
-    showAuthErr(msgs[e.code]||'Username atau password salah');
+    const msgs={'auth/user-not-found':'Username atau password salah','auth/wrong-password':'Username atau password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Username atau password salah','auth/network-request-failed':'Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.','unavailable':'Server database sedang tidak bisa dijangkau. Cek koneksi internet lalu coba lagi.','firestore/unavailable':'Server database sedang tidak bisa dijangkau. Cek koneksi lalu coba lagi.','permission-denied':'Akses ditolak oleh server. Hubungi developer.','firestore/permission-denied':'Akses ditolak oleh server. Hubungi developer.'};
+    const _c=e&&(e.code||'');showAuthErr(msgs[_c]||(String(_c).includes('network')||String(_c).includes('unavailable')?'Koneksi ke server gagal. Cek internet lalu coba lagi.':'Gagal login ('+(_c||'unknown')+') — coba refresh halaman.'));
   }finally{if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}}
 }
 function showAuthErr(msg){const e=document.getElementById('auth-err');if(e){e.removeAttribute('style');e.textContent=msg;e.style.display=msg?'block':'none';}}
