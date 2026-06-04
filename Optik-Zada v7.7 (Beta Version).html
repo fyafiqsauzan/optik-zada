@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System</span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.22</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.21 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.22 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,19 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.22 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.22 — Versi Terlihat + Fix Notif Error Data Kosong</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-tag" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Versi Tampil di Topbar</strong> — Nomor versi kini terlihat langsung di header (pojok kiri, di samping "OPTIK ZADA") tanpa perlu buka Release Notes. Memudahkan konfirmasi apakah update terbaru sudah terpasang.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Notif Jika Config Cloud Tidak Ada</strong> — Sebelumnya jika dokumen konfigurasi di cloud kosong/tidak ada, app diam-diam menampilkan Rp0 tanpa pesan apa pun dan berisiko menimpa data cloud. Sekarang muncul notifikasi merah yang jelas agar bisa segera ditangani.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-stethoscope" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Diagnostik Load Firestore</strong> (v8.9.21) — Toast diagnostik ditambahkan di setiap jalur inisialisasi Firebase: meta dokumen gagal, format data lama, maupun Firestore tidak terjangkau — sehingga masalah koneksi lebih mudah diidentifikasi.</span></div>
         </div>
       </div>
 
@@ -1082,7 +1095,7 @@ const Store={
     const _self=this;
     try{
       const[cfgSnap,invSnap]=await Promise.all([_self._getDoc(_self._configRef),_self._getDocs(_self._invoicesCol)]);
-      if(cfgSnap.exists()){const c=Object.assign({},cfgSnap.data());delete c.updatedAt;Object.assign(db,c);}else{db=_self.seedDB();await _self.save();}
+      if(cfgSnap.exists()){const c=Object.assign({},cfgSnap.data());delete c.updatedAt;Object.assign(db,c);}else{db=_self.seedDB();setTimeout(()=>toast('❌ Konfigurasi tidak ditemukan di cloud (optik-zada/config kosong). Data tidak bisa dimuat — hubungi developer atau coba Migrasi Data di Pengaturan.','e',25000),500);}
       db.invoices=[];invSnap.forEach(d=>db.invoices.push(d.data()));db.invoices.sort((a,b)=>(b.ts||0)-(a.ts||0));
       try{const{invoices:_i,..._cfg}=db;localStorage.setItem('_oz_fbsnap',JSON.stringify({..._cfg,invoices:db.invoices.slice(0,300),_ts:Date.now()}));}catch(_){}
     }catch(e){
@@ -1297,8 +1310,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.14';
-const APP_VERSION='8.9.14';
+const _RN_VERSION='8.9.22';
+const APP_VERSION='8.9.22';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
