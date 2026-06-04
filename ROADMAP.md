@@ -42,6 +42,7 @@
 | **v8.9.15 Beta** | ✅ Dirilis | Cash-basis accounting fix: kas masuk & profit dicatat sesuai kapan uang diterima, bukan tanggal invoice; profit DP invoice dibagi proporsional (dpRatio × profit → bulan DP, lunasRatio × profit → bulan pelunasan) |
 | **v8.9.16 Beta** | ✅ Dirilis | Fix Cashflow: `_cfCalc` sekarang cash-basis (dpAmount/lunasAmount bukan tot); profit kotor proporsional; dropdown bulan tambah lunasDate months; bar chart Dashboard ikut tampilkan cross-month pelunasan |
 | **v8.9.17 Beta** | ✅ Dirilis | Cashflow transparan: kartu "Alur Kas" waterfall (Penjualan Baru per kategori + Pelunasan Piutang → Kas Masuk → HPP → Profit Kotor → Pengeluaran → Profit Bersih); kartu Pelunasan Piutang di modal Kas Masuk (Dashboard & Laporan); export PDF Cashflow; export CSV Cashflow lebih lengkap (ringkasan + detail invoice + pelunasan + pengeluaran) |
+| **v8.9.18 Beta** | ✅ Dirilis | Optimasi kritis Firestore: (1) Enable IndexedDB offline cache — page load berikutnya instant dari cache; (2) Fix bug: config onSnapshot tidak lagi re-fetch semua invoice setiap ada perubahan kecil (hemat 90%+ reads); (3) Tambah invoice onSnapshot inkremental untuk multi-device sync real-time |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
