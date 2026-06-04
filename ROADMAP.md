@@ -49,6 +49,7 @@
 | **v8.9.22 Beta** | ✅ Dirilis | Versi tampil di topbar (konfirmasi deploy); fix silent Rp0: path `optik-zada/config` tidak ada kini munculkan toast merah (sebelumnya diam-diam reset ke seedDB + save, berpotensi timpa data); APP_VERSION sinkron ke 8.9.22 |
 | **v8.9.23 Beta** | ✅ Dirilis | HOTFIX: spinner login 15s → 5s (mencegah user stuck di spinner jika refresh sebelum form muncul); error login lebih jelas (Firestore errors sebelumnya muncul sebagai "username/password salah"); error sesi auto-login kini tampil di form login dengan kode error spesifik |
 | **v8.9.24 Beta** | ✅ Dirilis | 🔴 FIX KRITIS: syntax error (kutip kurang di `exportCashflowCSV`, `createdBy?.nama\|\|','']`) menyebabkan SELURUH inline script gagal parse sejak v8.9.17 — app tampil dashboard statik tapi semua tombol mati, login overlay tak muncul, data tak ter-load, & semua toast diagnostik v8.9.21–23 tak pernah jalan. Diperbaiki + validasi `node --check` sebelum rilis |
+| **v8.9.25 Beta** | ✅ Dirilis | Security patch: XSS escape semua innerHTML customer/produk/supplier; stok dikembalikan saat invoice diarsipkan (dan dikurangi kembali saat dipulihkan); auto-logout diperpanjang 3 menit → 15 menit |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -201,6 +202,40 @@
 
 ---
 
+## 🔍 Audit Produksi — Backlog Temuan (Juni 2026)
+> Hasil audit menyeluruh saat app sedang dipakai client (production testing aktif). Dikelompokkan berdasarkan prioritas.
+
+### 🔴 P0 — Harus Sebelum Lebih Banyak Data Masuk
+
+| # | Temuan | Detail | Status |
+|---|--------|--------|--------|
+| A1 | **Firestore `users/{id}` terlalu permissive** | Rules saat ini: `allow read, write: if request.auth != null` — siapapun yang login bisa menulis role `admin` ke dokumen dirinya sendiri via Firestore REST. Perlu restrict ke `request.auth.uid == userId` untuk read, dan `admin SDK only` atau whitelist uid untuk write role. | 📋 Backlog |
+| A2 | **Data customers dalam satu dokumen 1MB** | Semua customer + rxHistory disimpan di `optik-zada/config`. Setiap rxHistory row import Excel menambah ukuran. Jika ada 500+ customer dengan riwayat resep, dokumen bisa melebihi 1MB Firestore limit → write gagal total. Solusi: pindahkan `customers[]` ke `customers/{id}` per dokumen. | 📋 Backlog |
+| A3 | **Invoice counter collision multi-device** | Counter `db.config.lastInvNo` dibaca dari in-memory state, bukan atomic Firestore transaction. Jika dua perangkat simpan invoice bersamaan, bisa dapat nomor BON yang sama. Solusi: `runTransaction` di Firestore untuk increment counter. | 📋 Backlog |
+
+### 🟠 P1 — Sebelum Launch v9.0
+
+| # | Temuan | Detail | Status |
+|---|--------|--------|--------|
+| B1 | **Backup restore kurang validasi** | Import backup JSON tidak cek versi skema, field wajib, atau ukuran. Data korup atau JSON parsial bisa menggantikan seluruh db tanpa konfirmasi apa stok/invoice ikut hilang. Perlu: (1) cek field wajib, (2) preview ringkasan sebelum konfirmasi, (3) backup otomatis sebelum restore. | 📋 Backlog |
+| B2 | **Tutup Buku tidak mencegah pelunasan retroaktif** | Invoice dari bulan yang sudah di-tutup buku masih bisa dilunasi — angka cashflow bulan itu berubah padahal sudah ter-snapshot. Perlu: cek `closedMonths` sebelum izinkan perubahan finansial. | 📋 Backlog |
+| B3 | **Double-submit invoice** | Tombol "Simpan Invoice" tidak di-disable setelah klik pertama. Klik ganda atau koneksi lambat bisa membuat invoice duplikat. Perlu: disable tombol + loading state selama `persist()` berjalan. | 📋 Backlog |
+| B4 | **`confirm()` native masih dipakai** | `delInvoice()` masih pakai `window.confirm()` yang bisa diblokir Chrome desktop (policy: blocked in cross-origin iframes) dan tidak ada di beberapa browser mobile. Perlu ganti ke modal in-app. | 📋 Backlog |
+| B5 | **Export PDF Cashflow setelah Tutup Buku** | Sudah disepakati dengan client, belum diimplementasi. PDF snapshot per bulan yang sudah tutup buku. | 📋 Backlog |
+
+### 🟡 P2 — Nice-to-Have / Polish
+
+| # | Temuan | Detail | Status |
+|---|--------|--------|--------|
+| C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | 📋 Backlog |
+| C2 | **Template WA untuk supplier** | Client belum memberi format yang diinginkan. Menunggu konfirmasi. | ⏳ Menunggu client |
+| C3 | **Garansi frame** | Client belum memutuskan flow garansi. Menunggu keputusan. | ⏳ Menunggu client |
+| C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 📋 Backlog |
+| C5 | **Kompresi logo** | `assets/logo.png` ~1MB → <100KB. Proses manual via squoosh.app. | 📋 Backlog |
+| C6 | **Stok tidak bisa negatif tapi juga tidak ada warning** | Saat ini stok dikurangi diam-diam hingga 0 (Math.max(0,...)). Perlu toast warning jika qty melebihi stok tersedia saat simpan invoice. | 📋 Backlog |
+
+---
+
 ## 🚀 v8.9 → v9.0 — Launch Week (18–20 Juni)
 
 | # | Item | Detail |
@@ -304,7 +339,22 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 1 Jun 2026 | v8.9.8 | Feat: import historis → rxHistory[] customer (bukan invoice); profil customer 2 seksi; Riwayat bersih |
 | 1 Jun 2026 | v8.9.9 | Enhancement: Staff/Admin rename + topbar badge baru + Release Notes via tombol versi + toast login ramah |
 | 1 Jun 2026 | v8.9.10 | Feat: role Keluarga (admin-like minus cashflow & setting sensitif); admin-strict class; _isAdminLike() helper |
+| 1 Jun 2026 | v8.9.11 | Fix: hapus transaksi (renderHistory + error surfacing); Zona Berbahaya redesign; hapus Release Notes dari Pengaturan |
+| 1 Jun 2026 | v8.9.12 | Feat: template Excel untuk import customer (BON/NAMA/Rx/PD/ADD); klarifikasi import = data customer + riwayat resep |
+| 1 Jun 2026 | v8.9.13 | Stabilisasi prod: surface Firestore write errors (invoice/lunas/arsip/pengukuran) via toast; fix rxHdrRow undeclared bug |
+| 1 Jun 2026 | v8.9.14 | Feat: item GRATIS (jual=Rp0) — struk tampil "GRATIS"; stok & profit tetap terhitung |
+| 2 Jun 2026 | v8.9.15 | Fix: cash-basis accounting — kas masuk & profit dicatat sesuai kapan uang diterima, bukan tanggal invoice |
+| 2 Jun 2026 | v8.9.16 | Fix: Cashflow `_cfCalc` cash-basis (dpAmount/lunasAmount); dropdown bulan tambah lunasDate months |
+| 2 Jun 2026 | v8.9.17 | Feat: Cashflow waterfall (Penjualan Baru + Pelunasan → Kas Masuk → HPP → Profit Kotor → Pengeluaran → Profit Bersih); export PDF + CSV Cashflow lebih lengkap |
+| 2 Jun 2026 | v8.9.18 | Optimasi Firestore: IndexedDB offline cache + fix config onSnapshot re-fetch semua invoice + invoice onSnapshot inkremental |
+| 2 Jun 2026 | v8.9.19 | Cache lokal localStorage + notif error spesifik saat quota Firestore habis |
+| 2 Jun 2026 | v8.9.20 | Hotfix: revert IndexedDB cache (menyebabkan hang di beberapa browser) |
+| 3 Jun 2026 | v8.9.21 | Diagnostic: toast error di semua jalur load Firestore — meta_not_found, migrated=false, read error |
+| 3 Jun 2026 | v8.9.22 | Feat: versi tampil di topbar; fix silent Rp0 saat config cloud tidak ada — sekarang toast merah + tidak auto-save |
+| 3 Jun 2026 | v8.9.23 | Hotfix: spinner login 15s → 5s; error login Firestore lebih jelas; error sesi auto-login tampil di form |
+| 3 Jun 2026 | v8.9.24 | FIX KRITIS: syntax error `createdBy?.nama\|\|','']` di exportCashflowCSV (ada sejak v8.9.17) → seluruh inline JS gagal parse, app mati total; + CI `node --check` ditambahkan |
+| 4 Jun 2026 | v8.9.25 | Security: XSS escape semua innerHTML customer/produk/supplier; fix stok restore saat delInvoice/restoreInvoice; auto-logout 3 menit → 15 menit; tambah audit backlog ke ROADMAP |
 
 ---
 
-*Last updated: 1 Jun 2026 · Optik Zada Management System v8.9.10 Beta*
+*Last updated: 4 Jun 2026 · Optik Zada Management System v8.9.25 Beta*
