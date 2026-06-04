@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.23</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.24</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.23 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.24 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,18 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.24 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">FIX KRITIS</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.24 — Fix Total: Aplikasi Tidak Bisa Diklik / Stuck</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-bug-off" style="color:#dc2626;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Penyebab Utama Ditemukan &amp; Diperbaiki</strong> — Ada satu baris kode rusak (tanda kutip kurang) di fungsi Export CSV Cashflow yang menyebabkan <em>seluruh</em> JavaScript aplikasi gagal dijalankan. Akibatnya: halaman login tidak muncul, semua tombol mati, dan data tidak ter-load — meski tampilan dashboard terlihat. <strong>Data Anda tetap aman</strong> selama ini, hanya aplikasinya yang tidak bisa jalan.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Validasi Syntax Sebelum Rilis</strong> — Ke depannya setiap rilis akan dicek validitas kode-nya terlebih dahulu agar kejadian "aplikasi mati total" tidak terulang.</span></div>
         </div>
       </div>
 
@@ -1323,8 +1335,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.23';
-const APP_VERSION='8.9.23';
+const _RN_VERSION='8.9.24';
+const APP_VERSION='8.9.24';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -2535,7 +2547,7 @@ function exportCashflowCSV(monthKey){
   rows.push(['','','','','','']);
   if(inv.length){rows.push([`KAS MASUK \u2014 PENJUALAN BARU (${inv.length} invoice)`,'','','','','']);rows.push(['No. Invoice','Tanggal','Customer','Total Invoice','Kas Diterima (DP)','Metode Bayar']);inv.forEach(x=>rows.push([x.no,x.tanggal,x.customer,x.tot,x.dpAmount||0,x.pay]));rows.push(['','','','','','']);}
   if(pelList.length){rows.push([`KAS MASUK \u2014 PELUNASAN PIUTANG (${pelList.length} invoice)`,'','','','','']);rows.push(['No. Invoice','Tgl Invoice','Customer','Total Invoice','Jumlah Pelunasan','Tgl Lunas']);pelList.forEach(x=>rows.push([x.no,x.tanggal,x.customer,x.tot,x.lunasAmount||0,x.lunasDate||'']));rows.push(['','','','','','']);}
-  if(c.exps.length){rows.push([`PENGELUARAN OPERASIONAL (${c.exps.length} entri)`,'','','','','']);rows.push(['Tanggal','Kategori','Nominal','Keterangan','Dicatat Oleh','']);[...c.exps].sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).forEach(e=>rows.push([e.tanggal,EXPENSE_CATS[e.kategori]?.label||e.kategori,e.nominal||0,e.ket||'',e.createdBy?.nama||','']));}
+  if(c.exps.length){rows.push([`PENGELUARAN OPERASIONAL (${c.exps.length} entri)`,'','','','','']);rows.push(['Tanggal','Kategori','Nominal','Keterangan','Dicatat Oleh','']);[...c.exps].sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).forEach(e=>rows.push([e.tanggal,EXPENSE_CATS[e.kategori]?.label||e.kategori,e.nominal||0,e.ket||'',e.createdBy?.nama||'','']));}
   if(!inv.length&&!pelList.length&&!c.exps.length){toast('Tidak ada data untuk diekspor','w');return;}
   const csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
