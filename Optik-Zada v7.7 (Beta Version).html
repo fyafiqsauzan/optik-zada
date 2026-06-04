@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.20 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.21 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -1068,10 +1068,12 @@ const Store={
     const _core=async()=>{
       const ok=await _self._connectFirebase();
       if(!ok){db=_self.seedDB();return false;}
-      let migrated=false;
-      try{const m=await _self._getDoc(_self._metaRef);migrated=m.exists()&&m.data().migrated===true;}catch(e){}
+      let migrated=false,_metaErr=null;
+      try{const m=await _self._getDoc(_self._metaRef);migrated=m.exists()&&m.data().migrated===true;if(!m.exists())_metaErr='meta_not_found';}catch(e){_metaErr=e&&e.code?e.code:String(e);}
+      if(_metaErr)setTimeout(()=>toast('⚠️ DEBUG: metaRef gagal ('+_metaErr+'). Pastikan migrasi v8.5 sudah dijalankan di Pengaturan.','w',15000),500);
       if(migrated){_self._migrated=true;return await _self._loadNewStructure();}
-      return await new Promise(res=>{_self._fbSnap(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}else if(_self._onRemote)_self._onRemote();}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}});});
+      setTimeout(()=>toast('⚠️ Data dimuat dari format lama (pre-v8.5). Buka Pengaturan → Migrasi Data jika data tidak muncul.','w',12000),800);
+      return await new Promise(res=>{_self._fbSnap(_self._docRef,snap=>{if(snap.metadata.hasPendingWrites)return;if(snap.exists()&&snap.data().data){db=JSON.parse(snap.data().data);if(!_resolved){_resolved=true;res(true);}else if(_self._onRemote)_self._onRemote();}else{db=_self.seedDB();_self.save();if(!_resolved){_resolved=true;res(false);}setTimeout(()=>toast('❌ Format lama: dokumen optik-zada/main tidak ada datanya. Hubungi developer.','e',20000),500);}},err=>{if(!_resolved){_resolved=true;db=_self.seedDB();res(false);}setTimeout(()=>toast('❌ Gagal baca Firestore: '+(err&&err.code?err.code:String(err)),'e',20000),500);});});
     };
     const result=await Promise.race([_core().then(r=>{_resolved=true;return r;}),_fallback]);
     return result;
