@@ -13,6 +13,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Validate inline JS syntax
+        run: |
+          node -e '
+            const fs = require("fs");
+            const html = fs.readFileSync("Optik-Zada v7.7 (Beta Version).html", "utf8");
+            const blocks = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+            if (!blocks.length) { console.error("No inline script blocks found"); process.exit(1); }
+            const big = blocks.reduce((a, b) => b.length > a.length ? b : a, "");
+            fs.writeFileSync("/tmp/_app.js", big);
+          '
+          node --check /tmp/_app.js
+          echo "Inline JS syntax OK"
+
       - name: Build public directory
         run: |
           mkdir -p public
