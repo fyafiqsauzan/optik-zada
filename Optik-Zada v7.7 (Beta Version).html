@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.25</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.26</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -257,7 +257,7 @@ body,html{background:#fff!important}}
      ════════════════════════════════════════════════ -->
 <div id="page-invoice" class="page">
   <div class="ph"><div class="ph-left"><h2>Buat Invoice</h2><p>Catat transaksi penjualan baru</p></div>
-  <div class="ph-actions no-print"><button class="btn btn-outline btn-sm" onclick="resetInvoice()"><i class="ti ti-refresh"></i> Reset</button><button class="btn btn-outline btn-sm" onclick="previewInvoice()"><i class="ti ti-printer"></i> Preview</button><button class="btn btn-gold" onclick="simpanInvoice()"><i class="ti ti-check"></i> Simpan</button></div></div>
+  <div class="ph-actions no-print"><button class="btn btn-outline btn-sm" onclick="resetInvoice()"><i class="ti ti-refresh"></i> Reset</button><button class="btn btn-outline btn-sm" onclick="previewInvoice()"><i class="ti ti-printer"></i> Preview</button><button class="btn btn-gold" id="btn-simpan-inv" onclick="simpanInvoice()"><i class="ti ti-check"></i> Simpan</button></div></div>
   <div class="inv-layout">
     <div>
       <!-- Customer -->
@@ -274,7 +274,7 @@ body,html{background:#fff!important}}
         <div class="frow" style="grid-template-columns:80px 80px 1fr 1fr 1fr;align-items:end">
           <div class="fg"><label>Usia <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></label><input id="inv-usia" type="number" min="1" max="120" placeholder="Thn"></div>
           <div class="fg"><label>Kelamin</label><select id="inv-jk"><option value="">-</option><option value="L">L</option><option value="P">P</option></select></div>
-          <div class="fg"><label>Tgl Invoice <span style="color:var(--danger)">*</span></label><input id="inv-tanggal" type="date"></div>
+          <div class="fg"><label>Tgl Invoice <span style="color:var(--danger)">*</span></label><input id="inv-tanggal" type="date" onchange="genInvNo()"></div>
           <div class="fg"><label>Tgl Siap Ambil <span style="font-size:10px;font-weight:400;color:var(--muted)">(opsional)</span></label><input id="inv-tgl-siap" type="date"></div>
           <div class="fg"><label>No. Invoice</label><input id="inv-no" readonly></div>
         </div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.25 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.26 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,19 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.26 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:#16a34a;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.26 — Format Nomor Invoice Baru + Anti-Duplikasi</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-receipt-2" style="color:#16a34a;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Format Baru: <code>INV/OZ/DDMMYY/0001</code></strong> — Nomor invoice kini ber-prefix tanggal (contoh: <code>INV/OZ/070626/0001</code>). Counter reset per hari, jadi tidak ada risiko nomor sama jika dua perangkat menyimpan invoice bersamaan. Nomor lama (INV-0001) tetap tampil apa adanya di Riwayat.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-hand-stop" style="color:#16a34a;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Anti Double-Save</strong> — Tombol "Simpan" otomatis dinonaktifkan saat invoice sedang diproses, mencegah duplikasi akibat double-klik atau koneksi lambat.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:#16a34a;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Tutup Buku Lebih Tegas</strong> — Invoice baru dan pelunasan tidak bisa lagi diset ke bulan yang sudah ditutup buku. Sebelumnya, perubahan retroaktif bisa membuat angka laporan tidak konsisten.</span></div>
         </div>
       </div>
 
@@ -1348,8 +1361,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.25';
-const APP_VERSION='8.9.25';
+const _RN_VERSION='8.9.26';
+const APP_VERSION='8.9.26';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -1482,7 +1495,8 @@ function unfmtRpInput(el){const v=el.value.replace(/[^\d]/g,'');el.value=v||'';}
 function parseCurrencyInput(id){const v=(document.getElementById(id)?.value||'').replace(/[^\d]/g,'');return parseInt(v)||0;}
 function parseRp(v){return parseInt(String(v).replace(/[^\d]/g,''))||0;}
 function pct(a,b){return b?Math.round(a/b*100):0}
-function genInvNo(){document.getElementById('inv-no').value='INV-'+String(db.counter).padStart(4,'0')}
+function _invNoFor(yyyyMmDd){if(!yyyyMmDd){const _d=new Date();yyyyMmDd=_d.getFullYear()+'-'+String(_d.getMonth()+1).padStart(2,'0')+'-'+String(_d.getDate()).padStart(2,'0');}const parts=yyyyMmDd.split('-');if(parts.length!==3)return 'INV-'+String(db.counter||1).padStart(4,'0');const dd=parts[2].padStart(2,'0');const mm=parts[1].padStart(2,'0');const yy=parts[0].slice(-2);const prefix='INV/OZ/'+dd+mm+yy+'/';const existing=new Set((db.invoices||[]).map(i=>i.no));let n=1;while(existing.has(prefix+String(n).padStart(4,'0')))n++;return prefix+String(n).padStart(4,'0');}
+function genInvNo(){const _tglEl=document.getElementById('inv-tanggal');document.getElementById('inv-no').value=_invNoFor(_tglEl?_tglEl.value:'');}
 function today(){return new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}
 function closeModal(){document.getElementById('modal').style.display='none'}
 function allProds(){return[...db.frames.map(p=>({...p,cat:'Frame'})),...db.lensas.map(p=>({...p,cat:'Lensa'})),...db.softlens.map(p=>({...p,cat:'Softlens'})),...(db.aksesoris||[]).map(p=>({...p,cat:'Aksesoris'}))]}
@@ -2008,15 +2022,16 @@ document.getElementById('live-tape').innerHTML=`<div class="rh"><h3>${esc(db.tok
 // ════════════════════════════════════════════════
 // SAVE
 function resetInvoice(){cart={frame:[],lensa:[],softlens:[],aksesoris:[]};pay='';bank='';isDP=false;['inv-nama','inv-hp','inv-catatan','rx-rs','rx-rc','rx-ra','rx-rv','rx-ls','rx-lc','rx-la','rx-lv','rx-add','inv-alamat','inv-ro-nama','inv-ro-siro'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('inv-usia').value='';document.getElementById('inv-jk').value='';const _gReset=document.getElementById('inv-gelar');if(_gReset)_gReset.value='';const tglSiapEl=document.getElementById('inv-tgl-siap');if(tglSiapEl)tglSiapEl.value='';document.getElementById('inv-dp').value='';document.getElementById('inv-diskon').value='';document.getElementById('inv-diskon2').value='';const tgl=document.getElementById('inv-tanggal');if(tgl){const now=new Date();tgl.value=now.toISOString().slice(0,10);}setDP(false);document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('on'));document.querySelectorAll('.bk-btn').forEach(b=>b.classList.remove('on'));document.getElementById('bank-wrap').style.display='none';document.getElementById('qris-wrap').style.display='none';genInvNo();renderCart();}
-function simpanInvoice(){const _rawNama=document.getElementById('inv-nama').value.trim();const _gelarVal=document.getElementById('inv-gelar')?.value||'';const _hasGelar=/^(Tn\.|Ny\.|Nn\.|An\.|TN\.|NY\.|NN\.|AN\.)\s/i.test(_rawNama);const nama=(!_hasGelar&&_gelarVal)?_gelarVal+' '+_rawNama:_rawNama;if(!nama){toast('Nama customer wajib diisi','e');return;}const tglCheck=document.getElementById('inv-tanggal').value;if(!tglCheck){toast('Tanggal invoice wajib diisi','e');return;}if(!pay){toast('Pilih metode pembayaran','e');return;}if((pay==='Transfer'||pay==='QRIS')&&!bank){toast('Pilih bank','e');return;}const all=[...cart.frame,...cart.lensa,...cart.softlens,...(cart.aksesoris||[])];if(!all.length){toast('Minimal 1 item','e');return;}if(all.some(x=>!x.nama)){toast('Ada item nama kosong','e');return;}const t=cartTotals();
+function simpanInvoice(){const _btnSv=document.getElementById('btn-simpan-inv');if(_btnSv&&_btnSv.disabled)return;const _rawNama=document.getElementById('inv-nama').value.trim();const _gelarVal=document.getElementById('inv-gelar')?.value||'';const _hasGelar=/^(Tn\.|Ny\.|Nn\.|An\.|TN\.|NY\.|NN\.|AN\.)\s/i.test(_rawNama);const nama=(!_hasGelar&&_gelarVal)?_gelarVal+' '+_rawNama:_rawNama;if(!nama){toast('Nama customer wajib diisi','e');return;}const tglCheck=document.getElementById('inv-tanggal').value;if(!tglCheck){toast('Tanggal invoice wajib diisi','e');return;}const _mkInv=tglCheck.substring(0,7);if((db.closedMonths||[]).find(m=>m.monthKey===_mkInv)){toast('Bulan '+_mkInv+' sudah ditutup buku — tidak bisa simpan invoice ke tanggal ini. Pilih tanggal di bulan yang belum ditutup.','e',7000);return;}if(!pay){toast('Pilih metode pembayaran','e');return;}if((pay==='Transfer'||pay==='QRIS')&&!bank){toast('Pilih bank','e');return;}const all=[...cart.frame,...cart.lensa,...cart.softlens,...(cart.aksesoris||[])];if(!all.length){toast('Minimal 1 item','e');return;}if(all.some(x=>!x.nama)){toast('Ada item nama kosong','e');return;}const t=cartTotals();
 const _zeroNonFree=all.filter(x=>x.jual<=0&&!x.nama.toLowerCase().includes('gratis'));if(_zeroNonFree.length){toast('Harga jual harus lebih dari 0 (kecuali item berlabel GRATIS)','e');return;}
 if(t.disc>0&&t.disc>=t.sub){toast(`Diskon (${fmt(t.disc)}) tidak boleh melebihi subtotal (${fmt(t.sub)})`,'e');return;}
 if(isDP){if(t.dp<=0){toast('Jumlah DP harus lebih dari 0','e');return;}if(t.dp>=t.tot){toast(`DP (${fmt(t.dp)}) tidak boleh melebihi total (${fmt(t.tot)})`,'e');return;}}
 if(_isAdminLike()&&all.some(x=>!(x.modal>0))){toast('Ada item tanpa harga modal — laporan profit mungkin tidak akurat','w',4000);}
 cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});
 const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}`:pay;
-const ro=getRO();const _invNo='INV-'+String(db.counter).padStart(4,'0');document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
-db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('⚠️ Invoice disimpan di perangkat ini tapi GAGAL ke cloud! Jangan refresh halaman. ('+e.message+')','e',10000);});updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
+if(_btnSv){_btnSv.disabled=true;_btnSv.style.opacity='.6';_btnSv.style.pointerEvents='none';}
+const ro=getRO();const _invNo=_invNoFor(tglCheck);document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
+db.invoices.unshift(inv);db.counter++;saveCustomer(nama,inv.hp,inv.alamat,inv.usia,inv.jk);persist();if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('⚠️ Invoice disimpan di perangkat ini tapi GAGAL ke cloud! Jangan refresh halaman. ('+e.message+')','e',10000);});updateDPBadge();toast(`Invoice ${inv.no} disimpan! ${isDP?'(DP — belum lunas)':''}`,'s',4000);resetInvoice();if(_btnSv){_btnSv.disabled=false;_btnSv.style.opacity='';_btnSv.style.pointerEvents='';}setTimeout(()=>showPage('dashboard',document.querySelector('.nl')),600);}
 
 
 // ════════════════════════════════════════════════
@@ -2069,6 +2084,8 @@ function doLunas(id){
   if((_lunasPayMethod==='Transfer'||_lunasPayMethod==='QRIS')&&!_lunasBankMethod){toast('Pilih bank untuk pelunasan','e');return;}
   const tglInput=document.getElementById('lunas-tgl');
   const tglVal=tglInput?tglInput.value:'';
+  const _mkLunas=tglVal?tglVal.substring(0,7):'';
+  if(_mkLunas&&(db.closedMonths||[]).find(m=>m.monthKey===_mkLunas)){toast('Bulan '+_mkLunas+' sudah ditutup buku — tidak bisa lunaskan ke tanggal ini. Pilih tanggal di bulan yang belum ditutup.','e',7000);return;}
   const lunasDateFormatted=tglVal?(()=>{const d=new Date(tglVal);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});})():today();
   const payLunas=_lunasBankMethod?`${_lunasPayMethod} – ${_lunasBankMethod.replace(/ QRIS$/,'')}`:_lunasPayMethod;
   inv.lunasAmount=inv.sisa;inv.payStatus='lunas';inv.sisa=0;

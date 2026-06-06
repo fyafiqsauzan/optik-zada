@@ -50,6 +50,7 @@
 | **v8.9.23 Beta** | ✅ Dirilis | HOTFIX: spinner login 15s → 5s (mencegah user stuck di spinner jika refresh sebelum form muncul); error login lebih jelas (Firestore errors sebelumnya muncul sebagai "username/password salah"); error sesi auto-login kini tampil di form login dengan kode error spesifik |
 | **v8.9.24 Beta** | ✅ Dirilis | 🔴 FIX KRITIS: syntax error (kutip kurang di `exportCashflowCSV`, `createdBy?.nama\|\|','']`) menyebabkan SELURUH inline script gagal parse sejak v8.9.17 — app tampil dashboard statik tapi semua tombol mati, login overlay tak muncul, data tak ter-load, & semua toast diagnostik v8.9.21–23 tak pernah jalan. Diperbaiki + validasi `node --check` sebelum rilis |
 | **v8.9.25 Beta** | ✅ Dirilis | Security patch: XSS escape semua innerHTML customer/produk/supplier; stok dikembalikan saat invoice diarsipkan (dan dikurangi kembali saat dipulihkan); auto-logout diperpanjang 3 menit → 15 menit |
+| **v8.9.26 Beta** | ✅ Dirilis | Format nomor invoice baru `INV/OZ/DDMMYY/NNNN` (counter reset per-tanggal, anti-collision multi-device via dedup `existingBons`); double-submit guard di tombol Simpan; Tutup Buku tegas — blok simpan invoice & pelunasan ke bulan yang sudah ditutup |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -211,15 +212,15 @@
 |---|--------|--------|--------|
 | A1 | **Firestore `users/{id}` terlalu permissive** | Rules saat ini: `allow read, write: if request.auth != null` — siapapun yang login bisa menulis role `admin` ke dokumen dirinya sendiri via Firestore REST. Perlu restrict ke `request.auth.uid == userId` untuk read, dan `admin SDK only` atau whitelist uid untuk write role. | 📋 Backlog |
 | A2 | **Data customers dalam satu dokumen 1MB** | Semua customer + rxHistory disimpan di `optik-zada/config`. Setiap rxHistory row import Excel menambah ukuran. Jika ada 500+ customer dengan riwayat resep, dokumen bisa melebihi 1MB Firestore limit → write gagal total. Solusi: pindahkan `customers[]` ke `customers/{id}` per dokumen. | 📋 Backlog |
-| A3 | **Invoice counter collision multi-device** | Counter `db.config.lastInvNo` dibaca dari in-memory state, bukan atomic Firestore transaction. Jika dua perangkat simpan invoice bersamaan, bisa dapat nomor BON yang sama. Solusi: `runTransaction` di Firestore untuk increment counter. | 📋 Backlog |
+| A3 | **Invoice counter collision multi-device** | Counter `db.config.lastInvNo` dibaca dari in-memory state, bukan atomic Firestore transaction. Jika dua perangkat simpan invoice bersamaan, bisa dapat nomor BON yang sama. Solusi: `runTransaction` di Firestore untuk increment counter. | ✅ Done v8.9.26 (format per-tanggal + dedup `existingBons`) |
 
 ### 🟠 P1 — Sebelum Launch v9.0
 
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
 | B1 | **Backup restore kurang validasi** | Import backup JSON tidak cek versi skema, field wajib, atau ukuran. Data korup atau JSON parsial bisa menggantikan seluruh db tanpa konfirmasi apa stok/invoice ikut hilang. Perlu: (1) cek field wajib, (2) preview ringkasan sebelum konfirmasi, (3) backup otomatis sebelum restore. | 📋 Backlog |
-| B2 | **Tutup Buku tidak mencegah pelunasan retroaktif** | Invoice dari bulan yang sudah di-tutup buku masih bisa dilunasi — angka cashflow bulan itu berubah padahal sudah ter-snapshot. Perlu: cek `closedMonths` sebelum izinkan perubahan finansial. | 📋 Backlog |
-| B3 | **Double-submit invoice** | Tombol "Simpan Invoice" tidak di-disable setelah klik pertama. Klik ganda atau koneksi lambat bisa membuat invoice duplikat. Perlu: disable tombol + loading state selama `persist()` berjalan. | 📋 Backlog |
+| B2 | **Tutup Buku tidak mencegah pelunasan retroaktif** | Invoice dari bulan yang sudah di-tutup buku masih bisa dilunasi — angka cashflow bulan itu berubah padahal sudah ter-snapshot. Perlu: cek `closedMonths` sebelum izinkan perubahan finansial. | ✅ Done v8.9.26 |
+| B3 | **Double-submit invoice** | Tombol "Simpan Invoice" tidak di-disable setelah klik pertama. Klik ganda atau koneksi lambat bisa membuat invoice duplikat. Perlu: disable tombol + loading state selama `persist()` berjalan. | ✅ Done v8.9.26 |
 | B4 | **`confirm()` native masih dipakai** | `delInvoice()` masih pakai `window.confirm()` yang bisa diblokir Chrome desktop (policy: blocked in cross-origin iframes) dan tidak ada di beberapa browser mobile. Perlu ganti ke modal in-app. | 📋 Backlog |
 | B5 | **Export PDF Cashflow setelah Tutup Buku** | Sudah disepakati dengan client, belum diimplementasi. PDF snapshot per bulan yang sudah tutup buku. | 📋 Backlog |
 
@@ -227,7 +228,7 @@
 
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
-| C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | 📋 Backlog |
+| C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | ✅ Done v8.9.26 (format final: `INV/OZ/DDMMYY/NNNN`) |
 | C2 | **Template WA untuk supplier** | Client belum memberi format yang diinginkan. Menunggu konfirmasi. | ⏳ Menunggu client |
 | C3 | **Garansi frame** | Client belum memutuskan flow garansi. Menunggu keputusan. | ⏳ Menunggu client |
 | C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 📋 Backlog |
@@ -354,7 +355,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 3 Jun 2026 | v8.9.23 | Hotfix: spinner login 15s → 5s; error login Firestore lebih jelas; error sesi auto-login tampil di form |
 | 3 Jun 2026 | v8.9.24 | FIX KRITIS: syntax error `createdBy?.nama\|\|','']` di exportCashflowCSV (ada sejak v8.9.17) → seluruh inline JS gagal parse, app mati total; + CI `node --check` ditambahkan |
 | 4 Jun 2026 | v8.9.25 | Security: XSS escape semua innerHTML customer/produk/supplier; fix stok restore saat delInvoice/restoreInvoice; auto-logout 3 menit → 15 menit; tambah audit backlog ke ROADMAP |
+| 7 Jun 2026 | v8.9.26 | Feat: format nomor invoice baru `INV/OZ/DDMMYY/NNNN` (counter per-tanggal, anti-collision via dedup) + onchange listener tanggal; Fix: double-submit guard di tombol Simpan Invoice; Enforcement: Tutup Buku blok simpan invoice & pelunasan retroaktif ke bulan yang ditutup |
 
 ---
 
-*Last updated: 4 Jun 2026 · Optik Zada Management System v8.9.25 Beta*
+*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.26 Beta*
