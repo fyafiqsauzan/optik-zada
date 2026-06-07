@@ -1,17 +1,43 @@
-name: Deploy to Firebase Hosting and Rules
+name: Deploy to Firebase
 
 on:
   push:
     branches:
-      - claude/optimistic-darwin-qo3x8
-      - main
+      - claude/optimistic-darwin-qo3x8   # dev environment (project Firebase lu)
+      - main                              # prod environment (project Firebase client)
+
+# ─────────────────────────────────────────────────────────────────
+# SECRETS — set di GitHub repo → Settings → Secrets and variables
+#
+# DEV (sudah ada, tidak perlu diubah):
+#   FIREBASE_SERVICE_ACCOUNT_OPTIK_ZADA1127
+#     Service account project dev lu (sudah ada)
+#
+# PROD (diisi saat client onboard — job ini skip kalau belum ada):
+#   PROD_FIREBASE_SERVICE_ACCOUNT
+#     Service account JSON dari project Firebase client.
+#     Role yang diperlukan: Firebase Hosting Admin ONLY.
+#     Tidak perlu Firestore access — developer tidak bisa baca data client.
+#
+#   PROD_FIREBASE_CONFIG
+#     Firebase config object client (dari Firebase Console → Project Settings).
+#     Format: {"apiKey":"...","authDomain":"...","projectId":"...","storageBucket":"...","messagingSenderId":"...","appId":"..."}
+#
+#   PROD_FIREBASE_PROJECT_ID
+#     Project ID Firebase client (contoh: optik-zada-client)
+#
+#   PROD_ADMIN_EMAIL
+#     Email owner/admin client — untuk ADMIN_BOOTSTRAP_EMAIL di app.
+#     Email ini yang pertama kali login otomatis dapat role admin.
+# ─────────────────────────────────────────────────────────────────
 
 jobs:
-  deploy:
+
+  # ── Validasi JS syntax — selalu jalan, blok deploy kalau gagal ──
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Validate inline JS syntax
         run: |
@@ -24,15 +50,23 @@ jobs:
             fs.writeFileSync("/tmp/_app.js", big);
           '
           node --check /tmp/_app.js
-          echo "Inline JS syntax OK"
+          echo "✅ Inline JS syntax OK"
 
-      - name: Build public directory
+  # ── Deploy DEV — project Firebase lu (push ke dev branch) ──
+  deploy-dev:
+    needs: validate
+    if: github.ref == 'refs/heads/claude/optimistic-darwin-qo3x8'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build public dir
         run: |
           mkdir -p public
           cp "Optik-Zada v7.7 (Beta Version).html" public/index.html
           if [ -d assets ]; then cp -r assets public/; fi
 
-      - name: Deploy to Firebase Hosting
+      - name: Deploy to Firebase Hosting (dev)
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
@@ -40,12 +74,63 @@ jobs:
           channelId: live
           projectId: optik-zada1127
 
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_OPTIK_ZADA1127 }}
+  # ── Deploy PROD — project Firebase client (push ke main) ──
+  # Job ini hanya jalan saat push ke branch `main`.
+  # Secrets PROD_* harus sudah di-set di GitHub — kalau belum, job gagal dengan pesan jelas.
+  # Developer TIDAK mendapat akses Firestore client — hanya Firebase Hosting deploy.
+  deploy-prod:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Deploy Firestore Rules
+      - name: Inject prod Firebase config & admin email
+        env:
+          PROD_FIREBASE_CONFIG: ${{ secrets.PROD_FIREBASE_CONFIG }}
+          PROD_ADMIN_EMAIL: ${{ secrets.PROD_ADMIN_EMAIL }}
         run: |
-          npm install -g firebase-tools
-          firebase deploy --only firestore:rules --project optik-zada1127
+          node -e "
+            const fs = require('fs');
+            let html = fs.readFileSync('Optik-Zada v7.7 (Beta Version).html', 'utf8');
+
+            const cfg = process.env.PROD_FIREBASE_CONFIG;
+            if (!cfg) { console.error('❌ PROD_FIREBASE_CONFIG secret belum di-set'); process.exit(1); }
+
+            // Ganti FIREBASE_CONFIG dengan config project client
+            html = html.replace(
+              /const FIREBASE_CONFIG=\{[^}]*\}/,
+              'const FIREBASE_CONFIG=' + cfg
+            );
+
+            // Ganti ADMIN_BOOTSTRAP_EMAIL dengan email owner client
+            const email = process.env.PROD_ADMIN_EMAIL;
+            if (email) {
+              html = html.replace(
+                /const ADMIN_BOOTSTRAP_EMAIL='[^']*'/,
+                \"const ADMIN_BOOTSTRAP_EMAIL='\" + email + \"'\"
+              );
+              console.log('✅ Admin bootstrap email: ' + email);
+            }
+
+            fs.writeFileSync('Optik-Zada v7.7 (Beta Version).html', html);
+            console.log('✅ Prod config injected — dev Firebase config tidak ada di file ini');
+          "
+
+      - name: Build public dir
+        run: |
+          mkdir -p public
+          cp "Optik-Zada v7.7 (Beta Version).html" public/index.html
+          if [ -d assets ]; then cp -r assets public/; fi
+
+      - name: Deploy to Firebase Hosting (prod — client)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.PROD_FIREBASE_SERVICE_ACCOUNT }}
+          channelId: live
+          projectId: ${{ secrets.PROD_FIREBASE_PROJECT_ID }}
+
+      # Firestore rules TIDAK di-deploy via CI untuk prod.
+      # Rules prod di-deploy manual dari Firebase Console client (sudah done v8.9.29).
+      # Ini intentional — dev tidak butuh akses Firestore untuk deploy app.
