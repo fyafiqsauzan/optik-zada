@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.28</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.29</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.28 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.29 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,19 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.29 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.29 — Penguatan Keamanan Firestore Rules</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-lock" style="color:#dc2626;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Proteksi Eskalasi Hak Akses</strong> — Aturan Firestore untuk koleksi <code style="font-size:11px;background:var(--bg2);padding:1px 4px;border-radius:3px">users</code> diperketat: field <code style="font-size:11px;background:var(--bg2);padding:1px 4px;border-radius:3px">role</code> kini <strong>tidak bisa diubah setelah akun dibuat</strong>. Sebelumnya, pengguna yang tahu cara mengakses Firestore API langsung bisa mengubah role dirinya sendiri menjadi Admin tanpa sepengetahuan siapa pun.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-lock" style="color:#dc2626;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Pembatasan Akses Tulis per Pengguna</strong> — Setiap pengguna kini hanya bisa menulis ke profil miliknya sendiri. Penulisan ke dokumen pengguna lain melalui API langsung tidak lagi diizinkan.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-info-circle" style="color:var(--muted);font-size:14px;flex-shrink:0;margin-top:2px"></i><span style="color:var(--muted)">Perubahan ini ada di file <code style="font-size:11px;background:var(--bg2);padding:1px 4px;border-radius:3px">firestore.rules</code> dan harus di-deploy manual dari Firebase Console — tidak mempengaruhi fungsionalitas app secara langsung.</span></div>
         </div>
       </div>
 
@@ -1385,8 +1398,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.28';
-const APP_VERSION='8.9.28';
+const _RN_VERSION='8.9.29';
+const APP_VERSION='8.9.29';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){

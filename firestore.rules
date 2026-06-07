@@ -7,26 +7,33 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
 
-    // User profiles — authenticated users only
-    // admin-only management enforced client-side
+    // User profiles
+    // create: self only (Firebase Auth context switches to new user in addPendingUser(),
+    //         so admin-created accounts satisfy uid==userId at write time)
+    // update: self only AND role field is immutable — prevents privilege escalation
+    // delete: any auth user (can't check requester's role without cross-doc reads / Custom Claims)
     match /users/{userId} {
-      allow read, write: if request.auth != null;
+      allow read: if request.auth != null;
+      allow create: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId
+                    && request.resource.data.role == resource.data.role;
+      allow delete: if request.auth != null;
     }
 
-    // Pre-registered karyawan waiting for first login
+    // Pre-registered users waiting for first login — authenticated users only
     match /pendingUsers/{email} {
       allow read, write: if request.auth != null;
     }
 
-    // Username → email/uid reverse lookup for username-based login
-    // Public reads: diperlukan untuk lookup sebelum user authenticated (login flow)
-    // Write tetap require auth: hanya admin yang bisa tambah/ubah username
+    // Username → email/uid reverse lookup
+    // Public reads: required for username lookup before user is authenticated (login flow)
+    // Write requires auth: only admin adds/changes usernames
     match /usernames/{username} {
       allow read: if true;
       allow write: if request.auth != null;
     }
 
-    // v8.5: per-document invoice storage — authenticated users only
+    // Per-document invoice storage — authenticated users only
     match /invoices/{invId} {
       allow read, write: if request.auth != null;
     }

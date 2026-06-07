@@ -210,7 +210,7 @@
 
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
-| A1 | **Firestore `users/{id}` terlalu permissive** | Rules saat ini: `allow read, write: if request.auth != null` — siapapun yang login bisa menulis role `admin` ke dokumen dirinya sendiri via Firestore REST. Perlu restrict ke `request.auth.uid == userId` untuk read, dan `admin SDK only` atau whitelist uid untuk write role. | 📋 Backlog |
+| A1 | **Firestore `users/{id}` terlalu permissive** | Rules saat ini: `allow read, write: if request.auth != null` — siapapun yang login bisa menulis role `admin` ke dokumen dirinya sendiri via Firestore REST. Perlu restrict ke `request.auth.uid == userId` untuk read, dan `admin SDK only` atau whitelist uid untuk write role. | ✅ Done v8.9.29 — `allow create: if uid==userId`; `allow update: if uid==userId && role immutable`; `allow delete: if auth!=null` (batas: tidak bisa cek role requester tanpa Custom Claims). Deploy manual dari Firebase Console. |
 | A2 | **Data customers dalam satu dokumen 1MB** | Semua customer + rxHistory disimpan di `optik-zada/config`. Setiap rxHistory row import Excel menambah ukuran. Jika ada 500+ customer dengan riwayat resep, dokumen bisa melebihi 1MB Firestore limit → write gagal total. Solusi: pindahkan `customers[]` ke `customers/{id}` per dokumen. | 📋 Backlog |
 | A3 | **Invoice counter collision multi-device** | Counter `db.config.lastInvNo` dibaca dari in-memory state, bukan atomic Firestore transaction. Jika dua perangkat simpan invoice bersamaan, bisa dapat nomor BON yang sama. Solusi: `runTransaction` di Firestore untuk increment counter. | ✅ Done v8.9.26 (format per-tanggal + dedup `existingBons`) |
 
@@ -358,7 +358,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 7 Jun 2026 | v8.9.26 | Feat: format nomor invoice baru `INV/OZ/DDMMYY/NNNN` (counter per-tanggal, anti-collision via dedup) + onchange listener tanggal; Fix: double-submit guard di tombol Simpan Invoice; Enforcement: Tutup Buku blok simpan invoice & pelunasan retroaktif ke bulan yang ditutup |
 | 7 Jun 2026 | v8.9.27 | Feat: restore data lebih aman (validasi struktur + ringkasan perubahan + auto-backup sebelum timpa) & fix bug invoice tidak ter-restore di mode migrated; Feat: tombol Export PDF di arsip laporan Tutup Buku + modal detail |
 | 7 Jun 2026 | v8.9.28 | Fix B4: ganti semua 9 `confirm()` native ke `_confirmModal()` in-app helper + pending-state pattern — arsip invoice, hapus pengeluaran, tutup buku, reset master, hapus transaksi, reset all, migrasi v8.5, batalkan pending user, hapus akun |
+| 7 Jun 2026 | v8.9.29 | Security A1: perketat Firestore rules `users/{userId}` — `create` hanya untuk uid sendiri; `update` hanya untuk uid sendiri AND field `role` tidak bisa diubah (blok eskalasi privilege via Firestore REST). Deploy manual di Firebase Console. |
 
 ---
 
-*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.28 Beta*
+*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.29 Beta*
