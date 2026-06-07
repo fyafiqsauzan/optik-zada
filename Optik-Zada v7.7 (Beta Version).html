@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.29</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.30</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.29 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.30 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,18 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.30 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">FIX</span>
+          <span style="font-size:13px;font-weight:700">Hotfix v8.9.30 — Data Kosong Setelah Login (Compat Firestore Rules)</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-database" style="color:#dc2626;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Fix: Data Ter-load Setelah Login</strong> — Setelah rules Firestore diperketat (v8.9.29), app mencoba baca data sebelum user login dan mendapat <code style="font-size:11px;background:var(--bg2);padding:1px 4px;border-radius:3px">permission-denied</code>. Akibatnya data tidak pernah dimuat meski login berhasil. Diperbaiki dengan menunda load data sampai setelah autentikasi berhasil.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--muted);font-size:14px;flex-shrink:0;margin-top:2px"></i><span style="color:var(--muted)">Error toast <em>"metaRef gagal (permission-denied)"</em> dan <em>"Gagal baca Firestore"</em> yang muncul di halaman login juga dihilangkan — itu bukan error sesungguhnya, hanya load data sebelum auth yang kini di-skip dengan benar.</span></div>
         </div>
       </div>
 
@@ -1171,6 +1183,8 @@ const Store={
       if(!ok){db=_self.seedDB();return false;}
       let migrated=false,_metaErr=null;
       try{const m=await _self._getDoc(_self._metaRef);migrated=m.exists()&&m.data().migrated===true;if(!m.exists())_metaErr='meta_not_found';}catch(e){_metaErr=e&&e.code?e.code:String(e);}
+      // permission-denied = user not yet authenticated; silently defer data load to post-login
+      if(_metaErr==='permission-denied'){db=_self.seedDB();return false;}
       if(_metaErr)setTimeout(()=>toast('⚠️ DEBUG: metaRef gagal ('+_metaErr+'). Pastikan migrasi v8.5 sudah dijalankan di Pengaturan.','w',15000),500);
       if(migrated){_self._migrated=true;return await _self._loadNewStructure();}
       setTimeout(()=>toast('⚠️ Data dimuat dari format lama (pre-v8.5). Buka Pengaturan → Migrasi Data jika data tidak muncul.','w',12000),800);
@@ -1227,6 +1241,14 @@ const Store={
   }
 };
 let saveTimer=null;let _saveErrTs=0;function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>Store.save(),300);}
+// Load Firestore data after authentication (required when rules need auth for all reads).
+// Guards against concurrent calls and double-registration of onSnapshot listeners.
+async function _ensureDataLoaded(){
+  if(Store._migrated!==undefined||Store._ensureLoading||!Store._getDoc||!Store._metaRef)return;
+  Store._ensureLoading=true;
+  try{const m=await Store._getDoc(Store._metaRef);if(m.exists()&&m.data().migrated===true){Store._migrated=true;await Store._loadNewStructure();}else Store._migrated=false;}catch(e){}
+  Store._ensureLoading=false;
+}
 let _histPage=1;const HIST_PER=25;
 const PROD_PER=50;const CUST_PER=50;
 let _framePage=1,_lensaPage=1,_slPage=1,_akPage=1,_custPage=1;
@@ -1245,7 +1267,7 @@ function salesInvs(){return activeInvs().filter(x=>!x.isHistoris);}
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   genInvNo();try{const _t=localStorage.getItem('optik_zada_theme');const _sysDark=!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);const _useDark=_t?_t==='dark':_sysDark;if(_useDark){darkMode=true;document.documentElement.setAttribute('data-theme','dark');document.getElementById('dark-icon').className='ti ti-sun';}if(window.matchMedia){window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{if(!localStorage.getItem('optik_zada_theme')){darkMode=e.matches;document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');document.getElementById('dark-icon').className=darkMode?'ti ti-sun':'ti ti-moon';}});}}catch(e){}renderDashboard();renderCart();initSidebar();updateDPBadge();
   const _hideAuthCheck=()=>{const _ac=document.getElementById('auth-checking');if(_ac)_ac.style.display='none';};
-  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(!user){_hideAuthCheck();return;}if(currentRole)return;try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);return;}}else if(!currentRole&&!s.exists()){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Sesi ditemukan tapi akun belum terdaftar. Coba login manual.';_ae.style.display='block';}}}catch(e){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Gagal terhubung ke database ('+(e&&e.code?e.code:String(e))+') — cek koneksi lalu refresh.';_ae.style.display='block';}}if(!currentRole)_hideAuthCheck();});setTimeout(_hideAuthCheck,3000);}else{_hideAuthCheck();}
+  if(Store.mode==='firebase'&&Store._onAuth){Store._onAuth(async user=>{if(!user){_hideAuthCheck();return;}if(currentRole)return;try{const s=await Store._getDoc(Store._userDoc(user.uid));if(!currentRole&&s.exists()){const r=s.data().role;if(ROLES[r]){await _ensureDataLoaded();currentUser={uid:user.uid,nama:(s.data().nama||'').trim()||user.email,email:user.email,role:r};login(r);return;}}else if(!currentRole&&!s.exists()){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Sesi ditemukan tapi akun belum terdaftar. Coba login manual.';_ae.style.display='block';}}}catch(e){const _ae=document.getElementById('auth-err');if(_ae){_ae.textContent='Gagal terhubung ke database ('+(e&&e.code?e.code:String(e))+') — cek koneksi lalu refresh.';_ae.style.display='block';}}if(!currentRole)_hideAuthCheck();});setTimeout(_hideAuthCheck,3000);}else{_hideAuthCheck();}
   window.addEventListener('scroll',()=>{document.getElementById('scrtop').style.display=window.scrollY>300?'flex':'none';});
   document.addEventListener('click',e=>{if(!e.target.closest('.ac-wrap')){document.getElementById('ac-drop').style.display='none';document.querySelectorAll('[id^="ac-drop-"]').forEach(d=>d.style.display='none');}if(!e.target.closest('.top-search'))document.getElementById('gs-drop').style.display='none';});
   _initNetworkBanner();
@@ -1398,8 +1420,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.29';
-const APP_VERSION='8.9.29';
+const _RN_VERSION='8.9.30';
+const APP_VERSION='8.9.30';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -2966,7 +2988,7 @@ async function doAuthLogin(){
     if(!snap.exists()){
       if(cred.user.email===ADMIN_BOOTSTRAP_EMAIL){
         await Store._setDoc(Store._userDoc(uid),{role:'admin',nama:'Admin',email:cred.user.email});
-        currentUser={uid,nama:'Admin',email:cred.user.email,role:'admin'};
+        await _ensureDataLoaded();currentUser={uid,nama:'Admin',email:cred.user.email,role:'admin'};
         login('admin');return;
       }
       if(Store._pendingDoc&&Store._getDoc){
@@ -2977,7 +2999,7 @@ async function doAuthLogin(){
             const {role,nama}=pSnap.data();
             await Store._setDoc(Store._userDoc(uid),{role,nama,email:cred.user.email,createdAt:new Date().toISOString()});
             await Store._deleteDoc(Store._pendingDoc(pendingKey));
-            currentUser={uid,nama:(nama&&nama.trim())||cred.user.email,email:cred.user.email,role};
+            await _ensureDataLoaded();currentUser={uid,nama:(nama&&nama.trim())||cred.user.email,email:cred.user.email,role};
             login(role);return;
           }
         }catch(e){}
@@ -2995,7 +3017,7 @@ async function doAuthLogin(){
       if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-login"></i> Masuk';}
       return;
     }
-    currentUser={uid,nama:(data.nama&&data.nama.trim())||cred.user.email,email:cred.user.email,role};
+    await _ensureDataLoaded();currentUser={uid,nama:(data.nama&&data.nama.trim())||cred.user.email,email:cred.user.email,role};
     login(role);
   }catch(e){
     const msgs={'auth/user-not-found':'Username atau password salah','auth/wrong-password':'Username atau password salah','auth/invalid-email':'Format email tidak valid','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/invalid-credential':'Username atau password salah','auth/network-request-failed':'Koneksi internet bermasalah. Periksa jaringan lalu coba lagi.','unavailable':'Server database sedang tidak bisa dijangkau. Cek koneksi internet lalu coba lagi.','firestore/unavailable':'Server database sedang tidak bisa dijangkau. Cek koneksi lalu coba lagi.','permission-denied':'Akses ditolak oleh server. Hubungi developer.','firestore/permission-denied':'Akses ditolak oleh server. Hubungi developer.'};
@@ -3019,7 +3041,7 @@ async function _doCheckVerify(){
     if(_verifyState.user.emailVerified){
       const {user,uid,data,role}=_verifyState;_verifyState=null;
       try{await Store._setDoc(Store._userDoc(uid),{...data,requiresEmailVerification:false});}catch(e){}
-      currentUser={uid,nama:(data.nama&&data.nama.trim())||user.email,email:user.email,role};
+      await _ensureDataLoaded();currentUser={uid,nama:(data.nama&&data.nama.trim())||user.email,email:user.email,role};
       login(role);
     }else{
       if(verr){verr.style.cssText='display:block;color:var(--danger)';verr.textContent='Email belum diverifikasi. Buka link di email yang dikirim dan coba lagi.';}

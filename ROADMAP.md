@@ -359,7 +359,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 7 Jun 2026 | v8.9.27 | Feat: restore data lebih aman (validasi struktur + ringkasan perubahan + auto-backup sebelum timpa) & fix bug invoice tidak ter-restore di mode migrated; Feat: tombol Export PDF di arsip laporan Tutup Buku + modal detail |
 | 7 Jun 2026 | v8.9.28 | Fix B4: ganti semua 9 `confirm()` native ke `_confirmModal()` in-app helper + pending-state pattern — arsip invoice, hapus pengeluaran, tutup buku, reset master, hapus transaksi, reset all, migrasi v8.5, batalkan pending user, hapus akun |
 | 7 Jun 2026 | v8.9.29 | Security A1: perketat Firestore rules `users/{userId}` — `create` hanya untuk uid sendiri; `update` hanya untuk uid sendiri AND field `role` tidak bisa diubah (blok eskalasi privilege via Firestore REST). Deploy manual di Firebase Console. |
+| 7 Jun 2026 | v8.9.30 | Hotfix: data kosong setelah login akibat rules v8.9.29 — app load data sebelum auth (permission-denied → seedDB). Fix: early-exit saat permission-denied di init; tambah `_ensureDataLoaded()` dipanggil sebelum semua `login()` calls (doAuthLogin bootstrap/pendingUsers/normal, onAuth auto-resume, _doCheckVerify) |
 
 ---
 
-*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.29 Beta*
+*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.30 Beta*
