@@ -218,11 +218,11 @@
 
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
-| B1 | **Backup restore kurang validasi** | Import backup JSON tidak cek versi skema, field wajib, atau ukuran. Data korup atau JSON parsial bisa menggantikan seluruh db tanpa konfirmasi apa stok/invoice ikut hilang. Perlu: (1) cek field wajib, (2) preview ringkasan sebelum konfirmasi, (3) backup otomatis sebelum restore. | 📋 Backlog |
+| B1 | **Backup restore kurang validasi** | Import backup JSON tidak cek versi skema, field wajib, atau ukuran. Data korup atau JSON parsial bisa menggantikan seluruh db tanpa konfirmasi apa stok/invoice ikut hilang. Perlu: (1) cek field wajib, (2) preview ringkasan sebelum konfirmasi, (3) backup otomatis sebelum restore. | ✅ Done v8.9.27 — + fix bug invoice tidak ter-restore di mode migrated (Store.save buang invoices) |
 | B2 | **Tutup Buku tidak mencegah pelunasan retroaktif** | Invoice dari bulan yang sudah di-tutup buku masih bisa dilunasi — angka cashflow bulan itu berubah padahal sudah ter-snapshot. Perlu: cek `closedMonths` sebelum izinkan perubahan finansial. | ✅ Done v8.9.26 |
 | B3 | **Double-submit invoice** | Tombol "Simpan Invoice" tidak di-disable setelah klik pertama. Klik ganda atau koneksi lambat bisa membuat invoice duplikat. Perlu: disable tombol + loading state selama `persist()` berjalan. | ✅ Done v8.9.26 |
 | B4 | **`confirm()` native masih dipakai** | `delInvoice()` masih pakai `window.confirm()` yang bisa diblokir Chrome desktop (policy: blocked in cross-origin iframes) dan tidak ada di beberapa browser mobile. Perlu ganti ke modal in-app. | 📋 Backlog |
-| B5 | **Export PDF Cashflow setelah Tutup Buku** | Sudah disepakati dengan client, belum diimplementasi. PDF snapshot per bulan yang sudah tutup buku. | 📋 Backlog |
+| B5 | **Export PDF Cashflow setelah Tutup Buku** | Sudah disepakati dengan client, belum diimplementasi. PDF snapshot per bulan yang sudah tutup buku. | ✅ Done v8.9.27 — tombol PDF di arsip laporan tertutup + modal detail (reuse exportCashflowPDF) |
 
 ### 🟡 P2 — Nice-to-Have / Polish
 
@@ -356,7 +356,8 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 3 Jun 2026 | v8.9.24 | FIX KRITIS: syntax error `createdBy?.nama\|\|','']` di exportCashflowCSV (ada sejak v8.9.17) → seluruh inline JS gagal parse, app mati total; + CI `node --check` ditambahkan |
 | 4 Jun 2026 | v8.9.25 | Security: XSS escape semua innerHTML customer/produk/supplier; fix stok restore saat delInvoice/restoreInvoice; auto-logout 3 menit → 15 menit; tambah audit backlog ke ROADMAP |
 | 7 Jun 2026 | v8.9.26 | Feat: format nomor invoice baru `INV/OZ/DDMMYY/NNNN` (counter per-tanggal, anti-collision via dedup) + onchange listener tanggal; Fix: double-submit guard di tombol Simpan Invoice; Enforcement: Tutup Buku blok simpan invoice & pelunasan retroaktif ke bulan yang ditutup |
+| 7 Jun 2026 | v8.9.27 | Feat: restore data lebih aman (validasi struktur + ringkasan perubahan + auto-backup sebelum timpa) & fix bug invoice tidak ter-restore di mode migrated; Feat: tombol Export PDF di arsip laporan Tutup Buku + modal detail |
 
 ---
 
-*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.26 Beta*
+*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.27 Beta*

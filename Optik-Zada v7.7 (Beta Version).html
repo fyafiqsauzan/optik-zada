@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.26</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.27</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.26 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.27 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -520,6 +520,18 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:6px;padding-left:2px">• Lakukan <strong>Backup data secara rutin</strong> (Pengaturan → Backup .json) agar data aman jika terjadi error.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
+        </div>
+      </div>
+
+      <!-- New in v8.9.27 -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:11px">
+          <span style="background:#9333ea;color:#fff;font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;letter-spacing:.4px;flex-shrink:0">BARU</span>
+          <span style="font-size:13px;font-weight:700">Pembaruan v8.9.27 — Restore Aman + Export PDF Laporan Tertutup</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-database-import" style="color:#9333ea;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Restore Data Lebih Aman</strong> — Sebelum memulihkan dari backup, sistem kini: (1) memvalidasi file backup (cek struktur data), (2) menampilkan ringkasan perubahan (jumlah data saat ini → backup), dan (3) <strong>otomatis mengunduh backup data saat ini</strong> sebagai pengaman. Selain itu, bug yang membuat invoice tidak ikut ter-restore di mode cloud sudah diperbaiki.</span></div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-type-pdf" style="color:#9333ea;font-size:14px;flex-shrink:0;margin-top:2px"></i><span><strong>Export PDF dari Arsip Tutup Buku</strong> — Tombol Export PDF kini tersedia langsung di daftar laporan bulan yang sudah ditutup (Cashflow → Arsip Laporan Tertutup) dan di modal detailnya, jadi bisa cetak ulang laporan kapan saja.</span></div>
         </div>
       </div>
 
@@ -1361,8 +1373,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.26';
-const APP_VERSION='8.9.26';
+const _RN_VERSION='8.9.27';
+const APP_VERSION='8.9.27';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -2361,7 +2373,56 @@ function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)
   if(currentRole==='admin')loadUserList();
   renderSupplierList();}
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Backup diunduh');}
-function restoreData(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=async e=>{try{const data=JSON.parse(e.target.result);if(!data.frames){toast('File tidak valid','e');return;}if(!confirm('Timpa semua data saat ini?'))return;db=data;await Store.save();renderSettings();renderDashboard();toast('Data dipulihkan');}catch(err){toast('Gagal baca file','e');}};reader.readAsText(file);input.value='';}
+let _pendingRestore=null;
+function restoreData(input){
+  const file=input.files[0];if(!file){return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let data;
+    try{data=JSON.parse(e.target.result);}catch(err){toast('File rusak / bukan JSON yang valid','e',7000);input.value='';return;}
+    const need=['frames','lensas','softlens','customers','invoices'];
+    const missing=need.filter(k=>!Array.isArray(data[k]));
+    if(missing.length){toast('File backup tidak valid — field hilang atau salah format: '+missing.join(', '),'e',8000);input.value='';return;}
+    _pendingRestore=data;
+    const _row=(lbl,cur,bak)=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border2);font-size:13px"><span style="color:var(--muted)">${lbl}</span><span><span style="color:var(--muted)">${cur}</span> <i class="ti ti-arrow-right" style="font-size:11px;color:var(--muted)"></i> <strong>${bak}</strong></span></div>`;
+    document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-database-import" style="color:var(--danger)"></i> Pulihkan Data dari Backup</div>
+      <div style="background:var(--bg);border:1.5px solid var(--danger);border-radius:var(--radius-sm);padding:11px 14px;margin:12px 0;display:flex;gap:10px;align-items:flex-start"><i class="ti ti-alert-triangle" style="color:var(--danger);font-size:18px;flex-shrink:0;margin-top:1px"></i><div style="font-size:12.5px;line-height:1.6">Seluruh data saat ini akan <strong>ditimpa</strong> oleh isi file backup. Backup data saat ini akan otomatis diunduh dulu sebagai pengaman sebelum proses berjalan.</div></div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Perubahan (saat ini → backup)</div>
+      ${_row('Frame',db.frames.length,data.frames.length)}
+      ${_row('Lensa',db.lensas.length,data.lensas.length)}
+      ${_row('Softlens',db.softlens.length,data.softlens.length)}
+      ${_row('Aksesoris',(db.aksesoris||[]).length,(data.aksesoris||[]).length)}
+      ${_row('Customer',db.customers.length,data.customers.length)}
+      ${_row('Invoice',db.invoices.length,data.invoices.length)}
+      ${_row('Pengeluaran',(db.expenses||[]).length,(data.expenses||[]).length)}`;
+    document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="_pendingRestore=null;closeModal()">Batal</button><button class="btn btn-danger" onclick="_doRestore()"><i class="ti ti-database-import"></i> Backup dulu &amp; Pulihkan</button>`;
+    document.getElementById('modal').style.display='flex';
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+async function _doRestore(){
+  const data=_pendingRestore;if(!data)return;
+  closeModal();
+  try{backupData();}catch(_){}
+  if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc&&Store._invDoc&&Store._setDoc){
+    try{
+      toast('Memulihkan data… jangan tutup atau refresh halaman','i',9000);
+      const s=await Store._getDocs(Store._invoicesCol);
+      await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));
+      db=data;
+      await Promise.all((db.invoices||[]).map(inv=>Store._setDoc(Store._invDoc(inv.id),inv)));
+      await Store.save();
+    }catch(err){toast('Gagal memulihkan ke cloud: '+(err.message||err)+' — backup pengaman sudah diunduh.','e',12000);return;}
+  }else{
+    db=data;
+    try{await Store.save();}catch(err){toast('Gagal menyimpan data: '+(err.message||err),'e',8000);return;}
+  }
+  _pendingRestore=null;
+  if(!db.aksesoris)db.aksesoris=[];if(!db.expenses)db.expenses=[];if(!db.closedMonths)db.closedMonths=[];if(!db.actionLog)db.actionLog=[];if(!db.suppliers)db.suppliers=[];if(!db.toko)db.toko={nama:'OPTIK ZADA',alamat:'',kota:'',hp:'',jam:'',footer:''};
+  renderSettings();renderDashboard();renderHistory();updateDPBadge();
+  toast('✅ Data berhasil dipulihkan dari backup','s',6000);
+}
 async function seedMasterData(){
   if(!confirm('Reset data master produk & customer ke data demo?\n\nTransaksi (invoice) tidak akan dihapus.'))return;
   const _log={action:'seedMasterData',label:'Reset Master Data & Customer',by:currentUser?(currentUser.nama||currentUser.email||'Admin'):'Admin',byEmail:currentUser?currentUser.email:'',ts:Date.now()};
@@ -2458,7 +2519,7 @@ function _renderCashflowAdmin(){
   const phA=document.getElementById('cf-ph-actions');
   if(phA)phA.innerHTML=`<select id="cf-period" onchange="renderCashflow()" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;font-weight:600">${keys.map(k=>`<option value="${k}"${k===selMK?' selected':''}>${months[k]}</option>`).join('')}</select><button class="btn btn-success btn-sm" onclick="exportCashflowCSV('${selMK}')"><i class="ti ti-table"></i> CSV</button><button class="btn btn-outline btn-sm" onclick="exportCashflowPDF('${selMK}')"><i class="ti ti-file-type-pdf"></i> PDF</button>`;
   const expRows=[...c.exps].sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).map(e=>`<tr><td>${fmtDate(e.tanggal)}</td><td><span style="display:flex;align-items:center;gap:6px"><i class="ti ${EXPENSE_CATS[e.kategori]?.icon||'ti-dots'}" style="font-size:13px"></i>${EXPENSE_CATS[e.kategori]?.label||e.kategori}</span></td><td><strong style="color:var(--danger)">${fmt(e.nominal)}</strong></td><td style="color:var(--muted);font-size:12px">${e.ket||'\u2014'}</td><td style="font-size:11px;color:var(--muted)">${e.createdBy?.nama||'\u2014'}</td>${isClosed?'':`<td><button class="btn btn-danger btn-xs" onclick="deleteExpense(${e.id})" title="Hapus"><i class="ti ti-trash"></i></button></td>`}</tr>`).join('');
-  const closedList=(db.closedMonths||[]).length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Arsip Laporan Tertutup</div>${[...(db.closedMonths||[])].sort((a,b)=>b.monthKey.localeCompare(a.monthKey)).map(m=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border2);font-size:13px"><span style="font-weight:600"><i class="ti ti-calendar-check" style="color:var(--gold);margin-right:6px"></i>${_cfMonthLabel(m.monthKey)}</span><div style="display:flex;gap:16px;align-items:center"><span style="color:var(--muted)">Profit Bersih: <strong style="color:${m.snapshot.profitBersih>=0?'var(--success)':'var(--danger)'}">${m.snapshot.profitBersih<0?'\u2212':''}${fmt(Math.abs(m.snapshot.profitBersih))}</strong></span><button class="btn btn-outline btn-xs" onclick="showClosedMonth('${m.monthKey}')"><i class="ti ti-eye"></i></button></div></div>`).join('')}</div>`:'';
+  const closedList=(db.closedMonths||[]).length?`<div style="margin-top:16px"><div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Arsip Laporan Tertutup</div>${[...(db.closedMonths||[])].sort((a,b)=>b.monthKey.localeCompare(a.monthKey)).map(m=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border2);font-size:13px"><span style="font-weight:600"><i class="ti ti-calendar-check" style="color:var(--gold);margin-right:6px"></i>${_cfMonthLabel(m.monthKey)}</span><div style="display:flex;gap:16px;align-items:center"><span style="color:var(--muted)">Profit Bersih: <strong style="color:${m.snapshot.profitBersih>=0?'var(--success)':'var(--danger)'}">${m.snapshot.profitBersih<0?'\u2212':''}${fmt(Math.abs(m.snapshot.profitBersih))}</strong></span><button class="btn btn-outline btn-xs" onclick="showClosedMonth('${m.monthKey}')" title="Lihat detail"><i class="ti ti-eye"></i></button><button class="btn btn-outline btn-xs" onclick="exportCashflowPDF('${m.monthKey}')" title="Export PDF"><i class="ti ti-file-type-pdf"></i></button></div></div>`).join('')}</div>`:'';
   document.getElementById('cf-content').innerHTML=`
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold);font-size:22px">${fmt(c.omzet)}</div><div class="stat-sub">kas diterima periode ini</div></div>
@@ -2555,7 +2616,7 @@ function showClosedMonth(monthKey){
   const closedDate=new Date(cm.closedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
   const expDetail=expList.length?`<div style="font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 8px">Detail Pengeluaran (${expList.length} entri)</div><div style="max-height:220px;overflow-y:auto">${[...expList].sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).map(e=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border2);font-size:12.5px"><span><i class="ti ${EXPENSE_CATS[e.kategori]?.icon||'ti-dots'}" style="margin-right:6px;opacity:.7"></i>${EXPENSE_CATS[e.kategori]?.label||e.kategori}${e.ket?' <span style="color:var(--muted)">\u2014 '+e.ket+'</span>':''}</span><strong style="color:var(--danger);flex-shrink:0">${fmt(e.nominal)}</strong></div>`).join('')}</div>`:'';
   document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-calendar-check"></i> Laporan \u2014 ${_cfMonthLabel(monthKey)}</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px">Ditutup ${closedDate} oleh ${cm.closedBy?.nama||'\u2014'}</div><div class="grid g2" style="gap:10px;margin-bottom:12px"><div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Profit Kotor</div><div style="font-size:18px;font-weight:700;color:var(--success)">${fmt(s.profitKotor)}</div></div><div style="background:var(--bg2);border-radius:var(--radius-sm);padding:14px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Pengeluaran</div><div style="font-size:18px;font-weight:700;color:var(--danger)">${fmt(s.pengeluaran)}</div></div></div><div style="background:var(--bg);border:2px solid ${s.profitBersih>=0?'var(--success)':'var(--danger)'};border-radius:var(--radius-sm);padding:16px;text-align:center;margin-bottom:12px"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">PROFIT BERSIH</div><div style="font-size:24px;font-weight:800;color:${s.profitBersih>=0?'var(--success)':'var(--danger)'}">${s.profitBersih<0?'\u2212':''}${fmt(Math.abs(s.profitBersih))}</div></div>${expDetail}`;
-  document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline btn-sm" onclick="closeModal()">Tutup</button>`;
+  document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline btn-sm" onclick="exportCashflowPDF('${monthKey}')"><i class="ti ti-file-type-pdf"></i> Export PDF</button><button class="btn btn-outline btn-sm" onclick="closeModal()">Tutup</button>`;
   document.getElementById('modal').style.display='flex';
 }
 
@@ -2621,7 +2682,7 @@ function exportCashflowPDF(monthKey){
   if(inv.length){w.document.write('<h2>Penjualan Baru \u2014 '+inv.length+' Invoice</h2><table><thead><tr><th>No. Invoice</th><th>Tanggal</th><th>Customer</th><th>Total</th><th>Kas Diterima</th><th>Metode</th></tr></thead><tbody>');inv.forEach(x=>w.document.write('<tr><td><strong>'+x.no+'</strong></td><td>'+x.tanggal+'</td><td>'+x.customer+'</td><td>'+fmtN(x.tot)+'</td><td>'+fmtN(x.dpAmount||0)+(x.payStatus==='dp'?' <span style="background:#fef3c7;color:#92400e;font-size:9px;padding:1px 5px;border-radius:8px">DP</span>':'')+'</td><td>'+x.pay+'</td></tr>'));w.document.write('</tbody></table>');}
   if(pelList.length){w.document.write('<h2>Pelunasan Piutang \u2014 '+pelList.length+' Invoice</h2><table><thead><tr><th>No. Invoice</th><th>Tgl Invoice</th><th>Customer</th><th>Total Invoice</th><th>Jumlah Pelunasan</th><th>Tgl Lunas</th></tr></thead><tbody>');pelList.forEach(x=>w.document.write('<tr><td><strong>'+x.no+'</strong></td><td>'+x.tanggal+'</td><td>'+x.customer+'</td><td>'+fmtN(x.tot)+'</td><td style="color:#16a34a;font-weight:700">'+fmtN(x.lunasAmount)+'</td><td>'+x.lunasDate+'</td></tr>'));w.document.write('</tbody></table>');}
   if(c.exps.length){w.document.write('<h2>Pengeluaran Operasional \u2014 '+c.exps.length+' Entri</h2><table><thead><tr><th>Tanggal</th><th>Kategori</th><th>Nominal</th><th>Keterangan</th><th>Dicatat Oleh</th></tr></thead><tbody>');[...c.exps].sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).forEach(e=>w.document.write('<tr><td>'+e.tanggal+'</td><td>'+(EXPENSE_CATS[e.kategori]?.label||e.kategori)+'</td><td class="danger">'+fmtN(e.nominal)+'</td><td class="muted">'+(e.ket||'\u2014')+'</td><td style="font-size:10px;color:#94a3b8">'+(e.createdBy?.nama||'\u2014')+'</td></tr>'));w.document.write('</tbody></table>');}
-  w.document.write('<hr style="margin-top:24px;border:none;border-top:1px solid #e2e8f0"><div style="text-align:center;font-size:10px;color:#94a3b8;margin-top:8px">'+(toko.nama||'Optik')+' \u00B7 Dihasilkan dari Optik Zada Management System v8.9.17</div>');
+  w.document.write('<hr style="margin-top:24px;border:none;border-top:1px solid #e2e8f0"><div style="text-align:center;font-size:10px;color:#94a3b8;margin-top:8px">'+(toko.nama||'Optik')+' \u00B7 Dihasilkan dari Optik Zada Management System v'+APP_VERSION+'</div>');
   w.document.write('<div class="no-print" style="text-align:center;margin-top:16px;margin-bottom:8px"><button onclick="window.print()" style="background:#0f1f3d;color:white;border:none;padding:9px 24px;border-radius:5px;cursor:pointer;font-size:13px;font-weight:600">\uD83D\uDDA8 Cetak / Simpan sebagai PDF</button></div>');
   w.document.write('</body></html>');
   w.document.close();
