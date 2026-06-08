@@ -51,6 +51,19 @@
 | **v8.9.24 Beta** | ✅ Dirilis | 🔴 FIX KRITIS: syntax error (kutip kurang di `exportCashflowCSV`, `createdBy?.nama\|\|','']`) menyebabkan SELURUH inline script gagal parse sejak v8.9.17 — app tampil dashboard statik tapi semua tombol mati, login overlay tak muncul, data tak ter-load, & semua toast diagnostik v8.9.21–23 tak pernah jalan. Diperbaiki + validasi `node --check` sebelum rilis |
 | **v8.9.25 Beta** | ✅ Dirilis | Security patch: XSS escape semua innerHTML customer/produk/supplier; stok dikembalikan saat invoice diarsipkan (dan dikurangi kembali saat dipulihkan); auto-logout diperpanjang 3 menit → 15 menit |
 | **v8.9.26 Beta** | ✅ Dirilis | Format nomor invoice baru `INV/OZ/DDMMYY/NNNN` (counter reset per-tanggal, anti-collision multi-device via dedup `existingBons`); double-submit guard di tombol Simpan; Tutup Buku tegas — blok simpan invoice & pelunasan ke bulan yang sudah ditutup |
+| **v8.9.27 Beta** | ✅ Dirilis | Restore data lebih aman (validasi struktur + ringkasan perubahan + auto-backup sebelum timpa); fix bug invoice tidak ter-restore di mode migrated; tombol Export PDF di arsip laporan Tutup Buku |
+| **v8.9.28 Beta** | ✅ Dirilis | Ganti semua 9 `confirm()` native ke modal in-app + pending-state pattern — arsip invoice, hapus pengeluaran, tutup buku, reset master, hapus transaksi, reset all, migrasi, dll |
+| **v8.9.29 Beta** | ✅ Dirilis | Security: perketat Firestore rules `users/{userId}` — `create` hanya uid sendiri; `update` hanya uid sendiri AND field `role` immutable (blok privilege escalation via REST) |
+| **v8.9.30 Beta** | ✅ Dirilis | Hotfix: data kosong setelah login akibat rules v8.9.29 — fix `_ensureDataLoaded()` dipanggil sebelum semua login flows |
+| **v8.9.31 Beta** | ✅ Dirilis | Bulk delete master data per kategori — tombol "Hapus Semua" untuk Frame/Lensa/Softlens/Aksesoris dengan konfirmasi modal |
+| **v8.9.32 Beta** | ✅ Dirilis | Full audit log semua tindakan hapus — helper `_logAudit()` + semua destructive actions (produk, customer, invoice, supplier, pengeluaran, akun) tercatat ke log audit (maks. 50 entri) |
+| **v8.9.33 Beta** | ✅ Dirilis | TP Pengukuran Lensa dipisah jadi Kanan (OD) & Kiri (OS) — backward compat untuk data lama `rx.tp` |
+| **v8.9.34 Beta** | ✅ Dirilis | Tambah field Ket. Faset di Pengukuran Lensa — tampil di struk internal, WA supplier, dan CSV export |
+| **v8.9.35 Beta** | ✅ Dirilis | Koreksi label Dm.A(L)/Dm.B(T) di form Pengukuran Lensa dan header CSV export (sebelumnya terbalik) |
+| **v8.9.36 Beta** | ✅ Dirilis | Kas Masuk per Kategori: breakdown top-3 berubah dari nama produk → nama pembeli + no. invoice |
+| **v8.9.37 Beta** | ✅ Dirilis | Kas Masuk per Kategori: tambah daftar produk yang dibeli di baris kedua setiap transaksi |
+| **v8.9.38 Beta** | ✅ Dirilis | Tombol "Unduh Data Sekarang" di semua halaman Master Data — export data aktif (stok terkini) ke Excel, format identik template import |
+| **v8.9.39 Beta** | ✅ Dirilis | Print thermal: tambah `@page { size: 80mm auto; margin: 0 }` + print media CSS 72mm — hint ke browser/driver soal ukuran kertas thermal roll |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -65,10 +78,9 @@
 | Week 1 — Foundation & Beta Features | 20–27 Mei | v7.7 → v7.8 | ✅ Selesai |
 | Week 2 — Cashflow + Early Fixes | 28–29 Mei | v7.8 → v7.9 | ✅ Selesai |
 | Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.0 | ✅ Selesai |
-| Week 3 lanjutan — Search, Monitor, Infra | 30 Mei – 5 Juni | v8.0 → v8.1 | 🔄 In Progress |
-| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.5 | 📋 Planned |
-| Week 5 — Architectural & Polish | 13–17 Juni | v8.5 → v8.8 | 📋 Planned |
-| Launch Week | 18–20 Juni | v8.8 → v9.0 | 🚀 Target |
+| Week 3 lanjutan — Search, Monitor, Infra | 30 Mei – 5 Juni | v8.0 → v8.1 | ✅ Selesai |
+| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.9.39 | ✅ Selesai |
+| Launch Week | 18–20 Juni | v8.9.39 → v9.0 | 🚀 Target |
 
 ---
 
@@ -359,8 +371,17 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 7 Jun 2026 | v8.9.27 | Feat: restore data lebih aman (validasi struktur + ringkasan perubahan + auto-backup sebelum timpa) & fix bug invoice tidak ter-restore di mode migrated; Feat: tombol Export PDF di arsip laporan Tutup Buku + modal detail |
 | 7 Jun 2026 | v8.9.28 | Fix B4: ganti semua 9 `confirm()` native ke `_confirmModal()` in-app helper + pending-state pattern — arsip invoice, hapus pengeluaran, tutup buku, reset master, hapus transaksi, reset all, migrasi v8.5, batalkan pending user, hapus akun |
 | 7 Jun 2026 | v8.9.29 | Security A1: perketat Firestore rules `users/{userId}` — `create` hanya untuk uid sendiri; `update` hanya untuk uid sendiri AND field `role` tidak bisa diubah (blok eskalasi privilege via Firestore REST). Deploy manual di Firebase Console. |
-| 7 Jun 2026 | v8.9.30 | Hotfix: data kosong setelah login akibat rules v8.9.29 — app load data sebelum auth (permission-denied → seedDB). Fix: early-exit saat permission-denied di init; tambah `_ensureDataLoaded()` dipanggil sebelum semua `login()` calls (doAuthLogin bootstrap/pendingUsers/normal, onAuth auto-resume, _doCheckVerify) |
+| 7 Jun 2026 | v8.9.30 | Hotfix: data kosong setelah login akibat rules v8.9.29 — fix `_ensureDataLoaded()` dipanggil sebelum semua login flows |
+| 8 Jun 2026 | v8.9.31 | Feat: bulk delete master data per kategori (Frame/Lensa/Softlens/Aksesoris) |
+| 8 Jun 2026 | v8.9.32 | Feat: full audit log semua tindakan hapus — helper `_logAudit()`, 50 entri, semua destructive actions |
+| 8 Jun 2026 | v8.9.33 | Feat: TP Pengukuran Lensa dipisah Kanan (OD) & Kiri (OS), backward compat `rx.tp` |
+| 8 Jun 2026 | v8.9.34 | Feat: field Ket. Faset di Pengukuran Lensa |
+| 8 Jun 2026 | v8.9.35 | Fix: koreksi label Dm.A(L)/Dm.B(T) di form & CSV (sebelumnya terbalik) |
+| 8 Jun 2026 | v8.9.36 | Feat: Kas Masuk per Kategori tampil nama pembeli + no. invoice (top-3) |
+| 8 Jun 2026 | v8.9.37 | Feat: Kas Masuk per Kategori tambah daftar produk per transaksi |
+| 8 Jun 2026 | v8.9.38 | Feat: tombol "Unduh Data Sekarang" di semua Master Data — export aktif ke Excel |
+| 8 Jun 2026 | v8.9.39 | Fix: print thermal `@page 80mm auto` + print media CSS 72mm untuk printer thermal roll |
 
 ---
 
-*Last updated: 7 Jun 2026 · Optik Zada Management System v8.9.30 Beta*
+*Last updated: 8 Jun 2026 · Optik Zada Management System v8.9.39 Beta*
