@@ -68,7 +68,11 @@
 | **v8.9.41 Beta** | ✅ Dirilis | Print thermal: hapus `@page size` — fix rotasi / landscape di printer KASSEN |
 | **v8.9.42 Beta** | ✅ Dirilis | Print thermal: `@page { margin: 0mm; size: auto }` + print-color-adjust — suppress header/footer URL Chrome otomatis |
 | **v8.9.43 Beta** | ✅ Dirilis | Print thermal: body `width:100%` di media print agar konten mengisi penuh kertas (58mm/80mm); hapus tombol "Simpan PDF"; hint instruksi uncheck Headers and footers di dialog Chrome |
-| **v8.9 RC** | 📋 Planned | Polish & launch prep |
+| **v8.9.44 Beta** | ✅ Dirilis | Print thermal: redesain struk — nama toko 16px bold, separator solid/dashed untuk hirarki, layout item baru (qty tag), badge LUNAS 2px border, footer double-line, max-width 72mm |
+| **v8.9.45** | 🔨 Next | Warning stok saat input invoice — toast jika qty melebihi stok tersedia |
+| **v8.9.46** | 📋 Planned | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` |
+| **v8.9.47** | 📋 Planned | Polish & bug fix pre-RC — hasil temuan testing v8.9.44 |
+| **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
 > **Skema:** patch (x.x.Y) = bugfix kecil · minor (x.Y.0) = fitur baru · major (Y.0.0) = perubahan arsitektur besar · RC = Release Candidate
@@ -83,8 +87,9 @@
 | Week 2 — Cashflow + Early Fixes | 28–29 Mei | v7.8 → v7.9 | ✅ Selesai |
 | Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.0 | ✅ Selesai |
 | Week 3 lanjutan — Search, Monitor, Infra | 30 Mei – 5 Juni | v8.0 → v8.1 | ✅ Selesai |
-| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.9.43 | ✅ Selesai |
-| Launch Week | 18–20 Juni | v8.9.39 → v9.0 | 🚀 Target |
+| Week 4 — Core Features & Print Thermal | 6–8 Juni | v8.1 → v8.9.44 | ✅ Selesai |
+| Week 5 — Pre-Release Polish & Security | 9–17 Juni | v8.9.44 → v8.9 RC | 🔨 Aktif |
+| Launch Week | 18–20 Juni | v8.9 RC → v9.0 | 🚀 Target |
 
 ---
 
@@ -247,9 +252,54 @@
 | C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | ✅ Done v8.9.26 (format final: `INV/OZ/DDMMYY/NNNN`) |
 | C2 | **Template WA untuk supplier** | Client belum memberi format yang diinginkan. Menunggu konfirmasi. | ⏳ Menunggu client |
 | C3 | **Garansi frame** | Client belum memutuskan flow garansi. Menunggu keputusan. | ⏳ Menunggu client |
-| C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 📋 Backlog |
-| C5 | **Kompresi logo** | `assets/logo.png` ~1MB → <100KB. Proses manual via squoosh.app. | 📋 Backlog |
-| C6 | **Stok tidak bisa negatif tapi juga tidak ada warning** | Saat ini stok dikurangi diam-diam hingga 0 (Math.max(0,...)). Perlu toast warning jika qty melebihi stok tersedia saat simpan invoice. | 📋 Backlog |
+| C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 🔨 v8.9.46 |
+| C5 | **Kompresi logo** | `assets/logo.png` ~1MB → <100KB. Proses manual via squoosh.app. | 📋 User task |
+| C6 | **Stok tidak bisa negatif tapi juga tidak ada warning** | Saat ini stok dikurangi diam-diam hingga 0 (Math.max(0,...)). Perlu toast warning jika qty melebihi stok tersedia saat simpan invoice. | 🔨 v8.9.45 |
+
+---
+
+## 🔨 v8.9.44 → v8.9 RC — Week 5: Pre-Release Polish (9–17 Juni)
+
+> Target: semua item selesai sebelum 17 Juni. RC = tidak ada fitur baru, hanya regression test & hotfix.
+
+### Timeline Detail
+
+| Tanggal | Versi Target | Item | Prioritas |
+|---------|-------------|------|-----------|
+| 9–10 Juni | v8.9.45 | Warning stok saat input invoice — toast jika qty item > stok tersedia | 🔴 P1 |
+| 10–11 Juni | v8.9.46 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
+| 11–12 Juni | v8.9.47 | Fix temuan testing print thermal v8.9.44 (jika ada) + polish minor | 🟠 P2 |
+| 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
+| 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
+
+### 🔴 P1 — Harus Selesai Sebelum v9.0
+
+| # | Item | Detail | Target |
+|---|------|--------|--------|
+| D1 | **Warning Stok Saat Invoice** | Saat ini stok dikurangi senyap hingga 0. Perlu: toast warning "Stok [produk] hanya N tersisa" jika qty input melebihi stok, dan blokir simpan jika stok = 0 (kecuali stok tidak di-track / stok = 0 dari awal). | v8.9.45 |
+| D2 | **Firestore Rules Granular** | Rules `invoices/{id}` saat ini: `allow read, write: if auth != null` — karyawan bisa delete invoice dan ubah `createdBy`. Perlu: role-based rules (admin/keluarga: full; karyawan: create + update terbatas, no delete, `createdBy` immutable). | v8.9.46 |
+| D3 | **Merge dev → main sebelum RC** | v8.9.43 + v8.9.44 (thermal redesign) masih di dev, belum di main. Merge setelah user konfirmasi hasil print thermal oke. | 12 Juni |
+
+### 🟠 P2 — Nice-to-Have Sebelum Launch
+
+| # | Item | Detail | Status |
+|---|------|--------|--------|
+| C5 | **Kompresi Logo** | `assets/logo.png` ~1MB → <100KB. Proses manual user via [squoosh.app](https://squoosh.app). Tidak perlu dev. | 📋 User task |
+| C2 | **Template WA Supplier** | Format pesan WA ke supplier belum dikonfirmasi client. | ⏳ Menunggu client |
+| C3 | **Garansi Frame** | Flow garansi frame belum diputuskan client. | ⏳ Menunggu client |
+| A2 | **Customer Per-Document Firestore** | Risiko 1MB pada `optik-zada/config` jika customer + rxHistory banyak. Solusi: `customers/{id}` per dokumen. **Defer ke v9.1** — terlalu risky diimplementasi saat production testing aktif, data real sudah ada. | 🔁 Defer v9.1 |
+
+### ✅ Regression Test Checklist (sebelum v9.0)
+
+- [ ] Buat invoice baru → DP → lunaskan → cek cashflow
+- [ ] Print struk thermal (58mm & 80mm) — cek konten fit, no URL header
+- [ ] Import produk dari Excel → cek stok tidak overwrite
+- [ ] Unduh Data Sekarang → buka di Excel → isi produk baru → re-import
+- [ ] Backup data → restore → cek semua invoice + customer + produk intact
+- [ ] Tutup Buku bulan ini → cek tidak bisa entry retroaktif
+- [ ] Login karyawan → cek tidak bisa lihat cashflow, hapus invoice, ubah harga modal
+- [ ] Login keluarga → cek akses lengkap minus cashflow & pengaturan sensitif
+- [ ] Multi-device: dua browser buka bersamaan → simpan invoice → cek tidak collision
 
 ---
 
@@ -307,7 +357,7 @@ Profit Bersih = Omzet − HPP (modal produk, otomatis) − Pengeluaran Operasion
 |------|----------|--------|---------|
 | Firestore 1MB limit (item #26) | 🔴 High | 📋 Planned v8.5 | Restructure sebelum data production banyak masuk |
 | Auth logout setiap refresh (item #21) | 🔴 High | ✅ Fixed v8.0 | `browserLocalStoragePersistence` — sesi persistent |
-| Concurrent edit overwrite (item #31) | 🟡 Medium | 📋 Planned v8.6 | SOP sementara: jangan edit bersamaan |
+| Concurrent edit overwrite (item #31) | 🟡 Medium | ⏭️ Defer v9.1 | SOP sementara: jangan edit bersamaan di 2 perangkat. Format invoice per-tanggal (v8.9.26) sudah mitigasi collision nomor. |
 | Firebase Spark quota (item #25) | 🟡 Medium | 📋 Planned v8.1 | Upgrade Blaze sebelum launch |
 
 ### Cara Update Roadmap Ini
@@ -385,7 +435,13 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 8 Jun 2026 | v8.9.37 | Feat: Kas Masuk per Kategori tambah daftar produk per transaksi |
 | 8 Jun 2026 | v8.9.38 | Feat: tombol "Unduh Data Sekarang" di semua Master Data — export aktif ke Excel |
 | 8 Jun 2026 | v8.9.39 | Fix: print thermal `@page 80mm auto` + print media CSS 72mm untuk printer thermal roll |
+| 8 Jun 2026 | v8.9.40 | Fix: print thermal BTP3100 — @page 80mm, margin 4mm, tombol Simpan PDF, hint ukuran |
+| 8 Jun 2026 | v8.9.41 | Fix: print thermal hapus `@page size` — fix rotasi/landscape di KASSEN printer |
+| 8 Jun 2026 | v8.9.42 | Fix: print thermal `@page{margin:0mm;size:auto}` + print-color-adjust — suppress URL header/footer Chrome |
+| 8 Jun 2026 | v8.9.43 | Fix: print thermal width:100% di media print; hapus tombol Simpan PDF; hint uncheck Headers and footers |
+| 8 Jun 2026 | v8.9.44 | Feat: redesain struk thermal — nama toko 16px, separator hirarki solid/dashed, item layout + qty tag, badge LUNAS 2px, footer double-line, max-width 72mm |
+| 8 Jun 2026 | — | Roadmap diperbarui: timeline Week 5 (9–17 Juni), target v8.9.45–v8.9 RC, regression checklist |
 
 ---
 
-*Last updated: 8 Jun 2026 · Optik Zada Management System v8.9.39 Beta*
+*Last updated: 8 Jun 2026 · Optik Zada Management System v8.9.44 Beta*
