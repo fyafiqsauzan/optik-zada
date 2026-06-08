@@ -16,7 +16,7 @@
 ## Git & Deploy
 
 - **Branch kerja:** `claude/optimistic-darwin-qo3x8`
-- **JANGAN PERNAH push ke `main`**
+- **JANGAN PERNAH push ke `main`** — main = production client, hanya di-merge oleh user setelah review
 - Push via PAT: `https://fyafiqsauzan:<PAT_TOKEN>@github.com/fyafiqsauzan/optik-zada.git`
   _(PAT tersimpan di environment/session — jangan hardcode di file ini)_
 - Setelah push, sync tracking ref:
@@ -24,6 +24,20 @@
   git fetch https://fyafiqsauzan:<PAT>@github.com/fyafiqsauzan/optik-zada.git claude/optimistic-darwin-qo3x8:refs/remotes/origin/claude/optimistic-darwin-qo3x8
   ```
 - Setelah setiap fix/fitur: update `ROADMAP.md` + release notes di dalam web app
+
+## Workflow Rilis (WAJIB DIIKUTI)
+
+```
+1. Semua perubahan (fitur / bugfix / revisi) → push ke branch claude/optimistic-darwin-qo3x8
+2. User review di dev environment (optik-zada1127)
+3. Kalau sudah disetujui user → user sendiri yang merge + push ke main
+4. JANGAN push ke main tanpa persetujuan eksplisit dari user
+5. Boleh akumulasi beberapa fix/fitur di dev sebelum merge ke main — tidak perlu release satu-satu
+```
+
+**Firebase environments:**
+- `optik-zada1127` → dev/testing (branch claude/...) — data dummy, aman untuk eksperimen
+- `optik-zadaa` → production client (branch main) — data real, hati-hati
 
 ## Skema Versi
 
