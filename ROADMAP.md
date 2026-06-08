@@ -64,6 +64,10 @@
 | **v8.9.37 Beta** | ✅ Dirilis | Kas Masuk per Kategori: tambah daftar produk yang dibeli di baris kedua setiap transaksi |
 | **v8.9.38 Beta** | ✅ Dirilis | Tombol "Unduh Data Sekarang" di semua halaman Master Data — export data aktif (stok terkini) ke Excel, format identik template import |
 | **v8.9.39 Beta** | ✅ Dirilis | Print thermal: tambah `@page { size: 80mm auto; margin: 0 }` + print media CSS 72mm — hint ke browser/driver soal ukuran kertas thermal roll |
+| **v8.9.40 Beta** | ✅ Dirilis | Print thermal BTP3100: sesuaikan @page 80mm, margin 4mm, tombol "Simpan PDF", hint ukuran |
+| **v8.9.41 Beta** | ✅ Dirilis | Print thermal: hapus `@page size` — fix rotasi / landscape di printer KASSEN |
+| **v8.9.42 Beta** | ✅ Dirilis | Print thermal: `@page { margin: 0mm; size: auto }` + print-color-adjust — suppress header/footer URL Chrome otomatis |
+| **v8.9.43 Beta** | ✅ Dirilis | Print thermal: body `width:100%` di media print agar konten mengisi penuh kertas (58mm/80mm); hapus tombol "Simpan PDF"; hint instruksi uncheck Headers and footers di dialog Chrome |
 | **v8.9 RC** | 📋 Planned | Polish & launch prep |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -79,7 +83,7 @@
 | Week 2 — Cashflow + Early Fixes | 28–29 Mei | v7.8 → v7.9 | ✅ Selesai |
 | Week 3 — Critical Fixes & UX | 30 Mei – 5 Juni | v7.9 → v8.0 | ✅ Selesai |
 | Week 3 lanjutan — Search, Monitor, Infra | 30 Mei – 5 Juni | v8.0 → v8.1 | ✅ Selesai |
-| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.9.39 | ✅ Selesai |
+| Week 4 — Core Features | 6–12 Juni | v8.1 → v8.9.43 | ✅ Selesai |
 | Launch Week | 18–20 Juni | v8.9.39 → v9.0 | 🚀 Target |
 
 ---
