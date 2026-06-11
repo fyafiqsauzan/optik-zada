@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.46 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.47 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -521,6 +521,16 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
         </div>
+      </div>
+
+      <!-- New in v8.9.47 -->
+      <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.47</span>
+          <span style="font-size:13px;font-weight:700">Keamanan — Guard Semua Operasi Destruktif</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Seluruh fungsi <em>mutator</em> berbahaya (hapus customer, arsipkan invoice, hapus transaksi, reset data, migrasi, kelola supplier) kini punya pengaman ganda di level fungsi — tidak hanya bergantung pada sembunyinya tombol di UI. Ini mencegah aksi tidak sah bahkan jika dipanggil langsung dari konsol.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Kartu <strong>Export Laporan</strong> kini hanya tampil untuk Admin &amp; Keluarga. Header CSV diperbaiki: <em>Dm.A (Lebar)</em> &amp; <em>Dm.B (Tinggi)</em> (konsisten dengan label di cetak invoice).</span></div>
       </div>
 
       <!-- New in v8.9.46 -->
@@ -1513,8 +1523,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.46';
-const APP_VERSION='8.9.46';
+const _RN_VERSION='8.9.47';
+const APP_VERSION='8.9.47';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
