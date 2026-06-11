@@ -51,7 +51,7 @@
 
 ## File Utama
 
-- **App:** `/home/user/optik-zada/Optik-Zada v7.7 (Beta Version).html` — single-file SPA
+- **App:** `/home/user/optik-zada/index.html` — single-file SPA (di-rename dari "Optik-Zada v7.7 (Beta Version).html" pada v8.9.46 agar rapi & selaras dengan artifact deploy `public/index.html`)
 - **Roadmap:** `/home/user/optik-zada/ROADMAP.md`
 
 ---
