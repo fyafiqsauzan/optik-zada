@@ -69,9 +69,11 @@
 | **v8.9.42 Beta** | ✅ Dirilis | Print thermal: `@page { margin: 0mm; size: auto }` + print-color-adjust — suppress header/footer URL Chrome otomatis |
 | **v8.9.43 Beta** | ✅ Dirilis | Print thermal: body `width:100%` di media print agar konten mengisi penuh kertas (58mm/80mm); hapus tombol "Simpan PDF"; hint instruksi uncheck Headers and footers di dialog Chrome |
 | **v8.9.44 Beta** | ✅ Dirilis | Print thermal: redesain struk — nama toko 16px bold, separator solid/dashed untuk hirarki, layout item baru (qty tag), badge LUNAS 2px border, footer double-line, max-width 72mm |
-| **v8.9.45** | 🔨 Next | Warning stok saat input invoice — toast jika qty melebihi stok tersedia |
-| **v8.9.46** | 📋 Planned | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` |
-| **v8.9.47** | 📋 Planned | Polish & bug fix pre-RC — hasil temuan testing v8.9.44 |
+| **v8.9.45** | ✅ Dirilis | Cetak invoice: Rx 2 baris (R & L terpisah), label Dm.A (Lebar)/Dm.B (Tinggi) lengkap; stok karyawan diblokir (tombol +/- disembunyikan untuk Staff) |
+| **v8.9.46** | ✅ Dirilis | Polish hak akses: tombol Edit/Hapus produk admin-only (selaras guard); kartu Backup & Restore admin-strict + guard `restoreData`; rapikan section markers (escape text ═/· + dedup SECTION 22B); **rename file app → `index.html`** |
+| **v8.9.47** | 🔨 Next | Warning stok saat input invoice — toast jika qty melebihi stok tersedia (eks-C6/D1) |
+| **v8.9.48** | 📋 Planned | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` (eks-C4/D2) |
+| **v8.9.49** | 📋 Planned | Polish & bug fix pre-RC — hasil audit menyeluruh (typo sweep + JS logic audit) + temuan testing |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -266,9 +268,11 @@
 
 | Tanggal | Versi Target | Item | Prioritas |
 |---------|-------------|------|-----------|
-| 9–10 Juni | v8.9.45 | Warning stok saat input invoice — toast jika qty item > stok tersedia | 🔴 P1 |
-| 10–11 Juni | v8.9.46 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
-| 11–12 Juni | v8.9.47 | Fix temuan testing print thermal v8.9.44 (jika ada) + polish minor | 🟠 P2 |
+| 9 Juni | v8.9.45 ✅ | Cetak invoice Rx 2 baris + label Dm.A/B lengkap + stok karyawan diblokir | ✅ Selesai |
+| 9 Juni | v8.9.46 ✅ | Polish hak akses produk + Backup/Restore admin-strict + rapikan markers + rename `index.html` | ✅ Selesai |
+| 10–11 Juni | v8.9.47 | Warning stok saat input invoice — toast jika qty item > stok tersedia | 🔴 P1 |
+| 11–12 Juni | v8.9.48 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
+| 12 Juni | v8.9.49 | Audit menyeluruh lanjutan: typo sweep + JS logic audit (agent ke-2 dst dilanjut saat limit reset) + polish | 🟠 P2 |
 | 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
 | 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
 
@@ -441,7 +445,10 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 8 Jun 2026 | v8.9.43 | Fix: print thermal width:100% di media print; hapus tombol Simpan PDF; hint uncheck Headers and footers |
 | 8 Jun 2026 | v8.9.44 | Feat: redesain struk thermal — nama toko 16px, separator hirarki solid/dashed, item layout + qty tag, badge LUNAS 2px, footer double-line, max-width 72mm |
 | 8 Jun 2026 | — | Roadmap diperbarui: timeline Week 5 (9–17 Juni), target v8.9.45–v8.9 RC, regression checklist |
+| 9 Jun 2026 | v8.9.45 | Feat: cetak invoice Rx 2 baris (R & L terpisah), label Dm.A (Lebar)/Dm.B (Tinggi) lengkap; stok karyawan diblokir (tombol +/- disembunyikan untuk Staff) |
+| 9 Jun 2026 | v8.9.46 | Polish: tombol Edit/Hapus produk admin-only (selaras guard); kartu Backup & Restore admin-strict + guard `restoreData`; rapikan section markers (escape text ═/· + dedup SECTION 22B) |
+| 9 Jun 2026 | — | Chore: rename file app `Optik-Zada v7.7 (Beta Version).html` → `index.html` + update 5 referensi CI (firebase-deploy.yml) & CLAUDE.md. CI deploy-dev hijau. |
 
 ---
 
-*Last updated: 8 Jun 2026 · Optik Zada Management System v8.9.44 Beta*
+*Last updated: 9 Jun 2026 · Optik Zada Management System v8.9.46 Beta*
