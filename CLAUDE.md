@@ -88,7 +88,9 @@
 
 ## Pending / Backlog
 
-- Template WA untuk supplier — menunggu info dari client
 - Garansi frame — menunggu keputusan client
-- Custom format nomor BON — sudah disepakati, belum diimplementasi
-- PDF export setelah Tutup Buku di Cashflow — sudah disepakati, belum diimplementasi
+
+### Sudah Selesai (jangan dikira backlog)
+- Custom format nomor BON → `INV/OZ/DDMMYY/NNNN` (v8.9.26)
+- PDF export Cashflow + setelah Tutup Buku (v8.9.17 — tombol di header, list bulan tertutup, modal detail)
+- Template WA supplier → kini dapat dikustom oleh admin di Pengaturan → Daftar Supplier Lensa (v8.9.51)

@@ -439,6 +439,15 @@ body,html{background:#fff!important}}
         <button class="btn btn-primary btn-sm" onclick="addSupplier()"><i class="ti ti-plus"></i> Tambah</button>
       </div>
     </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:14px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px"><i class="ti ti-message-2"></i> Template Pesan WA Order</div>
+      <p style="font-size:11.5px;color:var(--muted);margin-bottom:8px;line-height:1.5">Pesan ini dikirim otomatis ke supplier. Placeholder: <code>{supplier}</code>, <code>{no_invoice}</code>, <code>{customer}</code>, <code>{tipe}</code>, <code>{rx_block}</code>, <code>{lens_block}</code>, <code>{toko_nama}</code>, <code>{toko_hp}</code>. Kosongkan untuk pakai default.</p>
+      <textarea id="tk-wa-template" oninput="saveToko()" rows="14" placeholder="(Kosong = pakai template default)" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:12px;background:var(--card);color:var(--text);outline:none;font-family:'Courier New',monospace;width:100%;box-sizing:border-box;resize:vertical;line-height:1.5"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-outline btn-xs" onclick="loadDefaultWATemplate()" title="Isi textarea dengan template default"><i class="ti ti-refresh"></i> Pakai Template Default</button>
+        <button class="btn btn-outline btn-xs" onclick="clearWATemplate()" title="Kosongkan (pakai default tersembunyi)"><i class="ti ti-eraser"></i> Hapus Custom Template</button>
+      </div>
+    </div>
   </div>
   <div class="card admin-strict" style="margin-bottom:16px"><div class="ct"><i class="ti ti-database"></i> Status</div><div id="storage-status" style="font-size:13px;color:var(--muted)">Memeriksa...</div></div>
   <div class="card admin-only admin-strict" id="user-mgmt-card" style="margin-bottom:16px">
@@ -505,7 +514,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.50 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.51 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -523,8 +532,18 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.50 -->
+      <!-- New in v8.9.51 -->
       <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.51</span>
+          <span style="font-size:13px;font-weight:700">Template WA Supplier Bisa Dikustom &amp; Fix Profit Negatif</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-message-2" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Admin/Keluarga bisa <strong>edit template pesan WA ke supplier</strong> langsung dari Pengaturan → Daftar Supplier Lensa. Pakai placeholder seperti <code>{supplier}</code>, <code>{customer}</code>, <code>{rx_block}</code>, <code>{lens_block}</code>, <code>{toko_nama}</code>. Tombol &ldquo;Pakai Template Default&rdquo; untuk reset ke format bawaan.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-chart-bar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Modal <strong>Profit per Kategori</strong> kini menangani profit negatif dengan benar: warna merah jika rugi, bar progres berdasarkan magnitude relatif, total dengan tanda <em>−</em> proper (sebelumnya bisa muncul angka aneh atau persentase tidak masuk akal).</span></div>
+      </div>
+
+      <!-- New in v8.9.50 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.50</span>
           <span style="font-size:13px;font-weight:700">Keamanan Server — Firestore Rules Granular</span>
@@ -1523,7 +1542,7 @@ function injectAuthUI(){
 }
 
 function _tk(){return Object.assign({nama:'OPTIK ZADA',alamat:'Jl. Raya Mangun Jaya No.03C, Tambun',kota:'Kab. Bekasi, Jawa Barat 17510',hp:'',jam:'09.00 – 21.00 WIB',footer:'Terima kasih atas kepercayaan Anda 🙏'},db.toko||{});}
-function saveToko(){if(!db.toko)db.toko={};['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el)db.toko[f]=el.value;});persist();}
+function saveToko(){if(!db.toko)db.toko={};['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el)db.toko[f]=el.value;});const _waTpl=document.getElementById('tk-wa-template');if(_waTpl)db.toko.waSupplierTemplate=_waTpl.value;persist();}
 function checkDataSize(){const sk=JSON.stringify(db).length/1024;if(sk>=900)toast(`🚨 Data kritis (${sk.toFixed(0)} KB/1000 KB) — SEGERA backup di Pengaturan!`,'e',9000);else if(sk>=700)toast(`⚠️ Data mendekati batas (${sk.toFixed(0)} KB/1000 KB) — segera backup`,'w',7000);}
 function login(role){
   currentRole=role;
@@ -1554,8 +1573,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.50';
-const APP_VERSION='8.9.50';
+const _RN_VERSION='8.9.51';
+const APP_VERSION='8.9.51';
 (function(){const el=document.getElementById('topbar-ver');if(el)el.textContent='v'+APP_VERSION;})();
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
@@ -2580,7 +2599,7 @@ async function doGantiPW(){
   }
 }
 function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)(db):db;const size=JSON.stringify(_cfgObj).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Config hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas config (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';const lbl=Store._migrated?'Config (produk & customer)':'Ukuran data';const limitTxt=Store._migrated?'Config: ~1 MB &nbsp;·&nbsp; Invoice: ∞':'Batas: ~1 MB';return`<div>${lbl}: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>${limitTxt}</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
-  const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});
+  const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});const _waTplEl=document.getElementById('tk-wa-template');if(_waTplEl&&!_waTplEl.matches(':focus'))_waTplEl.value=_tkv.waSupplierTemplate||'';
   const logEl=document.getElementById('action-log-content');
   if(logEl){const logs=(db.actionLog||[]).slice(0,5);if(!logs.length){logEl.textContent='Belum ada tindakan tercatat.';}else{const total=(db.actionLog||[]).length;logEl.innerHTML=logs.map(l=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div style="font-weight:600;color:var(--text)">${l.label}</div><div style="font-size:11px;color:var(--muted)">oleh: <strong>${l.by}</strong>${l.byEmail?' — '+l.byEmail:''}</div></div><div style="font-size:11px;color:var(--muted);flex-shrink:0;text-align:right">${new Date(l.ts).toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')+(total>5?`<div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">+${total-5} tindakan lainnya tersimpan</div>`:'')+`<div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="db.actionLog=[];Store.save();renderSettings();"><i class="ti ti-trash"></i> Hapus Log</button></div>`;}}
   const miCard=document.getElementById('migrate-card');
@@ -2950,6 +2969,21 @@ function showOrderSupplierModal(invId){
   document.getElementById('modal').style.display='flex';
 }
 
+const WA_SUPPLIER_TEMPLATE_DEFAULT=`Halo *{supplier}*, permisi mau order lensa 🙏
+
+No. Invoice : *{no_invoice}*
+Customer    : *{customer}*
+Tipe        : {tipe}
+
+─────────────────────
+*RESEP MATA:*
+{rx_block}
+─────────────────────
+{lens_block}
+Mohon konfirmasi ketersediaan & estimasi harga.
+Terima kasih 🙏
+_{toko_nama}{toko_hp}_`;
+
 function _kirimOrderWA(invId,supplierId){
   const inv=db.invoices.find(x=>x.id===invId);
   const sup=(db.suppliers||[]).find(x=>x.id===supplierId);
@@ -2969,27 +3003,26 @@ function _kirimOrderWA(invId,supplierId){
   const ld=inv.lensDetail;
   const lensLines=lensItems.map(x=>`- ${x.nama}${x.qty>1?' ×'+x.qty:''}`);
   if(!lensLines.length&&ld?.brand)lensLines.push(`- ${[ld.brand,ld.focus,ld.type,ld.color].filter(Boolean).join(' ')}`);
-  const div='─────────────────────';
-  const msg=[
-    `Halo *${sup.nama}*, permisi mau order lensa 🙏`,
-    '',
-    `No. Invoice : *${inv.no}*`,
-    `Customer    : *${inv.customer}*`,
-    `Tipe        : ${inv.tipe||'-'}`,
-    '',div,
-    '*RESEP MATA:*',
-    ...(rxLines.length?rxLines:['(tidak ada resep)']),
-    div,
-    ...(lensLines.length?['*DETAIL LENSA:*',...lensLines,div]:[]),
-    '',
-    'Mohon konfirmasi ketersediaan & estimasi harga.',
-    `Terima kasih 🙏`,
-    `_${tk.nama}${tk.hp?' · '+tk.hp:''}_`,
-  ].join('\n');
+  const rxBlock=rxLines.length?rxLines.join('\n'):'(tidak ada resep)';
+  const lensBlock=lensLines.length?'*DETAIL LENSA:*\n'+lensLines.join('\n')+'\n─────────────────────\n\n':'';
+  const tpl=(db.toko?.waSupplierTemplate||'').trim()||WA_SUPPLIER_TEMPLATE_DEFAULT;
+  const placeholders={
+    '{supplier}':sup.nama,
+    '{no_invoice}':inv.no,
+    '{customer}':inv.customer,
+    '{tipe}':inv.tipe||'-',
+    '{rx_block}':rxBlock,
+    '{lens_block}':lensBlock,
+    '{toko_nama}':tk.nama||'',
+    '{toko_hp}':tk.hp?' · '+tk.hp:''
+  };
+  const msg=Object.entries(placeholders).reduce((s,[k,v])=>s.split(k).join(v),tpl);
   const wa=sup.wa.replace(/[^0-9]/g,'').replace(/^(0|62)/,'');
   window.open(`https://wa.me/62${wa}?text=${encodeURIComponent(msg)}`,'_blank');
   closeModal();
 }
+function loadDefaultWATemplate(){const el=document.getElementById('tk-wa-template');if(el){el.value=WA_SUPPLIER_TEMPLATE_DEFAULT;saveToko();toast('Template default dimuat — bisa diedit sesuai kebutuhan','s');}}
+function clearWATemplate(){const el=document.getElementById('tk-wa-template');if(el){el.value='';saveToko();toast('Custom template dihapus — kembali ke default tersembunyi','s');}}
 
 function rxHistory(custId){
   const c=db.customers.find(x=>x.id===custId);if(!c)return;
@@ -3111,16 +3144,22 @@ function showProfitModal(source){
     x.items.softlens.forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Softlens.profit+=p;cats.Softlens.kas+=i.jual*i.qty;cats.Softlens.items[i.nama]=(cats.Softlens.items[i.nama]||0)+p;});
     (x.items.aksesoris||[]).forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Aksesoris.profit+=p;cats.Aksesoris.kas+=i.jual*i.qty;cats.Aksesoris.items[i.nama]=(cats.Aksesoris.items[i.nama]||0)+p;});
   });
-  const totalProfit=Object.values(cats).reduce((s,c)=>s+c.profit,0)||1;
+  const totalProfit=Object.values(cats).reduce((s,c)=>s+c.profit,0);
+  const _pctBase=Math.max(1,Math.abs(totalProfit));
   const catColors={Frame:'var(--navy2)',Lensa:'var(--gold)',Softlens:'var(--info)',Aksesoris:'var(--success)'};
   const catIcons={Frame:'ti-glasses',Lensa:'ti-circle',Softlens:'ti-disc',Aksesoris:'ti-package'};
   const label=source==='dashboard'?(new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'})):(()=>{const sel=document.getElementById('report-period');const v=sel?sel.value:'all';if(v==='all')return'Semua Waktu';const[y,m]=v.split('-');return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});})();
   const rows=Object.entries(cats).filter(([,c])=>c.kas>0).map(([k,c])=>{
     const margin=c.kas>0?Math.round(c.profit/c.kas*100):0;
     const top3=Object.entries(c.items).sort((a,b)=>b[1]-a[1]).slice(0,3);
-    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:var(--success)">+${fmt(c.profit)}</span><span class="badge bgreen" style="margin-left:4px">margin ${margin}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${Math.max(1,pct(c.profit,totalProfit))}%;background:var(--success);border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Omzet ${fmt(c.kas)} · Kontribusi ${pct(c.profit,totalProfit)}% dari total profit</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;color:var(--success);flex-shrink:0">+${fmt(v)}</span></div>`).join('')}</div>`;
+    const _profitColor=c.profit>=0?'var(--success)':'var(--danger)';
+    const _profitSign=c.profit>=0?'+':'−';
+    const _barW=Math.max(1,Math.min(100,Math.round(Math.abs(c.profit)/_pctBase*100)));
+    const _contrib=Math.round(Math.abs(c.profit)/_pctBase*100);
+    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:${_profitColor}">${_profitSign}${fmt(Math.abs(c.profit))}</span><span class="badge ${c.profit>=0?'bgreen':'bred'}" style="margin-left:4px">margin ${margin}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${_barW}%;background:${_profitColor};border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Omzet ${fmt(c.kas)} · Kontribusi ${_contrib}% (relatif)</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;color:${v>=0?'var(--success)':'var(--danger)'};flex-shrink:0">${v>=0?'+':'−'}${fmt(Math.abs(v))}</span></div>`).join('')}</div>`;
   }).join('');
-  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trending-up" style="color:var(--success)"></i> Profit per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:var(--success)">+${fmt(totalProfit)}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
+  const _totalColor=totalProfit>=0?'var(--success)':'var(--danger)';const _totalSign=totalProfit>=0?'+':'−';
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trending-up" style="color:${_totalColor}"></i> Profit per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:${_totalColor}">${_totalSign}${fmt(Math.abs(totalProfit))}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
   document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
   document.getElementById('modal').style.display='flex';
 }

@@ -75,6 +75,7 @@
 | **v8.9.48** | ✅ Dirilis | Polish UI/UX: topbar ver sync dinamis; badge role invoice pakai label UI (Staff/Keluarga/Admin); typo "progressif"→"progresif"; WA label DM.A/B → Dm.A (Lebar)/Dm.B (Tinggi); item-row mobile fix; tooltip title= pada semua tombol icon-only |
 | **v8.9.49** | ✅ Dirilis | Warning stok saat simpan invoice: block jika stok habis (= 0), warn jika qty > stok; notif stok ≤ 2 kini untuk semua kategori (eks-C6/D1) |
 | **v8.9.50** | ✅ Dirilis | Firestore rules granular: hapus invoice = admin/keluarga only di level server; `createdBy` immutable di update (anti-impersonation) — perlu deploy manual ke Firebase Console (eks-C4/D2) |
+| **v8.9.51** | ✅ Dirilis | Template WA supplier bisa dikustom dari Pengaturan (placeholder `{supplier}`, `{customer}`, `{rx_block}`, dst — eks-C2); fix modal Profit per Kategori untuk skenario profit negatif (warna merah, bar magnitude, tanda `−` proper) |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -253,7 +254,7 @@
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
 | C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | ✅ Done v8.9.26 (format final: `INV/OZ/DDMMYY/NNNN`) |
-| C2 | **Template WA untuk supplier** | Client belum memberi format yang diinginkan. Menunggu konfirmasi. | ⏳ Menunggu client |
+| C2 | **Template WA untuk supplier** | Solusi: admin bisa edit template sendiri dari Pengaturan dengan placeholder system, tidak perlu nunggu client kasih format. | ✅ Done v8.9.51 |
 | C3 | **Garansi frame** | Client belum memutuskan flow garansi. Menunggu keputusan. | ⏳ Menunggu client |
 | C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 🔨 v8.9.46 |
 | C5 | **Kompresi logo** | `assets/logo.png` ~1MB → <100KB. Proses manual via squoosh.app. | 📋 User task |
@@ -275,7 +276,8 @@
 | 10 Juni | v8.9.48 ✅ | Polish UI/UX: topbar ver sync; badge role invoice; typo; WA label; mobile fix; tooltip icon-only | ✅ Selesai |
 | 10 Juni | v8.9.49 ✅ | Warning stok saat simpan invoice: block stok habis, warn qty > stok, notif ≤ 2 semua kategori | ✅ Selesai |
 | 10 Juni | v8.9.50 ✅ | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) — deploy manual ke Console | ✅ Selesai |
-| 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
+| 10 Juni | v8.9.51 ✅ | Template WA supplier customizable + fix profit modal negatif | ✅ Selesai |
+| 11–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
 | 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
 
 ### 🔴 P1 — Harus Selesai Sebelum v9.0
@@ -291,7 +293,7 @@
 | # | Item | Detail | Status |
 |---|------|--------|--------|
 | C5 | **Kompresi Logo** | `assets/logo.png` ~1MB → <100KB. Proses manual user via [squoosh.app](https://squoosh.app). Tidak perlu dev. | 📋 User task |
-| C2 | **Template WA Supplier** | Format pesan WA ke supplier belum dikonfirmasi client. | ⏳ Menunggu client |
+| C2 | **Template WA Supplier** | Solusi self-serve: editable dari Pengaturan dengan placeholder, tidak nunggu client. | ✅ Done v8.9.51 |
 | C3 | **Garansi Frame** | Flow garansi frame belum diputuskan client. | ⏳ Menunggu client |
 | A2 | **Customer Per-Document Firestore** | Risiko 1MB pada `optik-zada/config` jika customer + rxHistory banyak. Solusi: `customers/{id}` per dokumen. **Defer ke v9.1** — terlalu risky diimplementasi saat production testing aktif, data real sudah ada. | 🔁 Defer v9.1 |
 
