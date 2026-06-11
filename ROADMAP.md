@@ -71,9 +71,10 @@
 | **v8.9.44 Beta** | ✅ Dirilis | Print thermal: redesain struk — nama toko 16px bold, separator solid/dashed untuk hirarki, layout item baru (qty tag), badge LUNAS 2px border, footer double-line, max-width 72mm |
 | **v8.9.45** | ✅ Dirilis | Cetak invoice: Rx 2 baris (R & L terpisah), label Dm.A (Lebar)/Dm.B (Tinggi) lengkap; stok karyawan diblokir (tombol +/- disembunyikan untuk Staff) |
 | **v8.9.46** | ✅ Dirilis | Polish hak akses: tombol Edit/Hapus produk admin-only (selaras guard); kartu Backup & Restore admin-strict + guard `restoreData`; rapikan section markers (escape text ═/· + dedup SECTION 22B); **rename file app → `index.html`** |
-| **v8.9.47** | 🔨 Next | Warning stok saat input invoice — toast jika qty melebihi stok tersedia (eks-C6/D1) |
-| **v8.9.48** | 📋 Planned | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` (eks-C4/D2) |
-| **v8.9.49** | 📋 Planned | Polish & bug fix pre-RC — hasil audit menyeluruh (typo sweep + JS logic audit) + temuan testing |
+| **v8.9.47** | ✅ Dirilis | Security: guard semua `_do*` mutators (delCustomer, delInvoice, clearTransactions, resetAll, migrate, supplier); kartu Export admin-only; header CSV Dm.A/B dibenerin; stat Kas Masuk/Profit → admin-strict |
+| **v8.9.48** | ✅ Dirilis | Polish UI/UX: topbar ver sync dinamis; badge role invoice pakai label UI (Staff/Keluarga/Admin); typo "progressif"→"progresif"; WA label DM.A/B → Dm.A (Lebar)/Dm.B (Tinggi); item-row mobile fix; tooltip title= pada semua tombol icon-only |
+| **v8.9.49** | ✅ Dirilis | Warning stok saat simpan invoice: block jika stok habis (= 0), warn jika qty > stok; notif stok ≤ 2 kini untuk semua kategori (eks-C6/D1) |
+| **v8.9.50** | 🔨 Next | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` (eks-C4/D2) |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -270,9 +271,10 @@
 |---------|-------------|------|-----------|
 | 9 Juni | v8.9.45 ✅ | Cetak invoice Rx 2 baris + label Dm.A/B lengkap + stok karyawan diblokir | ✅ Selesai |
 | 9 Juni | v8.9.46 ✅ | Polish hak akses produk + Backup/Restore admin-strict + rapikan markers + rename `index.html` | ✅ Selesai |
-| 10–11 Juni | v8.9.47 | Warning stok saat input invoice — toast jika qty item > stok tersedia | 🔴 P1 |
-| 11–12 Juni | v8.9.48 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
-| 12 Juni | v8.9.49 | Audit menyeluruh lanjutan: typo sweep + JS logic audit (agent ke-2 dst dilanjut saat limit reset) + polish | 🟠 P2 |
+| 9–10 Juni | v8.9.47 ✅ | Security: guard semua `_do*` mutators + Export admin-only + stat Kas/Profit admin-strict | ✅ Selesai |
+| 10 Juni | v8.9.48 ✅ | Polish UI/UX: topbar ver sync; badge role invoice; typo; WA label; mobile fix; tooltip icon-only | ✅ Selesai |
+| 10 Juni | v8.9.49 ✅ | Warning stok saat simpan invoice: block stok habis, warn qty > stok, notif ≤ 2 semua kategori | ✅ Selesai |
+| 11–12 Juni | v8.9.50 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
 | 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
 | 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
 

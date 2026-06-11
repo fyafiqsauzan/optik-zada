@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.48 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.49 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -523,8 +523,18 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.48 -->
+      <!-- New in v8.9.49 -->
       <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.49</span>
+          <span style="font-size:13px;font-weight:700">Peringatan Stok Saat Input Invoice</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-package-off" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Invoice tidak bisa disimpan jika ada item dengan <strong>stok habis (0)</strong> — app menampilkan pesan error beserta nama item yang terblokir. Jika qty melebihi stok tersisa (tapi stok &gt; 0), muncul peringatan kuning dan invoice tetap bisa disimpan (untuk kasus stok belum diperbarui di sistem).</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Notifikasi <em>stok tersisa ≤ 2</em> kini aktif untuk <strong>semua kategori</strong> produk (frame, lensa, softlens, aksesori) setelah invoice tersimpan — sebelumnya hanya frame.</span></div>
+      </div>
+
+      <!-- New in v8.9.48 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.48</span>
           <span style="font-size:13px;font-weight:700">Polish UI/UX — Konsistensi Tampilan &amp; Label</span>
@@ -1534,8 +1544,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.48';
-const APP_VERSION='8.9.48';
+const _RN_VERSION='8.9.49';
+const APP_VERSION='8.9.49';
 (function(){const el=document.getElementById('topbar-ver');if(el)el.textContent='v'+APP_VERSION;})();
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
@@ -2235,7 +2245,8 @@ const _zeroNonFree=all.filter(x=>x.jual<=0&&!x.nama.toLowerCase().includes('grat
 if(t.disc>0&&t.disc>=t.sub){toast(`Diskon (${fmt(t.disc)}) tidak boleh melebihi subtotal (${fmt(t.sub)})`,'e');return;}
 if(isDP){if(t.dp<=0){toast('Jumlah DP harus lebih dari 0','e');return;}if(t.dp>=t.tot){toast(`DP (${fmt(t.dp)}) tidak boleh melebihi total (${fmt(t.tot)})`,'e');return;}}
 if(_isAdminLike()&&all.some(x=>!(x.modal>0))){toast('Ada item tanpa harga modal — laporan profit mungkin tidak akurat','w',4000);}
-cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});
+const _stockErrors=[];const _stockWarns=[];[['frame',db.frames],['lensa',db.lensas],['softlens',db.softlens],['aksesoris',db.aksesoris||[]]].forEach(([k,list])=>{(cart[k]||[]).forEach(ci=>{const p=list.find(x=>x.nama===ci.nama);if(p&&typeof p.stok==='number'){if(p.stok===0)_stockErrors.push(`"${p.nama}" (stok habis)`);else if(ci.qty>p.stok)_stockWarns.push(`"${p.nama}" (stok: ${p.stok}, dibutuhkan: ${ci.qty})`);};});});if(_stockErrors.length){toast('Stok habis — tidak bisa disimpan: '+_stockErrors.join(', '),'e',7000);return;}if(_stockWarns.length)toast('Stok kurang: '+_stockWarns.join(', ')+' — invoice tetap disimpan','w',6000);
+cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});
 const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}`:pay;
 if(_btnSv){_btnSv.disabled=true;_btnSv.style.opacity='.6';_btnSv.style.pointerEvents='none';}
 const ro=getRO();const _invNo=_invNoFor(tglCheck);document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
