@@ -69,9 +69,13 @@
 | **v8.9.42 Beta** | ✅ Dirilis | Print thermal: `@page { margin: 0mm; size: auto }` + print-color-adjust — suppress header/footer URL Chrome otomatis |
 | **v8.9.43 Beta** | ✅ Dirilis | Print thermal: body `width:100%` di media print agar konten mengisi penuh kertas (58mm/80mm); hapus tombol "Simpan PDF"; hint instruksi uncheck Headers and footers di dialog Chrome |
 | **v8.9.44 Beta** | ✅ Dirilis | Print thermal: redesain struk — nama toko 16px bold, separator solid/dashed untuk hirarki, layout item baru (qty tag), badge LUNAS 2px border, footer double-line, max-width 72mm |
-| **v8.9.45** | 🔨 Next | Warning stok saat input invoice — toast jika qty melebihi stok tersedia |
-| **v8.9.46** | 📋 Planned | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` |
-| **v8.9.47** | 📋 Planned | Polish & bug fix pre-RC — hasil temuan testing v8.9.44 |
+| **v8.9.45** | ✅ Dirilis | Cetak invoice: Rx 2 baris (R & L terpisah), label Dm.A (Lebar)/Dm.B (Tinggi) lengkap; stok karyawan diblokir (tombol +/- disembunyikan untuk Staff) |
+| **v8.9.46** | ✅ Dirilis | Polish hak akses: tombol Edit/Hapus produk admin-only (selaras guard); kartu Backup & Restore admin-strict + guard `restoreData`; rapikan section markers (escape text ═/· + dedup SECTION 22B); **rename file app → `index.html`** |
+| **v8.9.47** | ✅ Dirilis | Security: guard semua `_do*` mutators (delCustomer, delInvoice, clearTransactions, resetAll, migrate, supplier); kartu Export admin-only; header CSV Dm.A/B dibenerin; stat Kas Masuk/Profit → admin-strict |
+| **v8.9.48** | ✅ Dirilis | Polish UI/UX: topbar ver sync dinamis; badge role invoice pakai label UI (Staff/Keluarga/Admin); typo "progressif"→"progresif"; WA label DM.A/B → Dm.A (Lebar)/Dm.B (Tinggi); item-row mobile fix; tooltip title= pada semua tombol icon-only |
+| **v8.9.49** | ✅ Dirilis | Warning stok saat simpan invoice: block jika stok habis (= 0), warn jika qty > stok; notif stok ≤ 2 kini untuk semua kategori (eks-C6/D1) |
+| **v8.9.50** | ✅ Dirilis | Firestore rules granular: hapus invoice = admin/keluarga only di level server; `createdBy` immutable di update (anti-impersonation) — perlu deploy manual ke Firebase Console (eks-C4/D2) |
+| **v8.9.51** | ✅ Dirilis | Template WA supplier bisa dikustom dari Pengaturan (placeholder `{supplier}`, `{customer}`, `{rx_block}`, dst — eks-C2); fix modal Profit per Kategori untuk skenario profit negatif (warna merah, bar magnitude, tanda `−` proper) |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -250,7 +254,7 @@
 | # | Temuan | Detail | Status |
 |---|--------|--------|--------|
 | C1 | **Custom format nomor BON** | Sudah disepakati client (format: `OZ/YYYY/MM/NNNN`), belum diimplementasi. Saat ini auto-increment integer. | ✅ Done v8.9.26 (format final: `INV/OZ/DDMMYY/NNNN`) |
-| C2 | **Template WA untuk supplier** | Client belum memberi format yang diinginkan. Menunggu konfirmasi. | ⏳ Menunggu client |
+| C2 | **Template WA untuk supplier** | Solusi: admin bisa edit template sendiri dari Pengaturan dengan placeholder system, tidak perlu nunggu client kasih format. | ✅ Done v8.9.51 |
 | C3 | **Garansi frame** | Client belum memutuskan flow garansi. Menunggu keputusan. | ⏳ Menunggu client |
 | C4 | **Firestore Security Rules lebih granular** | Rules saat ini: `allow read, write: if request.auth != null` untuk invoices. Idealnya tambah validasi: karyawan tidak bisa delete invoice, tidak bisa ubah field `createdBy`. | 🔨 v8.9.46 |
 | C5 | **Kompresi logo** | `assets/logo.png` ~1MB → <100KB. Proses manual via squoosh.app. | 📋 User task |
@@ -266,10 +270,14 @@
 
 | Tanggal | Versi Target | Item | Prioritas |
 |---------|-------------|------|-----------|
-| 9–10 Juni | v8.9.45 | Warning stok saat input invoice — toast jika qty item > stok tersedia | 🔴 P1 |
-| 10–11 Juni | v8.9.46 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
-| 11–12 Juni | v8.9.47 | Fix temuan testing print thermal v8.9.44 (jika ada) + polish minor | 🟠 P2 |
-| 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
+| 9 Juni | v8.9.45 ✅ | Cetak invoice Rx 2 baris + label Dm.A/B lengkap + stok karyawan diblokir | ✅ Selesai |
+| 9 Juni | v8.9.46 ✅ | Polish hak akses produk + Backup/Restore admin-strict + rapikan markers + rename `index.html` | ✅ Selesai |
+| 9–10 Juni | v8.9.47 ✅ | Security: guard semua `_do*` mutators + Export admin-only + stat Kas/Profit admin-strict | ✅ Selesai |
+| 10 Juni | v8.9.48 ✅ | Polish UI/UX: topbar ver sync; badge role invoice; typo; WA label; mobile fix; tooltip icon-only | ✅ Selesai |
+| 10 Juni | v8.9.49 ✅ | Warning stok saat simpan invoice: block stok habis, warn qty > stok, notif ≤ 2 semua kategori | ✅ Selesai |
+| 10 Juni | v8.9.50 ✅ | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) — deploy manual ke Console | ✅ Selesai |
+| 10 Juni | v8.9.51 ✅ | Template WA supplier customizable + fix profit modal negatif | ✅ Selesai |
+| 11–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
 | 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
 
 ### 🔴 P1 — Harus Selesai Sebelum v9.0
@@ -285,7 +293,7 @@
 | # | Item | Detail | Status |
 |---|------|--------|--------|
 | C5 | **Kompresi Logo** | `assets/logo.png` ~1MB → <100KB. Proses manual user via [squoosh.app](https://squoosh.app). Tidak perlu dev. | 📋 User task |
-| C2 | **Template WA Supplier** | Format pesan WA ke supplier belum dikonfirmasi client. | ⏳ Menunggu client |
+| C2 | **Template WA Supplier** | Solusi self-serve: editable dari Pengaturan dengan placeholder, tidak nunggu client. | ✅ Done v8.9.51 |
 | C3 | **Garansi Frame** | Flow garansi frame belum diputuskan client. | ⏳ Menunggu client |
 | A2 | **Customer Per-Document Firestore** | Risiko 1MB pada `optik-zada/config` jika customer + rxHistory banyak. Solusi: `customers/{id}` per dokumen. **Defer ke v9.1** — terlalu risky diimplementasi saat production testing aktif, data real sudah ada. | 🔁 Defer v9.1 |
 
@@ -441,7 +449,10 @@ Setiap ada tambahan request dari client atau fixing selesai:
 | 8 Jun 2026 | v8.9.43 | Fix: print thermal width:100% di media print; hapus tombol Simpan PDF; hint uncheck Headers and footers |
 | 8 Jun 2026 | v8.9.44 | Feat: redesain struk thermal — nama toko 16px, separator hirarki solid/dashed, item layout + qty tag, badge LUNAS 2px, footer double-line, max-width 72mm |
 | 8 Jun 2026 | — | Roadmap diperbarui: timeline Week 5 (9–17 Juni), target v8.9.45–v8.9 RC, regression checklist |
+| 9 Jun 2026 | v8.9.45 | Feat: cetak invoice Rx 2 baris (R & L terpisah), label Dm.A (Lebar)/Dm.B (Tinggi) lengkap; stok karyawan diblokir (tombol +/- disembunyikan untuk Staff) |
+| 9 Jun 2026 | v8.9.46 | Polish: tombol Edit/Hapus produk admin-only (selaras guard); kartu Backup & Restore admin-strict + guard `restoreData`; rapikan section markers (escape text ═/· + dedup SECTION 22B) |
+| 9 Jun 2026 | — | Chore: rename file app `Optik-Zada v7.7 (Beta Version).html` → `index.html` + update 5 referensi CI (firebase-deploy.yml) & CLAUDE.md. CI deploy-dev hijau. |
 
 ---
 
-*Last updated: 8 Jun 2026 · Optik Zada Management System v8.9.44 Beta*
+*Last updated: 9 Jun 2026 · Optik Zada Management System v8.9.46 Beta*

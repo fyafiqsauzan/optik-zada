@@ -150,7 +150,7 @@ tbody tr:hover td{background:var(--bg)}tbody tr[style*='cursor:pointer']:hover t
 .dp-btn.on-dp{border-color:var(--warn);background:#fff8e6;color:var(--warn)}
 /* ── RESPONSIVE: BREAKPOINTS ── */
 @media(max-width:1100px){.sidebar{transform:translateX(-220px)}.sidebar.collapsed{transform:translateX(-220px)}.sidebar.mobile-open{transform:translateX(0)}.main{margin-left:0}.main.sidebar-collapsed{margin-left:0}}
-@media(max-width:960px){.g4{grid-template-columns:1fr 1fr}.inv-layout{grid-template-columns:1fr}.live-receipt{position:static;margin-bottom:14px}.item-row{grid-template-columns:1fr 55px;gap:6px}.rx-grid{grid-template-columns:1fr}}
+@media(max-width:960px){.g4{grid-template-columns:1fr 1fr}.inv-layout{grid-template-columns:1fr}.live-receipt{position:static;margin-bottom:14px}.item-row{grid-template-columns:1fr 55px!important;gap:6px}.rx-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.top-search{display:none}.frow{grid-template-columns:1fr!important}.modal-box{padding:20px}}
 @media print{@page{margin:10mm}
 .topbar,.sidebar,.sidebar-overlay,#toast-wrap,#scrtop,.no-print,.fab-wrap,#offline-banner,#rn-modal{display:none!important}
@@ -171,7 +171,7 @@ body,html{background:#fff!important}}
 <body>
 <nav class="topbar">
   <button class="icon-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Menu" style="margin-right:12px;flex-shrink:0"><i class="ti ti-menu-2"></i></button>
-  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v8.9.42</span></span></div></div>
+  <div class="brand" onclick="showPage('dashboard',document.querySelector('.nl'))"><div class="brand-logo" id="topbar-brand-logo"><img src="assets/logo-icon.png" class="brand-logo-img" alt="" onload="var b=document.getElementById('topbar-brand-logo');b.style.background='#fff';b.style.padding='2px'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><i class="ti ti-eyeglass" style="display:none"></i></div><div class="brand-text"><b>OPTIK ZADA</b><span>Management System · <span id="topbar-ver">v…</span></span></div></div>
   <div class="top-right"><div class="top-search"><i class="ti ti-search"></i><input id="gs-inp" placeholder="Cari..." oninput="globalSearch(this.value)" autocomplete="off"><div class="gs-drop" id="gs-drop"></div></div><button class="icon-btn" onclick="toggleDark()" title="Dark mode"><i class="ti ti-moon" id="dark-icon"></i></button></div>
 </nav>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -211,8 +211,8 @@ body,html{background:#fff!important}}
   <div id="stok-alert-area"></div>
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-file-invoice stat-icon-bg"></i><div class="stat-label">Total Transaksi</div><div class="stat-value" id="d-tx">0</div><div class="stat-sub" id="d-tx-sub">—</div></div>
-    <div class="stat" onclick="showKasMasukModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label" id="d-omzet-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub" id="d-omzet-sub"><i class="ti ti-trending-up"></i>uang diterima</div></div>
-    <div class="stat admin-only" onclick="showProfitModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><i class="ti ti-trending-up stat-icon-bg"></i><div class="stat-label">Total Profit</div><div class="stat-value" style="color:var(--success)" id="d-profit">Rp0</div><div class="stat-sub" id="d-margin-sub">margin —</div></div>
+    <div class="stat admin-strict" onclick="showKasMasukModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><i class="ti ti-cash stat-icon-bg"></i><div class="stat-label" id="d-omzet-label">Kas Masuk</div><div class="stat-value" style="color:var(--gold)" id="d-omzet">Rp0</div><div class="stat-sub" id="d-omzet-sub"><i class="ti ti-trending-up"></i>uang diterima</div></div>
+    <div class="stat admin-strict" onclick="showProfitModal('dashboard')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><i class="ti ti-trending-up stat-icon-bg"></i><div class="stat-label">Total Profit</div><div class="stat-value" style="color:var(--success)" id="d-profit">Rp0</div><div class="stat-sub" id="d-margin-sub">margin —</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><i class="ti ti-users stat-icon-bg"></i><div class="stat-label">Customer</div><div class="stat-value" id="d-cust">0</div><div class="stat-sub" id="d-prod-sub">—</div></div>
   </div>
   <div class="grid g2" style="margin-bottom:16px">
@@ -231,8 +231,8 @@ body,html{background:#fff!important}}
   <div class="ph-actions"><select id="report-period" onchange="renderReports()" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;font-weight:600"><option value="all">Semua Waktu</option></select><button class="btn btn-success btn-sm" onclick="exportCSV()" style="margin-left:6px"><i class="ti ti-download"></i> Export CSV</button></div></div>
   <div class="grid g4" style="margin-bottom:16px">
     <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Transaksi</div><div class="stat-value" style="font-size:22px" id="rp-tx">0</div><div class="stat-sub" id="rp-tx-sub">invoice</div></div>
-    <div class="stat" onclick="showKasMasukModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><div class="stat-label">Kas Masuk</div><div class="stat-value" style="font-size:22px;color:var(--gold)" id="rp-kas">Rp0</div><div class="stat-sub">uang diterima</div></div>
-    <div class="stat admin-only" onclick="showProfitModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><div class="stat-label">Total Profit</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="rp-profit">Rp0</div><div class="stat-sub" id="rp-margin-sub">margin 0%</div></div>
+    <div class="stat admin-strict" onclick="showKasMasukModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-gold"></div><div class="stat-label">Kas Masuk</div><div class="stat-value" style="font-size:22px;color:var(--gold)" id="rp-kas">Rp0</div><div class="stat-sub">uang diterima</div></div>
+    <div class="stat admin-strict" onclick="showProfitModal('reports')" style="cursor:pointer" title="Klik untuk detail per kategori"><div class="stat-accent acc-green"></div><div class="stat-label">Total Profit</div><div class="stat-value" style="font-size:22px;color:var(--success)" id="rp-profit">Rp0</div><div class="stat-sub" id="rp-margin-sub">margin 0%</div></div>
     <div class="stat"><div class="stat-accent acc-navy"></div><div class="stat-label">Total Item Terjual</div><div class="stat-value" style="font-size:22px" id="r-items">0</div><div class="stat-sub">unit produk</div></div>
   </div>
   <div id="rp-cashflow-card" class="admin-only" style="margin-bottom:16px"></div>
@@ -420,8 +420,8 @@ body,html{background:#fff!important}}
 <div id="page-settings" class="page">
   <div class="ph"><div class="ph-left"><h2>Pengaturan</h2><p>Backup, restore, dan konfigurasi</p></div></div>
   <div class="grid g2" style="margin-bottom:16px">
-    <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
-    <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
+    <div class="card admin-strict"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
+    <div class="card admin-only"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
   <div class="card admin-only" style="margin-bottom:16px">
@@ -435,8 +435,17 @@ body,html{background:#fff!important}}
         <input id="sup-wa" placeholder="No. WA (+6281xxx)" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box">
       </div>
       <div style="display:flex;gap:8px">
-        <input id="sup-cat" placeholder="Catatan (opsional: misal 'lensa baca, progressif')" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;flex:1;box-sizing:border-box">
+        <input id="sup-cat" placeholder="Catatan (opsional: misal 'lensa baca, progresif')" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;flex:1;box-sizing:border-box">
         <button class="btn btn-primary btn-sm" onclick="addSupplier()"><i class="ti ti-plus"></i> Tambah</button>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:14px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:4px"><i class="ti ti-message-2"></i> Template Pesan WA Order</div>
+      <p style="font-size:11.5px;color:var(--muted);margin-bottom:8px;line-height:1.5">Pesan ini dikirim otomatis ke supplier. Placeholder: <code>{supplier}</code>, <code>{no_invoice}</code>, <code>{customer}</code>, <code>{tipe}</code>, <code>{rx_block}</code>, <code>{lens_block}</code>, <code>{toko_nama}</code>, <code>{toko_hp}</code>. Kosongkan untuk pakai default.</p>
+      <textarea id="tk-wa-template" oninput="saveToko()" rows="14" placeholder="(Kosong = pakai template default)" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:12px;background:var(--card);color:var(--text);outline:none;font-family:'Courier New',monospace;width:100%;box-sizing:border-box;resize:vertical;line-height:1.5"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn btn-outline btn-xs" onclick="loadDefaultWATemplate()" title="Isi textarea dengan template default"><i class="ti ti-refresh"></i> Pakai Template Default</button>
+        <button class="btn btn-outline btn-xs" onclick="clearWATemplate()" title="Kosongkan (pakai default tersembunyi)"><i class="ti ti-eraser"></i> Hapus Custom Template</button>
       </div>
     </div>
   </div>
@@ -505,7 +514,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.45 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.51 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -522,6 +531,71 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
         </div>
       </div>
+
+      <!-- New in v8.9.51 -->
+      <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.51</span>
+          <span style="font-size:13px;font-weight:700">Template WA Supplier Bisa Dikustom &amp; Fix Profit Negatif</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-message-2" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Admin/Keluarga bisa <strong>edit template pesan WA ke supplier</strong> langsung dari Pengaturan → Daftar Supplier Lensa. Pakai placeholder seperti <code>{supplier}</code>, <code>{customer}</code>, <code>{rx_block}</code>, <code>{lens_block}</code>, <code>{toko_nama}</code>. Tombol &ldquo;Pakai Template Default&rdquo; untuk reset ke format bawaan.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-chart-bar" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Modal <strong>Profit per Kategori</strong> kini menangani profit negatif dengan benar: warna merah jika rugi, bar progres berdasarkan magnitude relatif, total dengan tanda <em>−</em> proper (sebelumnya bisa muncul angka aneh atau persentase tidak masuk akal).</span></div>
+      </div>
+
+      <!-- New in v8.9.50 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.50</span>
+          <span style="font-size:13px;font-weight:700">Keamanan Server — Firestore Rules Granular</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Aturan Firestore kini membatasi <strong>hapus invoice</strong> hanya untuk Admin &amp; Keluarga di level server (bukan hanya UI). Karyawan yang mencoba memanggil delete langsung ke Firestore akan ditolak.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-shield" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Field <code>createdBy</code> pada invoice kini <strong>immutable</strong> — tidak ada role yang bisa mengubah siapa yang membuat invoice setelah tersimpan (anti-impersonation).</span></div>
+      </div>
+
+      <!-- New in v8.9.49 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.49</span>
+          <span style="font-size:13px;font-weight:700">Peringatan Stok Saat Input Invoice</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-package-off" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Invoice tidak bisa disimpan jika ada item dengan <strong>stok habis (0)</strong> — app menampilkan pesan error beserta nama item yang terblokir. Jika qty melebihi stok tersisa (tapi stok &gt; 0), muncul peringatan kuning dan invoice tetap bisa disimpan (untuk kasus stok belum diperbarui di sistem).</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-alert-triangle" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Notifikasi <em>stok tersisa ≤ 2</em> kini aktif untuk <strong>semua kategori</strong> produk (frame, lensa, softlens, aksesori) setelah invoice tersimpan — sebelumnya hanya frame.</span></div>
+      </div>
+
+      <!-- New in v8.9.48 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.48</span>
+          <span style="font-size:13px;font-weight:700">Polish UI/UX — Konsistensi Tampilan &amp; Label</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-tag" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Versi di topbar kini selalu sesuai versi aktual app (sebelumnya stuck "v8.9.42"). Badge role di detail invoice menampilkan nama UI yang benar: <strong>Staff</strong>, <strong>Keluarga</strong>, <strong>Admin</strong> — bukan kode internal.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-accessible" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Seluruh tombol aksi icon-only kini memiliki tooltip <em>title</em> yang jelas (stok +/−, edit, hapus produk, navigasi halaman, hapus item, tambah pengeluaran, kelola pengguna). Typo &ldquo;progressif&rdquo; → &ldquo;progresif&rdquo; diperbaiki. Label order WA supplier diselaraskan: <strong>Dm.A (Lebar)</strong> &amp; <strong>Dm.B (Tinggi)</strong>.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-device-mobile" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Layout item invoice di mobile (≤960px): kolom stacking kini berfungsi benar — tidak lagi tertimpa oleh inline style admin/karyawan. Stat card Kas Masuk &amp; Profit: tampil hanya untuk Admin (selaras dengan fungsinya).</span></div>
+      </div>
+
+      <!-- New in v8.9.47 -->
+      <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.47</span>
+          <span style="font-size:13px;font-weight:700">Keamanan — Guard Semua Operasi Destruktif</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-check" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Seluruh fungsi <em>mutator</em> berbahaya (hapus customer, arsipkan invoice, hapus transaksi, reset data, migrasi, kelola supplier) kini punya pengaman ganda di level fungsi — tidak hanya bergantung pada sembunyinya tombol di UI. Ini mencegah aksi tidak sah bahkan jika dipanggil langsung dari konsol.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-file-spreadsheet" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Kartu <strong>Export Laporan</strong> kini hanya tampil untuk Admin &amp; Keluarga. Header CSV diperbaiki: <em>Dm.A (Lebar)</em> &amp; <em>Dm.B (Tinggi)</em> (konsisten dengan label di cetak invoice).</span></div>
+      </div>
+
+      <!-- New in v8.9.46 -->
+      <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.46</span>
+          <span style="font-size:13px;font-weight:700">Polish Hak Akses &amp; Konsistensi Tampilan</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-adjustments" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Di Master Data, tombol <strong>Edit</strong> &amp; <strong>Hapus</strong> produk kini hanya tampil untuk <strong>Admin</strong> — sebelumnya Keluarga melihat tombol tersebut tetapi mendapat pesan error saat diklik. Tombol tambah/kurang stok tetap untuk Admin &amp; Keluarga.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Kartu <strong>Backup &amp; Restore</strong> kini khusus Admin (selaras dengan Zona Berbahaya), dan fungsi Restore diberi pengaman tambahan agar tidak bisa menimpa seluruh data tanpa hak akses Admin.</span></div>
+      </div>
+
+      <details style="margin-top:4px">
+        <summary style="cursor:pointer;font-size:12.5px;color:var(--muted);padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);list-style:none;display:flex;align-items:center;gap:6px;user-select:none"><i class="ti ti-history"></i> Lihat riwayat versi lama (v8.6 – v8.9.45)</summary>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px">
 
       <!-- New in v8.9.45 -->
       <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
@@ -1209,6 +1283,9 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
+        </div>
+      </details>
+
     </div>
     <div style="padding:14px 22px;border-top:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0">
       <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;user-select:none">
@@ -1455,7 +1532,7 @@ function injectAuthUI(){
           <label>Password</label>
           <div class="lp-pass-wrap">
             <input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLogin()">
-            <button type="button" class="lp-eye" onclick="toggleAuthPass()"><i class="ti ti-eye" id="auth-eye-icon"></i></button>
+            <button type="button" class="lp-eye" onclick="toggleAuthPass()" aria-label="Tampilkan/sembunyikan password"><i class="ti ti-eye" id="auth-eye-icon"></i></button>
           </div>
         </div>
         <div id="auth-err" class="lp-err"></div>
@@ -1472,7 +1549,7 @@ function injectAuthUI(){
 }
 
 function _tk(){return Object.assign({nama:'OPTIK ZADA',alamat:'Jl. Raya Mangun Jaya No.03C, Tambun',kota:'Kab. Bekasi, Jawa Barat 17510',hp:'',jam:'09.00 – 21.00 WIB',footer:'Terima kasih atas kepercayaan Anda 🙏'},db.toko||{});}
-function saveToko(){if(!db.toko)db.toko={};['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el)db.toko[f]=el.value;});persist();}
+function saveToko(){if(!db.toko)db.toko={};['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el)db.toko[f]=el.value;});const _waTpl=document.getElementById('tk-wa-template');if(_waTpl)db.toko.waSupplierTemplate=_waTpl.value;persist();}
 function checkDataSize(){const sk=JSON.stringify(db).length/1024;if(sk>=900)toast(`🚨 Data kritis (${sk.toFixed(0)} KB/1000 KB) — SEGERA backup di Pengaturan!`,'e',9000);else if(sk>=700)toast(`⚠️ Data mendekati batas (${sk.toFixed(0)} KB/1000 KB) — segera backup`,'w',7000);}
 function login(role){
   currentRole=role;
@@ -1503,8 +1580,9 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.45';
-const APP_VERSION='8.9.45';
+const _RN_VERSION='8.9.51';
+const APP_VERSION='8.9.51';
+(function(){const el=document.getElementById('topbar-ver');if(el)el.textContent='v'+APP_VERSION;})();
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -1674,7 +1752,7 @@ function renderProds(t){
   if(q!==_prodSearchPrev[t]){_prodSearchPrev[t]=q;window['_'+t+'Page']=1;}
   const filtered=q?arr.filter(p=>p.nama.toLowerCase().includes(q)||String(p.brand||'').toLowerCase().includes(q)||String(p.cat||'').toLowerCase().includes(q)):arr;
   document.getElementById(c.emp).style.display=arr.length?'none':'block';
-  const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=_isAdminLike();
+  const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=_isAdminLike();const _isStrictAdm=currentRole==='admin';
   const thead=document.querySelector('#'+c.tb).closest('table').querySelector('thead tr');
   thead.innerHTML='<th>#</th><th>Nama</th>'+(showCat?'<th>Kategori</th>':'')+(_isAdm?'<th>Modal</th>':'')+'<th>Jual</th>'+(_isAdm?'<th>Margin</th>':'')+'<th>Stok</th>'+(showDetail?'<th>Detail</th>':'')+'<th>Aksi</th>';
   const pgTotal=Math.ceil(filtered.length/PROD_PER)||1;
@@ -1700,19 +1778,21 @@ function renderProds(t){
       +detailCell
       +'<td style="display:flex;gap:4px">'
       +(_isAdm
-        ?'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',-1)"><i class="ti ti-minus"></i></button>'
-         +'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',1)"><i class="ti ti-plus"></i></button>'
-         +'<button class="btn btn-xs btn-outline" onclick="editProduct(\''+t+'\','+p.id+')"><i class="ti ti-edit"></i></button>'
-         +'<button class="btn btn-danger btn-xs" onclick="delProduct(\''+t+'\','+p.id+')"><i class="ti ti-trash"></i></button>'
+        ?'<button class="btn btn-xs btn-outline" title="Kurangi stok" onclick="editStok(\''+t+'\','+p.id+',-1)"><i class="ti ti-minus"></i></button>'
+         +'<button class="btn btn-xs btn-outline" title="Tambah stok" onclick="editStok(\''+t+'\','+p.id+',1)"><i class="ti ti-plus"></i></button>'
+        :'')
+      +(_isStrictAdm
+        ?'<button class="btn btn-xs btn-outline" title="Edit produk" onclick="editProduct(\''+t+'\','+p.id+')"><i class="ti ti-edit"></i></button>'
+         +'<button class="btn btn-danger btn-xs" title="Hapus produk" onclick="delProduct(\''+t+'\','+p.id+')"><i class="ti ti-trash"></i></button>'
         :'')
       +'</td></tr>';
   }).join(''):(q?'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted)"><i class="ti ti-search" style="font-size:32px;display:block;margin-bottom:8px;opacity:.25"></i>Tidak ada produk yang cocok dengan &ldquo;<strong>'+esc(q)+'</strong>&rdquo;</td></tr>':'');
   let pgEl=document.getElementById(t+'-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id=t+'-pg';document.getElementById(c.tb).closest('.tbl-wrap').after(pgEl);}
   pgEl.innerHTML=filtered.length>PROD_PER?'<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;border-top:1px solid var(--border);font-size:12px">'
-    +(pg>1?'<button class="btn btn-outline btn-sm" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'')
+    +(pg>1?'<button class="btn btn-outline btn-sm" title="Sebelumnya" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']-1;renderProds(\''+t+'\')"><i class="ti ti-chevron-left"></i></button>':'')
     +'<span style="color:var(--muted)">Hal '+pg+' / '+pgTotal+' &nbsp;&middot;&nbsp; '+filtered.length+' produk</span>'
-    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']+1;renderProds(\''+t+'\')"><i class="ti ti-chevron-right"></i></button>':'')
+    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" title="Berikutnya" onclick="window[\'_'+t+'Page\']=window[\'_'+t+'Page\']+1;renderProds(\''+t+'\')"><i class="ti ti-chevron-right"></i></button>':'')
     +'</div>':'';
 }
 
@@ -1863,8 +1943,8 @@ function _doImportProducts(t){
 // CUSTOMERS
 function addCustomerManual(){const n=document.getElementById('cn').value.trim();if(!n){toast('Nama kosong','e');return;}const g=document.getElementById('cg')?.value||'';const fullNama=g&&!n.match(/^(Tn\.|Ny\.|Nn\.|An\.|Dr\.)/i)?g+' '+n:n;saveCustomer(fullNama,document.getElementById('chp').value.trim(),document.getElementById('ca').value.trim(),parseInt(document.getElementById('cu').value)||0);['cn','chp','ca','cu'].forEach(id=>document.getElementById(id).value='');const cgEl=document.getElementById('cg');if(cgEl)cgEl.value='';renderCustomers();persist();toast('Customer '+fullNama+' ditambahkan');}
 function saveCustomer(nama,hp,alamat,usia,jk){const ex=db.customers.find(c=>c.nama.toLowerCase()===nama.toLowerCase());if(!ex)db.customers.push({id:Date.now(),nama,hp:hp||'',alamat:alamat||'',usia:usia||0,jk:jk||''});else{if(hp&&!ex.hp)ex.hp=hp;if(alamat&&!ex.alamat)ex.alamat=alamat;if(usia&&!ex.usia)ex.usia=usia;if(jk&&!ex.jk)ex.jk=jk;}}
-function delCustomer(id){const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trash" style="color:var(--danger)"></i> Hapus Customer</div><p style="margin:12px 0 4px">Hapus customer <strong>${c.nama}</strong>?</p><p style="font-size:12px;color:var(--muted)">Data customer dihapus dari daftar. Riwayat invoice tidak terpengaruh.</p>`;document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-danger" onclick="_doDelCustomer(${id})"><i class="ti ti-trash"></i> Hapus</button>`;document.getElementById('modal').style.display='flex';}
-function _doDelCustomer(id){const c=db.customers.find(x=>x.id===id);db.customers=db.customers.filter(x=>x.id!==id);_logAudit('delCustomer','Hapus Customer: '+(c?c.nama:'?'));renderCustomers();persist();closeModal();toast('Customer dihapus','w');}
+function delCustomer(id){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat menghapus customer','e');return;}const c=db.customers.find(x=>x.id===id);if(!c)return;document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trash" style="color:var(--danger)"></i> Hapus Customer</div><p style="margin:12px 0 4px">Hapus customer <strong>${c.nama}</strong>?</p><p style="font-size:12px;color:var(--muted)">Data customer dihapus dari daftar. Riwayat invoice tidak terpengaruh.</p>`;document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-danger" onclick="_doDelCustomer(${id})"><i class="ti ti-trash"></i> Hapus</button>`;document.getElementById('modal').style.display='flex';}
+function _doDelCustomer(id){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat menghapus customer','e');return;}const c=db.customers.find(x=>x.id===id);db.customers=db.customers.filter(x=>x.id!==id);_logAudit('delCustomer','Hapus Customer: '+(c?c.nama:'?'));renderCustomers();persist();closeModal();toast('Customer dihapus','w');}
 function renderCustomers(){
   const q=(document.getElementById('c-q')?.value||'').toLowerCase();
   if(q!==_custSearchPrev){_custSearchPrev=q;_custPage=1;}
@@ -1888,15 +1968,15 @@ function renderCustomers(){
       +'<td><strong>'+(txs.count?fmt(txs.total):'—')+'</strong></td>'
       +'<td style="display:flex;gap:4px">'
       +'<button class="btn btn-outline btn-xs" onclick="rxHistory('+c.id+')" title="Riwayat Transaksi &amp; Resep"><i class="ti ti-history"></i></button>'
-      +(_isAdminLike()?'<button class="btn btn-danger btn-xs" onclick="delCustomer('+c.id+')"><i class="ti ti-trash"></i></button>':'')
+      +(_isAdminLike()?'<button class="btn btn-danger btn-xs" onclick="delCustomer('+c.id+')" title="Hapus"><i class="ti ti-trash"></i></button>':'')
       +'</td></tr>';
   }).join('');
   let pgEl=document.getElementById('cu-pg');
   if(!pgEl){pgEl=document.createElement('div');pgEl.id='cu-pg';document.getElementById('cu-tb').closest('.tbl-wrap').after(pgEl);}
   pgEl.innerHTML=arr.length>CUST_PER?'<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;border-top:1px solid var(--border);font-size:12px">'
-    +(pg>1?'<button class="btn btn-outline btn-sm" onclick="_custPage--;renderCustomers()"><i class="ti ti-chevron-left"></i></button>':'')
+    +(pg>1?'<button class="btn btn-outline btn-sm" onclick="_custPage--;renderCustomers()" title="Sebelumnya"><i class="ti ti-chevron-left"></i></button>':'')
     +'<span style="color:var(--muted)">Hal '+pg+' / '+pgTotal+' &nbsp;&middot;&nbsp; '+arr.length+' customer</span>'
-    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" onclick="_custPage++;renderCustomers()"><i class="ti ti-chevron-right"></i></button>':'')
+    +(pg<pgTotal?'<button class="btn btn-outline btn-sm" title="Berikutnya" onclick="_custPage++;renderCustomers()"><i class="ti ti-chevron-right"></i></button>':'')
     +'</div>':'';
 }
 
@@ -2153,7 +2233,7 @@ function setDP(v){isDP=v;document.getElementById('dp-lunas-btn').className='dp-b
 // CART
 function addItem(t){cart[t].push({id:Date.now(),nama:'',qty:1,jual:0,modal:0});renderCart();}
 function removeItem(t,id){cart[t]=cart[t].filter(x=>x.id!==id);renderCart();}
-function renderCart(){const isAdmin=_isAdminLike();const dbMap={frame:db.frames,lensa:db.lensas,softlens:db.softlens,aksesoris:db.aksesoris||[]};['frame','lensa','softlens','aksesoris'].forEach(t=>{document.getElementById(t+'-items').innerHTML=cart[t].map(item=>{return`<div class="item-row" style="grid-template-columns:${isAdmin?'2fr 65px 1fr 1fr 28px':'2fr 65px 1fr 28px'}"><div class="fg"><label>Nama</label><div class="ac-wrap"><input id="ac-inp-${item.id}" placeholder="Ketik nama produk..." value="${item.nama?item.nama.replace(/"/g,'&quot;'):''}" autocomplete="off" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="_iAcInp('${t}',${item.id},this)" onfocus="_iAcShow('${t}',${item.id},this)" onblur="_iAcHide(${item.id})"><div class="ac-drop" id="ac-drop-${item.id}" style="max-height:240px"></div></div></div><div class="fg"><label>Qty</label><input type="number" min="1" value="${item.qty}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'qty',+this.value||1)"></div><div class="fg"><label>Harga Jual</label><input type="text" inputmode="numeric" id="ij-${item.id}" value="${item.jual?parseInt(item.jual).toLocaleString('id-ID'):''}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'jual',parseRp(this.value))" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>${isAdmin?`<div class="fg"><label>Modal</label><input type="text" inputmode="numeric" id="im-${item.id}" value="${item.modal?parseInt(item.modal).toLocaleString('id-ID'):''}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'modal',parseRp(this.value))" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>`:`<input type="hidden" id="im-${item.id}" value="${item.modal}">`}<button onclick="removeItem('${t}',${item.id})" style="align-self:flex-end;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:9px 0" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'"><i class="ti ti-x"></i></button></div>`;}).join('')||'<p style="font-size:12px;color:var(--muted);padding:4px 0">Belum ada item.</p>';});updateReceipt();}
+function renderCart(){const isAdmin=_isAdminLike();const dbMap={frame:db.frames,lensa:db.lensas,softlens:db.softlens,aksesoris:db.aksesoris||[]};['frame','lensa','softlens','aksesoris'].forEach(t=>{document.getElementById(t+'-items').innerHTML=cart[t].map(item=>{return`<div class="item-row" style="grid-template-columns:${isAdmin?'2fr 65px 1fr 1fr 28px':'2fr 65px 1fr 28px'}"><div class="fg"><label>Nama</label><div class="ac-wrap"><input id="ac-inp-${item.id}" placeholder="Ketik nama produk..." value="${item.nama?item.nama.replace(/"/g,'&quot;'):''}" autocomplete="off" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="_iAcInp('${t}',${item.id},this)" onfocus="_iAcShow('${t}',${item.id},this)" onblur="_iAcHide(${item.id})"><div class="ac-drop" id="ac-drop-${item.id}" style="max-height:240px"></div></div></div><div class="fg"><label>Qty</label><input type="number" min="1" value="${item.qty}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'qty',+this.value||1)"></div><div class="fg"><label>Harga Jual</label><input type="text" inputmode="numeric" id="ij-${item.id}" value="${item.jual?parseInt(item.jual).toLocaleString('id-ID'):''}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'jual',parseRp(this.value))" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>${isAdmin?`<div class="fg"><label>Modal</label><input type="text" inputmode="numeric" id="im-${item.id}" value="${item.modal?parseInt(item.modal).toLocaleString('id-ID'):''}" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:8px 10px;font-size:13px;background:var(--card);color:var(--text);width:100%;font-family:inherit;outline:none" oninput="iFld('${t}',${item.id},'modal',parseRp(this.value))" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>`:`<input type="hidden" id="im-${item.id}" value="${item.modal}">`}<button onclick="removeItem('${t}',${item.id})" title="Hapus item" style="align-self:flex-end;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:9px 0" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'"><i class="ti ti-x"></i></button></div>`;}).join('')||'<p style="font-size:12px;color:var(--muted);padding:4px 0">Belum ada item.</p>';});updateReceipt();}
 function iFld(t,id,f,v){const item=cart[t].find(x=>x.id===id);if(!item)return;item[f]=f==='qty'?Math.max(1,v||1):f==='nama'?v:(v||0);updateReceipt();}
 function _iAcInp(t,id,el){iFld(t,id,'nama',el.value);_iAcRenderDrop(t,id,el.value);}
 function _iAcShow(t,id,el){document.querySelectorAll('[id^="ac-drop-"]').forEach(d=>{if(d.id!=='ac-drop-'+id)d.style.display='none';});_iAcRenderDrop(t,id,el.value);}
@@ -2201,7 +2281,8 @@ const _zeroNonFree=all.filter(x=>x.jual<=0&&!x.nama.toLowerCase().includes('grat
 if(t.disc>0&&t.disc>=t.sub){toast(`Diskon (${fmt(t.disc)}) tidak boleh melebihi subtotal (${fmt(t.sub)})`,'e');return;}
 if(isDP){if(t.dp<=0){toast('Jumlah DP harus lebih dari 0','e');return;}if(t.dp>=t.tot){toast(`DP (${fmt(t.dp)}) tidak boleh melebihi total (${fmt(t.tot)})`,'e');return;}}
 if(_isAdminLike()&&all.some(x=>!(x.modal>0))){toast('Ada item tanpa harga modal — laporan profit mungkin tidak akurat','w',4000);}
-cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-ci.qty);});
+const _stockErrors=[];const _stockWarns=[];[['frame',db.frames],['lensa',db.lensas],['softlens',db.softlens],['aksesoris',db.aksesoris||[]]].forEach(([k,list])=>{(cart[k]||[]).forEach(ci=>{const p=list.find(x=>x.nama===ci.nama);if(p&&typeof p.stok==='number'){if(p.stok===0)_stockErrors.push(`"${p.nama}" (stok habis)`);else if(ci.qty>p.stok)_stockWarns.push(`"${p.nama}" (stok: ${p.stok}, dibutuhkan: ${ci.qty})`);};});});if(_stockErrors.length){toast('Stok habis — tidak bisa disimpan: '+_stockErrors.join(', '),'e',7000);return;}if(_stockWarns.length)toast('Stok kurang: '+_stockWarns.join(', ')+' — invoice tetap disimpan','w',6000);
+cart.frame.forEach(ci=>{const p=db.frames.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.lensa.forEach(ci=>{const p=db.lensas.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});cart.softlens.forEach(ci=>{const p=db.softlens.find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});(cart.aksesoris||[]).forEach(ci=>{const p=(db.aksesoris||[]).find(x=>x.nama===ci.nama);if(p){p.stok=Math.max(0,(p.stok||0)-ci.qty);if(p.stok<=2)toast(`Stok "${p.nama}" tersisa ${p.stok}`,'w',5000)}});
 const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}`:pay;
 if(_btnSv){_btnSv.disabled=true;_btnSv.style.opacity='.6';_btnSv.style.pointerEvents='none';}
 const ro=getRO();const _invNo=_invNoFor(tglCheck);document.getElementById('inv-no').value=_invNo;const inv={id:Date.now(),no:_invNo,tanggal:(()=>{const v=document.getElementById('inv-tanggal').value;if(v){const d=new Date(v);return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}return today();})(),ts:Date.now(),customer:nama,hp:document.getElementById('inv-hp').value.trim(),usia:parseInt(document.getElementById('inv-usia').value)||0,jk:document.getElementById('inv-jk').value||'',alamat:document.getElementById('inv-alamat').value.trim(),tipe:deriveTipe(),tglSiap:document.getElementById('inv-tgl-siap')?.value||'',ro,rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value.trim(),createdBy:currentUser?{uid:currentUser.uid,nama:currentUser.nama||currentUser.email||'User',role:currentUser.role}:null,createdTs:Date.now()};
@@ -2283,8 +2364,8 @@ return`<div class="modal-title"><i class="ti ti-receipt"></i> Struk Invoice</div
 function previewInvoice(){const t=cartTotals();const payLabel=bank?`${pay} – ${bank.replace(/ QRIS$/,'')}` :(pay||'-');const fakeInv={no:document.getElementById('inv-no').value,tanggal:today(),customer:document.getElementById('inv-nama').value||'(belum diisi)',tipe:deriveTipe(),ro:getRO(),rx:getRx(),frameDetail:getFrameDetail(),lensDetail:getLensDetail(),items:{frame:[...cart.frame],lensa:[...cart.lensa],softlens:[...cart.softlens],aksesoris:[...(cart.aksesoris||[])]},sub:t.sub,disc:t.disc,tot:t.tot,mod:t.mod,profit:t.profit,pay:payLabel,payStatus:isDP?'dp':'lunas',dpAmount:isDP?t.dp:t.tot,sisa:isDP?t.sisa:0,catatan:document.getElementById('inv-catatan').value};document.getElementById('modal-content').innerHTML=buildReceipt(fakeInv);document.getElementById('modal-actions').innerHTML=`<button class="btn btn-primary" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
 function viewInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;
 const auditHtml=`<div class="no-print" style="margin-top:14px;padding:10px 14px;border-top:1px solid var(--border);background:var(--bg);border-radius:0 0 var(--radius-sm) var(--radius-sm);display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted)">
-  ${inv.createdBy?`<span style="display:flex;align-items:center;gap:5px"><i class="ti ti-pencil-plus" style="color:var(--gold);font-size:12px"></i><span>Dibuat oleh <strong style="color:var(--text)">${esc(inv.createdBy.nama)}</strong> <span class="badge ${inv.createdBy.role==='admin'?'bgold':'bgreen'}" style="font-size:9px;padding:1px 5px">${esc(inv.createdBy.role)}</span></span></span>`:''}
-  ${inv.lunasBy?`<span style="display:flex;align-items:center;gap:5px"><i class="ti ti-check-circle" style="color:var(--success);font-size:12px"></i><span>Dilunasi oleh <strong style="color:var(--text)">${esc(inv.lunasBy.nama)}</strong> <span class="badge ${inv.lunasBy.role==='admin'?'bgold':'bgreen'}" style="font-size:9px;padding:1px 5px">${esc(inv.lunasBy.role)}</span></span></span>`:''}
+  ${inv.createdBy?`<span style="display:flex;align-items:center;gap:5px"><i class="ti ti-pencil-plus" style="color:var(--gold);font-size:12px"></i><span>Dibuat oleh <strong style="color:var(--text)">${esc(inv.createdBy.nama)}</strong> <span class="badge ${inv.createdBy.role==='admin'?'bgold':'bgreen'}" style="font-size:9px;padding:1px 5px">${esc(ROLES[inv.createdBy.role]?.label||inv.createdBy.role)}</span></span></span>`:''}
+  ${inv.lunasBy?`<span style="display:flex;align-items:center;gap:5px"><i class="ti ti-check-circle" style="color:var(--success);font-size:12px"></i><span>Dilunasi oleh <strong style="color:var(--text)">${esc(inv.lunasBy.nama)}</strong> <span class="badge ${inv.lunasBy.role==='admin'?'bgold':'bgreen'}" style="font-size:9px;padding:1px 5px">${esc(ROLES[inv.lunasBy.role]?.label||inv.lunasBy.role)}</span></span></span>`:''}
   ${!inv.createdBy&&!inv.lunasBy?'<span><i class="ti ti-history" style="font-size:12px"></i> Tidak ada log aktivitas</span>':''}
 </div>`;
 const _pmv=inv.rx||{};const _showPm=inv.tipe==='Kacamata'||inv.tipe==='Lensa'||!!(inv.items?.lensa?.some(x=>x.nama))||!!(inv.rx&&(inv.rx.rs||inv.rx.ls));const _pmCard=_showPm?'<div style="margin-top:12px;padding:14px;background:var(--bg);border:1.5px dashed var(--border2);border-radius:var(--radius-sm)" class="no-print">'+'<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;display:flex;align-items:center;gap:7px">'+'<i class="ti ti-ruler-measure" style="font-size:13px;color:var(--gold)"></i> Pengukuran Lensa — Internal / Supplier'+'<span style="margin-left:auto;font-size:10px;font-weight:400;opacity:.65">Isi setelah struk dicetak</span></div>'+'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">PD</label><input id="pm-pd" type="number" placeholder="mm" step="0.5" value="'+(_pmv.pd||'')+'" style="font-size:12px"></div>'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">Dm.A (Lebar)</label><input id="pm-dma" type="number" placeholder="mm" step="0.1" value="'+(_pmv.dma||'')+'" style="font-size:12px"></div>'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">Dm.B (Tinggi)</label><input id="pm-dmb" type="number" placeholder="mm" step="0.1" value="'+(_pmv.dmb||'')+'" style="font-size:12px"></div>'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">DBL</label><input id="pm-dbl" type="number" placeholder="mm" step="0.1" value="'+(_pmv.dbl||'')+'" style="font-size:12px"></div>'+'</div>'+'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">Ket. Faset</label><input id="pm-faset" type="text" placeholder="cth: Flat, V-bevel..." value="'+(_pmv.faset||'')+'" style="font-size:12px"></div>'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">TP Kanan (OD)</label><input id="pm-tpR" type="number" placeholder="mm" step="0.1" value="'+(_pmv.tpR||'')+'" style="font-size:12px"></div>'+'<div class="fg"><label style="font-size:11px;color:var(--muted)">TP Kiri (OS)</label><input id="pm-tpL" type="number" placeholder="mm" step="0.1" value="'+(_pmv.tpL||'')+'" style="font-size:12px"></div>'+'</div>'+'<button class="btn btn-outline btn-sm" onclick="savePengukuran('+inv.id+')" style="width:100%;justify-content:center"><i class="ti ti-device-floppy"></i> Simpan Pengukuran</button>'+'</div>':'';document.getElementById('modal-content').innerHTML=buildReceipt(inv)+auditHtml+_pmCard;const delBtnHtml=_isAdminLike()?`<button class="btn btn-danger btn-sm" onclick="closeModal();delInvoice(${inv.id})" style="margin-right:auto"><i class="ti ti-trash"></i> Hapus</button>`:'';const waBtnV=inv.hp?`<button class="btn btn-success btn-sm" onclick="btnWA(${inv.id})" title="WhatsApp Customer" style="padding:8px 11px"><i class="ti ti-brand-whatsapp"></i></button>`:'';const _hasRxOrLens=!!(inv.rx&&(inv.rx.rs||inv.rx.ls||inv.rx.add||inv.rx.dma))||!!(inv.items?.lensa?.some(x=>x.nama));const orderSupBtn=_hasRxOrLens?`<button class="btn btn-outline btn-sm" onclick="showOrderSupplierModal(${inv.id})" title="Order ke Supplier" style="padding:8px 11px"><i class="ti ti-truck-delivery"></i></button>`:'';document.getElementById('modal-actions').innerHTML=`${delBtnHtml}<div style="display:flex;gap:6px;align-items:center">${orderSupBtn}${waBtnV}<button class="btn btn-outline btn-sm" onclick="buildThermalReceipt(db.invoices.find(x=>x.id===${inv.id}))" title="Cetak Thermal 80mm" style="padding:8px 11px"><i class="ti ti-device-mobile"></i></button></div>${inv.payStatus==='dp'?`<button class="btn btn-gold btn-sm" onclick="closeModal();lunaskan(${inv.id})"><i class="ti ti-check"></i> Lunaskan</button>`:''}<button class="btn btn-primary btn-sm" onclick="window.print()"><i class="ti ti-printer"></i> Cetak</button>`;document.getElementById('modal').style.display='flex';}
@@ -2301,13 +2382,13 @@ function renderHistory(){const q=(document.getElementById('sh-q')?.value||'').to
 document.getElementById('h-tbody').innerHTML=pageArr.map(inv=>{const statusBadge=inv.payStatus==='lunas'?('<span class="badge bgreen">Lunas</span>'+(inv.lunasDate&&inv.lunasAmount?`<div style="font-size:10px;color:var(--muted);margin-top:2px">DP ${fmt(inv.dpAmount)} + Pelunasan ${fmt(inv.lunasAmount)}</div>`:'')):(`<span class="badge borange">DP ${fmt(inv.dpAmount)}</span><div style="font-size:10px;color:var(--danger);margin-top:2px">Sisa ${fmt(inv.sisa)}</div>`);const isAdmin=_isAdminLike();const delBtn=isAdmin?`<button class="btn btn-danger btn-xs no-print" onclick="event.stopPropagation();delInvoice(${inv.id})" title="Hapus"><i class="ti ti-trash"></i></button>`:'';const waBtn=inv.hp?`<button class="btn btn-success btn-xs no-print" onclick="event.stopPropagation();btnWA(${inv.id})" title="WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>`:'';const aksiTd=`<td class="no-print" style="display:flex;gap:4px;align-items:center" onclick="event.stopPropagation()">${waBtn}${delBtn}</td>`;const tglLunas=inv.lunasDate?`<span style="color:var(--success);font-size:12px">${inv.lunasDate}</span>`:(inv.payStatus==='lunas'&&!inv.lunasDate?`<span style="color:var(--muted);font-size:11px">—</span>`:`<span style="color:var(--muted);font-size:11px">Belum lunas</span>`);const creatorBadge=inv.createdBy?`<div style="font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:3px"><i class="ti ti-user-circle" style="font-size:10px;color:var(--gold)"></i>${esc(inv.createdBy.nama)}</div>`:'';
 const lunasByBadge=inv.lunasBy?`<div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:3px"><i class="ti ti-check-circle" style="font-size:10px;color:var(--success)"></i>oleh: ${esc(inv.lunasBy.nama)}</div>`:'';
 return`<tr style="cursor:pointer" onclick="viewInvoice(${inv.id})" title="Klik untuk lihat detail"><td><strong>${inv.no}</strong>${creatorBadge}</td><td style="color:var(--muted)">${inv.tanggal}</td><td>${tglLunas}${lunasByBadge}</td><td>${inv.customer}</td><td><span class="badge bg">${inv.tipe||'-'}</span></td><td><strong>${fmt(inv.tot)}</strong></td><td>${statusBadge}</td><td><span class="badge ${inv.pay.includes('Transfer')?'bpurple':inv.pay.includes('QRIS')?'bgold':inv.pay==='Historis'?'bg':'bgreen'}">${inv.pay}</span></td>${aksiTd}</tr>`;}).join('');
-const _pgEl=document.getElementById('h-pagination');if(_pgEl){if(_pgTotal>1){let _ph='';if(_histPage>1)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage--;renderHistory()"><i class="ti ti-chevron-left"></i></button>';_ph+='<span style="font-size:12px;color:var(--muted);padding:0 8px">Hal '+_histPage+' / '+_pgTotal+' &nbsp;&#xb7;&nbsp; '+arr.length+' transaksi</span>';if(_histPage<_pgTotal)_ph+='<button class="btn btn-outline btn-sm" onclick="_histPage++;renderHistory()"><i class="ti ti-chevron-right"></i></button>';_pgEl.innerHTML=_ph;}else _pgEl.innerHTML='';}const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=_isAdminLike()?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
+const _pgEl=document.getElementById('h-pagination');if(_pgEl){if(_pgTotal>1){let _ph='';if(_histPage>1)_ph+='<button class="btn btn-outline btn-sm" title="Sebelumnya" onclick="_histPage--;renderHistory()"><i class="ti ti-chevron-left"></i></button>';_ph+='<span style="font-size:12px;color:var(--muted);padding:0 8px">Hal '+_histPage+' / '+_pgTotal+' &nbsp;&#xb7;&nbsp; '+arr.length+' transaksi</span>';if(_histPage<_pgTotal)_ph+='<button class="btn btn-outline btn-sm" title="Berikutnya" onclick="_histPage++;renderHistory()"><i class="ti ti-chevron-right"></i></button>';_pgEl.innerHTML=_ph;}else _pgEl.innerHTML='';}const sumEl=document.getElementById('h-summary');if(arr.length){const st=arr.reduce((s,x)=>s+x.tot,0),sp=arr.reduce((s,x)=>s+x.profit,0),dpCount=arr.filter(x=>x.payStatus==='dp').length;sumEl.style.display='flex';const profitHtml=_isAdminLike()?`<span style="color:var(--muted)">Profit: <strong style="color:var(--success)">+${fmt(sp)}</strong></span>`:'';sumEl.innerHTML=`<span style="color:var(--muted)">${arr.length} transaksi</span><span style="color:var(--muted)">Total: <strong style="color:var(--text)">${fmt(st)}</strong></span>${profitHtml}${dpCount?`<span style="color:var(--warn)"><strong>${dpCount} belum lunas</strong></span>`:''}`;}else sumEl.style.display='none';const aksiTh=document.getElementById('h-aksi-th');if(aksiTh)aksiTh.style.display='';updateDPBadge();}
 function _restoreStock(inv){if(!inv||!inv.items)return;const cats={frame:db.frames,lensa:db.lensas,softlens:db.softlens,aksesoris:db.aksesoris||[]};Object.entries(cats).forEach(([cat,list])=>{(inv.items[cat]||[]).forEach(ci=>{const p=list.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)+(ci.qty||1));});});}
 function _decrementStock(inv){if(!inv||!inv.items)return;const cats={frame:db.frames,lensa:db.lensas,softlens:db.softlens,aksesoris:db.aksesoris||[]};Object.entries(cats).forEach(([cat,list])=>{(inv.items[cat]||[]).forEach(ci=>{const p=list.find(x=>x.nama===ci.nama);if(p)p.stok=Math.max(0,(p.stok||0)-(ci.qty||1));});});}
-function delInvoice(id){const _inv=db.invoices.find(x=>x.id===id);_pendingDelId=id;_confirmModal({title:'Arsipkan Invoice',icon:'ti-archive',iconColor:'var(--warn)',body:(_inv?`Invoice <strong>${esc(_inv.no)}</strong> — ${esc(_inv.customer)} akan diarsipkan.`:'Invoice ini akan diarsipkan.')+'<br><span style="font-size:12px;color:var(--muted)">Invoice dapat dipulihkan kapan saja dari Pengaturan → Invoice Terhapus.</span>',confirmLabel:'Arsipkan',confirmClass:'btn-outline',onConfirmJs:'_doDelInvoice()'});}
-function _doDelInvoice(){const id=_pendingDelId;_pendingDelId=null;if(!id)return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();_restoreStock(_di);_logAudit('delInvoice','Arsipkan Invoice: '+(_di.no||'?')+' — '+(_di.customer||'?'));if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(e=>{toast('Gagal arsip ke cloud: '+e.message,'e',6000);});}renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
+function delInvoice(id){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat mengarsipkan invoice','e');return;}const _inv=db.invoices.find(x=>x.id===id);_pendingDelId=id;_confirmModal({title:'Arsipkan Invoice',icon:'ti-archive',iconColor:'var(--warn)',body:(_inv?`Invoice <strong>${esc(_inv.no)}</strong> — ${esc(_inv.customer)} akan diarsipkan.`:'Invoice ini akan diarsipkan.')+'<br><span style="font-size:12px;color:var(--muted)">Invoice dapat dipulihkan kapan saja dari Pengaturan → Invoice Terhapus.</span>',confirmLabel:'Arsipkan',confirmClass:'btn-outline',onConfirmJs:'_doDelInvoice()'});}
+function _doDelInvoice(){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat mengarsipkan invoice','e');return;}const id=_pendingDelId;_pendingDelId=null;if(!id)return;const _di=db.invoices.find(x=>x.id===id);if(_di){_di.deletedAt=Date.now();_restoreStock(_di);_logAudit('delInvoice','Arsipkan Invoice: '+(_di.no||'?')+' — '+(_di.customer||'?'));if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(_di.id),_di).catch(e=>{toast('Gagal arsip ke cloud: '+e.message,'e',6000);});}renderHistory();persist();updateDPBadge();toast('Invoice diarsipkan','w');}
 function showArchivedInvoices(){const deleted=db.invoices.filter(x=>x.deletedAt).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));document.getElementById('modal-content').innerHTML='<div class="modal-title"><i class="ti ti-archive"></i> Invoice Terhapus ('+deleted.length+')</div>'+(deleted.length?deleted.map(inv=>'<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-weight:600">'+inv.no+' — '+inv.customer+'</div><div style="font-size:11px;color:var(--muted)">'+inv.tanggal+' · '+fmt(inv.tot)+' · '+inv.pay+'</div></div><button class="btn btn-success btn-xs" onclick="restoreInvoice('+inv.id+')"><i class="ti ti-refresh"></i> Pulihkan</button></div>').join(''):'<div class="empty" style="padding:24px"><i class="ti ti-check-circle" style="font-size:32px;color:var(--success)"></i><p>Tidak ada invoice terhapus</p></div>');document.getElementById('modal-actions').innerHTML='<button class="btn btn-outline" onclick="closeModal()">Tutup</button>';document.getElementById('modal').style.display='flex';}
-function restoreInvoice(id){const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;_decrementStock(inv);if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('Gagal pulihkan ke cloud: '+e.message,'e',6000);});persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
+function restoreInvoice(id){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat memulihkan invoice','e');return;}const inv=db.invoices.find(x=>x.id===id);if(!inv)return;delete inv.deletedAt;_decrementStock(inv);if(Store._migrated&&Store._invDoc&&Store._setDoc)Store._setDoc(Store._invDoc(inv.id),inv).catch(e=>{toast('Gagal pulihkan ke cloud: '+e.message,'e',6000);});persist();renderSettings();updateDPBadge();showArchivedInvoices();toast('Invoice '+inv.no+' dipulihkan','s');}
 
 
 // ════════════════════════════════════════════════
@@ -2525,7 +2606,7 @@ async function doGantiPW(){
   }
 }
 function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)(db):db;const size=JSON.stringify(_cfgObj).length;const modeTxt=Store.mode==='firebase'?'<span style="color:var(--success)"><i class="ti ti-cloud-check"></i> Tersambung Firebase — live sync antar perangkat aktif</span>':'<span style="color:var(--info)"><i class="ti ti-device-desktop"></i> Mode lokal — data tersimpan di perangkat ini saja</span>';document.getElementById('storage-status').innerHTML=`<div style="display:grid;gap:6px"><div>Mode penyimpanan: <strong>${Store.mode==='firebase'?'Cloud (Firestore)':'Lokal'}</strong></div><div>Produk terdaftar: <strong>${db.frames.length+db.lensas.length+db.softlens.length+(db.aksesoris||[]).length}</strong></div><div>Customer: <strong>${db.customers.length}</strong></div><div>Transaksi aktif: <strong>${activeInvs().length}</strong>${db.invoices.filter(x=>x.deletedAt).length?` <span style="font-size:11px;color:var(--muted)">(+${db.invoices.filter(x=>x.deletedAt).length} diarsipkan)</span>`:''}</div>${(()=>{const sk=size/1024;const p=Math.min(100,Math.round(sk/1000*100));const bc=sk<700?'var(--success)':sk<900?'#f59e0b':'var(--danger)';const wm=sk>=900?`<div style="color:var(--danger);font-size:12px;font-weight:600;margin-top:4px">🚨 Kritis! Config hampir penuh (${sk.toFixed(0)} KB) — SEGERA backup &amp; hubungi developer</div>`:sk>=700?`<div style="color:#f59e0b;font-size:12px;font-weight:600;margin-top:4px">⚠️ Mendekati batas config (${sk.toFixed(0)} KB) — segera lakukan backup data</div>`:'';const lbl=Store._migrated?'Config (produk & customer)':'Ukuran data';const limitTxt=Store._migrated?'Config: ~1 MB &nbsp;·&nbsp; Invoice: ∞':'Batas: ~1 MB';return`<div>${lbl}: <strong>${sk.toFixed(1)} KB</strong> / 1.000 KB</div><div style="background:var(--bg2);border-radius:4px;height:7px;overflow:hidden;margin:4px 0 2px"><div style="width:${p}%;height:100%;background:${bc};border-radius:4px;transition:width .3s"></div></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)"><span>${p}% digunakan</span><span>${limitTxt}</span></div>${wm}`;})()}<div style="margin-top:6px">${modeTxt}</div></div>`;
-  const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});
+  const _tkv=_tk();['nama','alamat','kota','hp','jam','footer'].forEach(f=>{const el=document.getElementById('tk-'+f);if(el&&!el.matches(':focus'))el.value=_tkv[f]||'';});const _waTplEl=document.getElementById('tk-wa-template');if(_waTplEl&&!_waTplEl.matches(':focus'))_waTplEl.value=_tkv.waSupplierTemplate||'';
   const logEl=document.getElementById('action-log-content');
   if(logEl){const logs=(db.actionLog||[]).slice(0,5);if(!logs.length){logEl.textContent='Belum ada tindakan tercatat.';}else{const total=(db.actionLog||[]).length;logEl.innerHTML=logs.map(l=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:8px"><div><div style="font-weight:600;color:var(--text)">${l.label}</div><div style="font-size:11px;color:var(--muted)">oleh: <strong>${l.by}</strong>${l.byEmail?' — '+l.byEmail:''}</div></div><div style="font-size:11px;color:var(--muted);flex-shrink:0;text-align:right">${new Date(l.ts).toLocaleString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div>`).join('')+(total>5?`<div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center">+${total-5} tindakan lainnya tersimpan</div>`:'')+`<div style="margin-top:10px"><button class="btn btn-outline btn-sm" onclick="db.actionLog=[];Store.save();renderSettings();"><i class="ti ti-trash"></i> Hapus Log</button></div>`;}}
   const miCard=document.getElementById('migrate-card');
@@ -2538,6 +2619,7 @@ function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Backup diunduh');}
 let _pendingRestore=null;
 function restoreData(input){
+  if(currentRole!=='admin'){toast('Hanya Admin yang dapat me-restore data','e');return;}
   const file=input.files[0];if(!file){return;}
   const reader=new FileReader();
   reader.onload=e=>{
@@ -2586,21 +2668,21 @@ async function _doRestore(){
   renderSettings();renderDashboard();renderHistory();updateDPBadge();
   toast('✅ Data berhasil dipulihkan dari backup','s',6000);
 }
-function seedMasterData(){_confirmModal({title:'Reset Master Data & Customer',body:'Produk dan customer akan direset ke data demo.<br><span style="font-size:12px;color:var(--muted)">Transaksi (invoice) tidak akan dihapus.</span>',confirmLabel:'Reset Master Data',onConfirmJs:'_doSeedMasterData()'});}
-async function _doSeedMasterData(){db.frames=JSON.parse(JSON.stringify(SEED.frames));db.lensas=JSON.parse(JSON.stringify(SEED.lensas));db.softlens=JSON.parse(JSON.stringify(SEED.softlens));db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.customers=JSON.parse(JSON.stringify(SEED.customers));_logAudit('seedMasterData','Reset Master Data & Customer');await Store.save();renderSettings();toast('Master data & customer berhasil direset ke data demo · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'s',3000);}
-function clearTransactions(){_confirmModal({title:'Hapus Semua Transaksi',body:'Semua transaksi aktif dan arsip akan <strong>dihapus permanen</strong>.<br><span style="font-size:12px;color:var(--muted)">Tindakan ini dicatat di log audit dan tidak bisa dibatalkan.</span>',confirmLabel:'Hapus Semua Transaksi',onConfirmJs:'_doClearTransactions()'});}
-async function _doClearTransactions(){let fsErr=null;if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc){try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){fsErr=e;}}if(fsErr){toast('Gagal hapus dari Firestore: '+(fsErr.message||fsErr.code||'error'),'e',6000);return;}db.invoices=[];db.counter=1;_logAudit('clearTransactions','Hapus Semua Transaksi');await Store.save();renderHistory();renderSettings();renderDashboard();toast('Semua transaksi dihapus · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'w',4000);}
-function resetAll(){_confirmModal({title:'⚠ Reset Semua Data',body:'<strong style="color:var(--danger)">SEMUA DATA akan dihapus permanen</strong> — transaksi, produk, customer, dan pengeluaran.<br><span style="font-size:12px;color:var(--muted)">Tindakan ini dicatat di log audit dan tidak bisa dibatalkan.</span>',confirmLabel:'Reset Semua Data',onConfirmJs:'_doResetAll()'});}
-async function _doResetAll(){if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc){try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){}}const _prevLog=(db.actionLog||[]).slice();db=Store.seedDB();db.actionLog=_prevLog;_logAudit('resetAll','Reset Semua Data');await Store.save();renderSettings();renderDashboard();toast('Data direset · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'w',4000);}
-function migrateToV2(){if(Store._migrated||Store.mode!=='firebase'||!Store._configRef||!Store._metaRef||!Store._invDoc||!Store._setDoc){toast('Migrasi tidak tersedia','e');return;}_confirmModal({title:'Migrasi Struktur Data v8.5',icon:'ti-database-export',iconColor:'var(--gold)',body:'Data akan dipindahkan ke struktur per-dokumen Firestore.<br><strong style="color:var(--danger)">Pastikan backup sudah diunduh. Proses ini tidak bisa dibalik.</strong>',confirmLabel:'Mulai Migrasi',confirmClass:'btn-gold',onConfirmJs:'_doMigrateToV2()'});}
-async function _doMigrateToV2(){const btn=document.getElementById('migrate-btn');const st=document.getElementById('migrate-status');if(btn)btn.disabled=true;if(st)st.textContent='Memigrasikan...';try{const{invoices:_inv,...cfgData}=db;await Store._setDoc(Store._configRef,{...cfgData,updatedAt:Store._serverTs()});const writes=(db.invoices||[]).map(inv=>Store._setDoc(Store._invDoc(inv.id),inv));await Promise.all(writes);await Store._setDoc(Store._metaRef,{migrated:true,migratedAt:Store._serverTs()});Store._migrated=true;renderSettings();toast('Migrasi v8.5 selesai! Invoice per-dokumen aktif','s',5000);}catch(e){if(st)st.textContent='Gagal: '+e.message;if(btn)btn.disabled=false;toast('Migrasi gagal: '+e.message,'e',5000);}}
-function exportCSV(){if(!salesInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(L)','Dm.B(T)','DBL','Ket. Faset','TP Kanan (OD)','TP Kiri (OS)','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.faset||'',rx.tpR||rx.tp||'',rx.tpL||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
+function seedMasterData(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat mereset master data','e');return;}_confirmModal({title:'Reset Master Data & Customer',body:'Produk dan customer akan direset ke data demo.<br><span style="font-size:12px;color:var(--muted)">Transaksi (invoice) tidak akan dihapus.</span>',confirmLabel:'Reset Master Data',onConfirmJs:'_doSeedMasterData()'});}
+async function _doSeedMasterData(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat mereset master data','e');return;}db.frames=JSON.parse(JSON.stringify(SEED.frames));db.lensas=JSON.parse(JSON.stringify(SEED.lensas));db.softlens=JSON.parse(JSON.stringify(SEED.softlens));db.aksesoris=JSON.parse(JSON.stringify(SEED.aksesoris));db.customers=JSON.parse(JSON.stringify(SEED.customers));_logAudit('seedMasterData','Reset Master Data & Customer');await Store.save();renderSettings();toast('Master data & customer berhasil direset ke data demo · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'s',3000);}
+function clearTransactions(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat menghapus semua transaksi','e');return;}_confirmModal({title:'Hapus Semua Transaksi',body:'Semua transaksi aktif dan arsip akan <strong>dihapus permanen</strong>.<br><span style="font-size:12px;color:var(--muted)">Tindakan ini dicatat di log audit dan tidak bisa dibatalkan.</span>',confirmLabel:'Hapus Semua Transaksi',onConfirmJs:'_doClearTransactions()'});}
+async function _doClearTransactions(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat menghapus semua transaksi','e');return;}let fsErr=null;if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc){try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){fsErr=e;}}if(fsErr){toast('Gagal hapus dari Firestore: '+(fsErr.message||fsErr.code||'error'),'e',6000);return;}db.invoices=[];db.counter=1;_logAudit('clearTransactions','Hapus Semua Transaksi');await Store.save();renderHistory();renderSettings();renderDashboard();toast('Semua transaksi dihapus · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'w',4000);}
+function resetAll(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat mereset semua data','e');return;}_confirmModal({title:'⚠ Reset Semua Data',body:'<strong style="color:var(--danger)">SEMUA DATA akan dihapus permanen</strong> — transaksi, produk, customer, dan pengeluaran.<br><span style="font-size:12px;color:var(--muted)">Tindakan ini dicatat di log audit dan tidak bisa dibatalkan.</span>',confirmLabel:'Reset Semua Data',onConfirmJs:'_doResetAll()'});}
+async function _doResetAll(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat mereset semua data','e');return;}if(Store._migrated&&Store._invoicesCol&&Store._getDocs&&Store._deleteDoc){try{const s=await Store._getDocs(Store._invoicesCol);await Promise.all(s.docs.map(d=>Store._deleteDoc(d.ref)));}catch(e){}}const _prevLog=(db.actionLog||[]).slice();db=Store.seedDB();db.actionLog=_prevLog;_logAudit('resetAll','Reset Semua Data');await Store.save();renderSettings();renderDashboard();toast('Data direset · dicatat: '+(currentUser?.nama||currentUser?.email||'?'),'w',4000);}
+function migrateToV2(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat menjalankan migrasi data','e');return;}if(Store._migrated||Store.mode!=='firebase'||!Store._configRef||!Store._metaRef||!Store._invDoc||!Store._setDoc){toast('Migrasi tidak tersedia','e');return;}_confirmModal({title:'Migrasi Struktur Data v8.5',icon:'ti-database-export',iconColor:'var(--gold)',body:'Data akan dipindahkan ke struktur per-dokumen Firestore.<br><strong style="color:var(--danger)">Pastikan backup sudah diunduh. Proses ini tidak bisa dibalik.</strong>',confirmLabel:'Mulai Migrasi',confirmClass:'btn-gold',onConfirmJs:'_doMigrateToV2()'});}
+async function _doMigrateToV2(){if(currentRole!=='admin'){toast('Hanya Admin yang dapat menjalankan migrasi data','e');return;}const btn=document.getElementById('migrate-btn');const st=document.getElementById('migrate-status');if(btn)btn.disabled=true;if(st)st.textContent='Memigrasikan...';try{const{invoices:_inv,...cfgData}=db;await Store._setDoc(Store._configRef,{...cfgData,updatedAt:Store._serverTs()});const writes=(db.invoices||[]).map(inv=>Store._setDoc(Store._invDoc(inv.id),inv));await Promise.all(writes);await Store._setDoc(Store._metaRef,{migrated:true,migratedAt:Store._serverTs()});Store._migrated=true;renderSettings();toast('Migrasi v8.5 selesai! Invoice per-dokumen aktif','s',5000);}catch(e){if(st)st.textContent='Gagal: '+e.message;if(btn)btn.disabled=false;toast('Migrasi gagal: '+e.message,'e',5000);}}
+function exportCSV(){if(!salesInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A (Lebar)','Dm.B (Tinggi)','DBL','Ket. Faset','TP Kanan (OD)','TP Kiri (OS)','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.faset||'',rx.tpR||rx.tp||'',rx.tpL||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
 
 
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// SECTION 21 \u00B7 CASHFLOW MODULE
+// ════════════════════════════════════════════════
+// SECTION 21 · CASHFLOW MODULE
 // Pengeluaran operasional, profit bersih, tutup buku
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// ════════════════════════════════════════════════
 const EXPENSE_CATS={
   listrik:       {label:'Biaya Listrik Toko',     icon:'ti-bolt'},
   wifi:          {label:'Biaya WiFi',             icon:'ti-wifi'},
@@ -2649,7 +2731,7 @@ function _renderCashflowAdmin(){
       <div class="fg"><label>Kategori</label><select id="cf-kat">${Object.entries(EXPENSE_CATS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
       <div class="fg"><label>Nominal (Rp)</label><input type="text" inputmode="numeric" id="cf-nominal" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>
       <div class="fg"><label>Keterangan</label><input id="cf-ket" placeholder="Opsional..."></div>
-      <div class="fg"><label>&nbsp;</label><button class="btn btn-gold" onclick="addExpense()"><i class="ti ti-plus"></i></button></div>
+      <div class="fg"><label>&nbsp;</label><button class="btn btn-gold" onclick="addExpense()" title="Catat pengeluaran"><i class="ti ti-plus"></i></button></div>
     </div>
   </div>`}
   <div class="card" style="margin-bottom:16px">
@@ -2674,7 +2756,7 @@ function _renderCashflowKaryawan(){
       <div class="fg"><label>Kategori</label><select id="cf-kat">${Object.entries(EXPENSE_CATS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></div>
       <div class="fg"><label>Nominal (Rp)</label><input type="text" inputmode="numeric" id="cf-nominal" placeholder="0" oninput="fmtRpInput(this)" onfocus="unfmtRpInput(this)" onblur="fmtRpInput(this)"></div>
       <div class="fg"><label>Keterangan</label><input id="cf-ket" placeholder="Opsional..."></div>
-      <div class="fg"><label>&nbsp;</label><button class="btn btn-gold" onclick="addExpense()"><i class="ti ti-plus"></i></button></div>
+      <div class="fg"><label>&nbsp;</label><button class="btn btn-gold" onclick="addExpense()" title="Catat pengeluaran"><i class="ti ti-plus"></i></button></div>
     </div>
   </div>
   <div class="card">
@@ -2787,11 +2869,11 @@ function exportCashflowPDF(monthKey){
   w.document.close();
 }
 
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// SECTION 22 \u00B7 FITUR TAMBAHAN
+// ════════════════════════════════════════════════
+// SECTION 22 · FITUR TAMBAHAN
 // WA 1-click, Riwayat Rx, DP Badge Sidebar
 // Siap Ambil Alert, Grafik Bulanan, Thermal Print
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// ════════════════════════════════════════════════
 
 function btnWA(invId){
   const inv=db.invoices.find(x=>x.id===invId);
@@ -2850,6 +2932,7 @@ function renderSupplierList(){
 }
 
 function addSupplier(){
+  if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat mengelola supplier','e');return;}
   const nama=(document.getElementById('sup-nama')?.value||'').trim();
   const wa=(document.getElementById('sup-wa')?.value||'').trim();
   const cat=(document.getElementById('sup-cat')?.value||'').trim();
@@ -2863,12 +2946,13 @@ function addSupplier(){
 }
 
 function delSupplier(id){
+  if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat mengelola supplier','e');return;}
   const s=(db.suppliers||[]).find(x=>x.id===id);if(!s)return;
   document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trash" style="color:var(--danger)"></i> Hapus Supplier</div><p style="margin:14px 0 4px">Hapus supplier <strong>${esc(s.nama)}</strong>?</p><p style="font-size:12px;color:var(--muted)">Ini hanya menghapus dari daftar — data invoice tidak berubah.</p>`;
   document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Batal</button><button class="btn btn-danger" onclick="_doDelSupplier(${id})"><i class="ti ti-trash"></i> Hapus</button>`;
   document.getElementById('modal').style.display='flex';
 }
-function _doDelSupplier(id){const s=(db.suppliers||[]).find(x=>x.id===id);_logAudit('delSupplier','Hapus Supplier: '+(s?s.nama:'?'));db.suppliers=db.suppliers.filter(x=>x.id!==id);persist();renderSupplierList();closeModal();toast('Supplier dihapus','w');}
+function _doDelSupplier(id){if(!_isAdminLike()){toast('Hanya Admin/Keluarga yang dapat mengelola supplier','e');return;}const s=(db.suppliers||[]).find(x=>x.id===id);_logAudit('delSupplier','Hapus Supplier: '+(s?s.nama:'?'));db.suppliers=db.suppliers.filter(x=>x.id!==id);persist();renderSupplierList();closeModal();toast('Supplier dihapus','w');}
 
 function showOrderSupplierModal(invId){
   const inv=db.invoices.find(x=>x.id===invId);if(!inv)return;
@@ -2892,6 +2976,21 @@ function showOrderSupplierModal(invId){
   document.getElementById('modal').style.display='flex';
 }
 
+const WA_SUPPLIER_TEMPLATE_DEFAULT=`Halo *{supplier}*, permisi mau order lensa 🙏
+
+No. Invoice : *{no_invoice}*
+Customer    : *{customer}*
+Tipe        : {tipe}
+
+─────────────────────
+*RESEP MATA:*
+{rx_block}
+─────────────────────
+{lens_block}
+Mohon konfirmasi ketersediaan & estimasi harga.
+Terima kasih 🙏
+_{toko_nama}{toko_hp}_`;
+
 function _kirimOrderWA(invId,supplierId){
   const inv=db.invoices.find(x=>x.id===invId);
   const sup=(db.suppliers||[]).find(x=>x.id===supplierId);
@@ -2902,8 +3001,8 @@ function _kirimOrderWA(invId,supplierId){
   if(rx.ls||rx.lc)rxLines.push(`OS (L): Sph *${rx.ls||'Pl'}* | Cyl *${rx.lc||'-'}* | Axis *${rx.la||'-'}°*${rx.lv?' | Vis: '+rx.lv:''}`);
   if(rx.pd)rxLines.push(`PD    : *${rx.pd}*`);
   if(rx.add)rxLines.push(`Add   : *${rx.add}*`);
-  if(rx.dma)rxLines.push(`DM.A  : *${rx.dma}* mm`);
-  if(rx.dmb)rxLines.push(`DM.B  : *${rx.dmb}* mm`);
+  if(rx.dma)rxLines.push(`Dm.A (Lebar)  : *${rx.dma}* mm`);
+  if(rx.dmb)rxLines.push(`Dm.B (Tinggi) : *${rx.dmb}* mm`);
   if(rx.dbl)rxLines.push(`DBL   : *${rx.dbl}* mm`);
   if(rx.tpR||rx.tpL)rxLines.push(`TP OD : *${rx.tpR||'—'}* mm\nTP OS : *${rx.tpL||'—'}* mm`);else if(rx.tp)rxLines.push(`TP    : *${rx.tp}* mm`);
   if(rx.faset)rxLines.push(`Faset : *${rx.faset}*`);
@@ -2911,27 +3010,26 @@ function _kirimOrderWA(invId,supplierId){
   const ld=inv.lensDetail;
   const lensLines=lensItems.map(x=>`- ${x.nama}${x.qty>1?' ×'+x.qty:''}`);
   if(!lensLines.length&&ld?.brand)lensLines.push(`- ${[ld.brand,ld.focus,ld.type,ld.color].filter(Boolean).join(' ')}`);
-  const div='─────────────────────';
-  const msg=[
-    `Halo *${sup.nama}*, permisi mau order lensa 🙏`,
-    '',
-    `No. Invoice : *${inv.no}*`,
-    `Customer    : *${inv.customer}*`,
-    `Tipe        : ${inv.tipe||'-'}`,
-    '',div,
-    '*RESEP MATA:*',
-    ...(rxLines.length?rxLines:['(tidak ada resep)']),
-    div,
-    ...(lensLines.length?['*DETAIL LENSA:*',...lensLines,div]:[]),
-    '',
-    'Mohon konfirmasi ketersediaan & estimasi harga.',
-    `Terima kasih 🙏`,
-    `_${tk.nama}${tk.hp?' · '+tk.hp:''}_`,
-  ].join('\n');
+  const rxBlock=rxLines.length?rxLines.join('\n'):'(tidak ada resep)';
+  const lensBlock=lensLines.length?'*DETAIL LENSA:*\n'+lensLines.join('\n')+'\n─────────────────────\n\n':'';
+  const tpl=(db.toko?.waSupplierTemplate||'').trim()||WA_SUPPLIER_TEMPLATE_DEFAULT;
+  const placeholders={
+    '{supplier}':sup.nama,
+    '{no_invoice}':inv.no,
+    '{customer}':inv.customer,
+    '{tipe}':inv.tipe||'-',
+    '{rx_block}':rxBlock,
+    '{lens_block}':lensBlock,
+    '{toko_nama}':tk.nama||'',
+    '{toko_hp}':tk.hp?' · '+tk.hp:''
+  };
+  const msg=Object.entries(placeholders).reduce((s,[k,v])=>s.split(k).join(v),tpl);
   const wa=sup.wa.replace(/[^0-9]/g,'').replace(/^(0|62)/,'');
   window.open(`https://wa.me/62${wa}?text=${encodeURIComponent(msg)}`,'_blank');
   closeModal();
 }
+function loadDefaultWATemplate(){const el=document.getElementById('tk-wa-template');if(el){el.value=WA_SUPPLIER_TEMPLATE_DEFAULT;saveToko();toast('Template default dimuat — bisa diedit sesuai kebutuhan','s');}}
+function clearWATemplate(){const el=document.getElementById('tk-wa-template');if(el){el.value='';saveToko();toast('Custom template dihapus — kembali ke default tersembunyi','s');}}
 
 function rxHistory(custId){
   const c=db.customers.find(x=>x.id===custId);if(!c)return;
@@ -3006,7 +3104,7 @@ function renderMonthlyChart(){
 }
 
 // ════════════════════════════════════════════════
-// SECTION 22 · MODAL BREAKDOWN KAS & PROFIT
+// SECTION 22B · MODAL BREAKDOWN KAS & PROFIT
 // ════════════════════════════════════════════════
 
 function _getFilteredInv(source){
@@ -3021,7 +3119,7 @@ function _getFilteredInv(source){
 }
 
 function showKasMasukModal(source){
-  if(currentRole&&currentRole!=='admin'){return;}
+  if(currentRole!=='admin'){toast('Fitur ini hanya untuk Admin','e');return;}
   const now=new Date();
   const period=source==='dashboard'?(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')):(()=>{const sel=document.getElementById('report-period');return sel?sel.value||'all':'all';})();
   const allSI=salesInvs();
@@ -3053,16 +3151,22 @@ function showProfitModal(source){
     x.items.softlens.forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Softlens.profit+=p;cats.Softlens.kas+=i.jual*i.qty;cats.Softlens.items[i.nama]=(cats.Softlens.items[i.nama]||0)+p;});
     (x.items.aksesoris||[]).forEach(i=>{if(!i.nama)return;const p=(i.jual-(i.modal||0))*i.qty;cats.Aksesoris.profit+=p;cats.Aksesoris.kas+=i.jual*i.qty;cats.Aksesoris.items[i.nama]=(cats.Aksesoris.items[i.nama]||0)+p;});
   });
-  const totalProfit=Object.values(cats).reduce((s,c)=>s+c.profit,0)||1;
+  const totalProfit=Object.values(cats).reduce((s,c)=>s+c.profit,0);
+  const _pctBase=Math.max(1,Math.abs(totalProfit));
   const catColors={Frame:'var(--navy2)',Lensa:'var(--gold)',Softlens:'var(--info)',Aksesoris:'var(--success)'};
   const catIcons={Frame:'ti-glasses',Lensa:'ti-circle',Softlens:'ti-disc',Aksesoris:'ti-package'};
   const label=source==='dashboard'?(new Date().toLocaleDateString('id-ID',{month:'long',year:'numeric'})):(()=>{const sel=document.getElementById('report-period');const v=sel?sel.value:'all';if(v==='all')return'Semua Waktu';const[y,m]=v.split('-');return new Date(parseInt(y),parseInt(m)-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});})();
   const rows=Object.entries(cats).filter(([,c])=>c.kas>0).map(([k,c])=>{
     const margin=c.kas>0?Math.round(c.profit/c.kas*100):0;
     const top3=Object.entries(c.items).sort((a,b)=>b[1]-a[1]).slice(0,3);
-    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:var(--success)">+${fmt(c.profit)}</span><span class="badge bgreen" style="margin-left:4px">margin ${margin}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${Math.max(1,pct(c.profit,totalProfit))}%;background:var(--success);border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Omzet ${fmt(c.kas)} · Kontribusi ${pct(c.profit,totalProfit)}% dari total profit</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;color:var(--success);flex-shrink:0">+${fmt(v)}</span></div>`).join('')}</div>`;
+    const _profitColor=c.profit>=0?'var(--success)':'var(--danger)';
+    const _profitSign=c.profit>=0?'+':'−';
+    const _barW=Math.max(1,Math.min(100,Math.round(Math.abs(c.profit)/_pctBase*100)));
+    const _contrib=Math.round(Math.abs(c.profit)/_pctBase*100);
+    return`<div style="margin-bottom:14px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><i class="ti ${catIcons[k]}" style="font-size:18px;color:${catColors[k]}"></i><strong style="font-size:14px;flex:1">${k}</strong><span style="font-size:14px;font-weight:700;color:${_profitColor}">${_profitSign}${fmt(Math.abs(c.profit))}</span><span class="badge ${c.profit>=0?'bgreen':'bred'}" style="margin-left:4px">margin ${margin}%</span></div><div style="height:5px;background:var(--border);border-radius:3px;margin-bottom:8px"><div style="height:100%;width:${_barW}%;background:${_profitColor};border-radius:3px"></div></div><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Omzet ${fmt(c.kas)} · Kontribusi ${_contrib}% (relatif)</div>${top3.map(([n,v])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-top:1px solid var(--border2)"><span style="flex:1;margin-right:8px">${n}</span><span style="font-weight:600;color:${v>=0?'var(--success)':'var(--danger)'};flex-shrink:0">${v>=0?'+':'−'}${fmt(Math.abs(v))}</span></div>`).join('')}</div>`;
   }).join('');
-  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trending-up" style="color:var(--success)"></i> Profit per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:var(--success)">+${fmt(totalProfit)}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
+  const _totalColor=totalProfit>=0?'var(--success)':'var(--danger)';const _totalSign=totalProfit>=0?'+':'−';
+  document.getElementById('modal-content').innerHTML=`<div class="modal-title"><i class="ti ti-trending-up" style="color:${_totalColor}"></i> Profit per Kategori</div><div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;justify-content:space-between"><span>${label}</span><strong style="color:${_totalColor}">${_totalSign}${fmt(Math.abs(totalProfit))}</strong></div>${rows||'<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada transaksi pada periode ini</p></div>'}`;
   document.getElementById('modal-actions').innerHTML=`<button class="btn btn-outline" onclick="closeModal()">Tutup</button>`;
   document.getElementById('modal').style.display='flex';
 }
@@ -3177,7 +3281,7 @@ function _cancelVerify(){
   const brow=document.querySelector('.lp-eyebrow');const title=document.querySelector('.lp-title');const form=document.querySelector('.lp-form');
   if(brow)brow.textContent='Selamat Datang';
   if(title)title.innerHTML='Masuk ke<br>sistem';
-  if(form)form.innerHTML=`<div class="lp-field"><label>Username</label><input type="text" id="auth-email" placeholder="username atau email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div><div class="lp-field"><label>Password</label><div class="lp-pass-wrap"><input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLogin()"><button type="button" class="lp-eye" onclick="toggleAuthPass()"><i class="ti ti-eye" id="auth-eye-icon"></i></button></div></div><div id="auth-err" class="lp-err"></div><button class="btn btn-gold" id="auth-btn" onclick="doAuthLogin()" style="width:100%;padding:11px;font-size:14px"><i class="ti ti-login"></i> Masuk</button><div style="text-align:center;margin-top:4px"><button type="button" id="forgot-btn" onclick="doForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit">Lupa password?</button></div>`;
+  if(form)form.innerHTML=`<div class="lp-field"><label>Username</label><input type="text" id="auth-email" placeholder="username atau email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div><div class="lp-field"><label>Password</label><div class="lp-pass-wrap"><input type="password" id="auth-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuthLogin()"><button type="button" class="lp-eye" onclick="toggleAuthPass()" aria-label="Tampilkan/sembunyikan password"><i class="ti ti-eye" id="auth-eye-icon"></i></button></div></div><div id="auth-err" class="lp-err"></div><button class="btn btn-gold" id="auth-btn" onclick="doAuthLogin()" style="width:100%;padding:11px;font-size:14px"><i class="ti ti-login"></i> Masuk</button><div style="text-align:center;margin-top:4px"><button type="button" id="forgot-btn" onclick="doForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;font-family:inherit">Lupa password?</button></div>`;
 }
 async function doForgotPassword(){
   const rawInput=(document.getElementById('auth-email')?.value||'').trim();
@@ -3218,12 +3322,12 @@ async function loadUserList(){
     let rows='';
     uSnap.forEach(d=>{
       const {role,nama,email,username}=d.data();const isMe=d.id===myUid;
-      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}${username?` <span style="font-size:11px;color:var(--muted);font-weight:400">@${username}</span>`:''}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${ROLES[role]?.label||role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
+      rows+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama||'—'}${username?` <span style="font-size:11px;color:var(--muted);font-weight:400">@${username}</span>`:''}</div><div style="font-size:11px;color:var(--muted)">${email||d.id}</div></div><span class="badge ${role==='admin'?'bgold':'bgreen'}" style="font-size:11px;white-space:nowrap">${ROLES[role]?.label||role}</span>${isMe?'<span style="font-size:11px;color:var(--muted);white-space:nowrap">(Anda)</span>':`<button class="btn btn-danger btn-sm" title="Hapus pengguna" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="deleteUserProfile('${d.id}','${(nama||email||'').replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`}</div>`;
     });
     let pending='';
     pSnap.forEach(d=>{
       const {role,nama}=d.data();const emailDisp=d.id.replace(/_/g,'.');
-      pending+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama}</div><div style="font-size:11px;color:var(--muted)">${emailDisp} · <i>menunggu login pertama</i></div></div><span class="badge" style="font-size:11px;background:var(--border);color:var(--muted);white-space:nowrap">${ROLES[role]?.label||role}</span><button class="btn btn-outline btn-sm" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="cancelPendingUser('${d.id}')"><i class="ti ti-x"></i></button></div>`;
+      pending+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="flex:1"><div style="font-weight:600;font-size:13px">${nama}</div><div style="font-size:11px;color:var(--muted)">${emailDisp} · <i>menunggu login pertama</i></div></div><span class="badge" style="font-size:11px;background:var(--border);color:var(--muted);white-space:nowrap">${ROLES[role]?.label||role}</span><button class="btn btn-outline btn-sm" title="Batalkan undangan" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="cancelPendingUser('${d.id}')"><i class="ti ti-x"></i></button></div>`;
     });
     el.innerHTML=(rows||'<div style="color:var(--muted);font-size:12px;padding:6px 0">Belum ada pengguna terdaftar.</div>')+(pending?`<div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:12px;margin-bottom:2px;letter-spacing:.5px">MENUNGGU AKTIVASI</div>${pending}`:'');
   }catch(e){el.innerHTML=`<span style="color:var(--danger);font-size:12px">Gagal memuat: ${e.message||e.code||''}</span>`;}

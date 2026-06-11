@@ -51,7 +51,7 @@
 
 ## File Utama
 
-- **App:** `/home/user/optik-zada/Optik-Zada v7.7 (Beta Version).html` — single-file SPA
+- **App:** `/home/user/optik-zada/index.html` — single-file SPA (di-rename dari "Optik-Zada v7.7 (Beta Version).html" pada v8.9.46 agar rapi & selaras dengan artifact deploy `public/index.html`)
 - **Roadmap:** `/home/user/optik-zada/ROADMAP.md`
 
 ---
@@ -88,7 +88,9 @@
 
 ## Pending / Backlog
 
-- Template WA untuk supplier — menunggu info dari client
 - Garansi frame — menunggu keputusan client
-- Custom format nomor BON — sudah disepakati, belum diimplementasi
-- PDF export setelah Tutup Buku di Cashflow — sudah disepakati, belum diimplementasi
+
+### Sudah Selesai (jangan dikira backlog)
+- Custom format nomor BON → `INV/OZ/DDMMYY/NNNN` (v8.9.26)
+- PDF export Cashflow + setelah Tutup Buku (v8.9.17 — tombol di header, list bulan tertutup, modal detail)
+- Template WA supplier → kini dapat dikustom oleh admin di Pengaturan → Daftar Supplier Lensa (v8.9.51)
