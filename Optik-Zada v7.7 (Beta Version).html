@@ -420,7 +420,7 @@ body,html{background:#fff!important}}
 <div id="page-settings" class="page">
   <div class="ph"><div class="ph-left"><h2>Pengaturan</h2><p>Backup, restore, dan konfigurasi</p></div></div>
   <div class="grid g2" style="margin-bottom:16px">
-    <div class="card"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
+    <div class="card admin-strict"><div class="ct"><i class="ti ti-cloud-download"></i> Backup & Restore</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Simpan/pulihkan seluruh data.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" onclick="backupData()"><i class="ti ti-download"></i> Backup (.json)</button><button class="btn btn-outline btn-sm" onclick="document.getElementById('restore-inp').click()"><i class="ti ti-upload"></i> Restore</button><input type="file" id="restore-inp" accept=".json" style="display:none" onchange="restoreData(this)"></div></div>
     <div class="card"><div class="ct"><i class="ti ti-file-spreadsheet"></i> Export Laporan</div><p style="font-size:13px;color:var(--muted);margin-bottom:14px">Ekspor riwayat transaksi ke format CSV yang bisa dibuka di Excel / Google Sheets.</p><button class="btn btn-success btn-sm" onclick="exportCSV()"><i class="ti ti-download"></i> Export Transaksi (.csv)</button></div>
   </div>
   <div class="card admin-only" style="margin-bottom:16px"><div class="ct"><i class="ti ti-building-store"></i> Info Toko</div><p style="font-size:13px;color:var(--muted);margin-bottom:12px">Nama &amp; info toko yang tampil di struk, print, dan pesan WA.</p><div style="display:grid;gap:8px"><input id="tk-nama" placeholder="Nama toko (contoh: OPTIK ZADA)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-alamat" placeholder="Alamat toko" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-kota" placeholder="Kota / kode pos" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-hp" placeholder="No. HP / WA toko (opsional)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-jam" placeholder="Jam operasional (contoh: 09.00 – 21.00 WIB)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"><input id="tk-footer" placeholder="Pesan footer struk (contoh: Terima kasih 🙏)" oninput="saveToko()" style="border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:9px 12px;font-size:13px;background:var(--card);color:var(--text);outline:none;font-family:inherit;width:100%;box-sizing:border-box"></div></div>
@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.45 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.46 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -521,6 +521,16 @@ body,html{background:#fff!important}}
           <span style="display:block;margin-top:3px;padding-left:2px">• Data tersimpan di <strong>Firebase Cloud</strong> — dapat diakses dari perangkat manapun selama ada internet.</span>
           <span style="display:block;margin-top:3px;padding-left:2px">• Jika ada bug atau kendala, segera hubungi developer.</span></div>
         </div>
+      </div>
+
+      <!-- New in v8.9.46 -->
+      <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.46</span>
+          <span style="font-size:13px;font-weight:700">Polish Hak Akses &amp; Konsistensi Tampilan</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-adjustments" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Di Master Data, tombol <strong>Edit</strong> &amp; <strong>Hapus</strong> produk kini hanya tampil untuk <strong>Admin</strong> — sebelumnya Keluarga melihat tombol tersebut tetapi mendapat pesan error saat diklik. Tombol tambah/kurang stok tetap untuk Admin &amp; Keluarga.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Kartu <strong>Backup &amp; Restore</strong> kini khusus Admin (selaras dengan Zona Berbahaya), dan fungsi Restore diberi pengaman tambahan agar tidak bisa menimpa seluruh data tanpa hak akses Admin.</span></div>
       </div>
 
       <!-- New in v8.9.45 -->
@@ -1503,8 +1513,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.45';
-const APP_VERSION='8.9.45';
+const _RN_VERSION='8.9.46';
+const APP_VERSION='8.9.46';
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}
 function setupVersionWatcher(){
@@ -1674,7 +1684,7 @@ function renderProds(t){
   if(q!==_prodSearchPrev[t]){_prodSearchPrev[t]=q;window['_'+t+'Page']=1;}
   const filtered=q?arr.filter(p=>p.nama.toLowerCase().includes(q)||String(p.brand||'').toLowerCase().includes(q)||String(p.cat||'').toLowerCase().includes(q)):arr;
   document.getElementById(c.emp).style.display=arr.length?'none':'block';
-  const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=_isAdminLike();
+  const showDetail=t==='frame'||t==='lensa'||t==='softlens';const showCat=t==='aksesoris';const _isAdm=_isAdminLike();const _isStrictAdm=currentRole==='admin';
   const thead=document.querySelector('#'+c.tb).closest('table').querySelector('thead tr');
   thead.innerHTML='<th>#</th><th>Nama</th>'+(showCat?'<th>Kategori</th>':'')+(_isAdm?'<th>Modal</th>':'')+'<th>Jual</th>'+(_isAdm?'<th>Margin</th>':'')+'<th>Stok</th>'+(showDetail?'<th>Detail</th>':'')+'<th>Aksi</th>';
   const pgTotal=Math.ceil(filtered.length/PROD_PER)||1;
@@ -1702,7 +1712,9 @@ function renderProds(t){
       +(_isAdm
         ?'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',-1)"><i class="ti ti-minus"></i></button>'
          +'<button class="btn btn-xs btn-outline" onclick="editStok(\''+t+'\','+p.id+',1)"><i class="ti ti-plus"></i></button>'
-         +'<button class="btn btn-xs btn-outline" onclick="editProduct(\''+t+'\','+p.id+')"><i class="ti ti-edit"></i></button>'
+        :'')
+      +(_isStrictAdm
+        ?'<button class="btn btn-xs btn-outline" onclick="editProduct(\''+t+'\','+p.id+')"><i class="ti ti-edit"></i></button>'
          +'<button class="btn btn-danger btn-xs" onclick="delProduct(\''+t+'\','+p.id+')"><i class="ti ti-trash"></i></button>'
         :'')
       +'</td></tr>';
@@ -2538,6 +2550,7 @@ function renderSettings(){const _cfgObj=Store._migrated?(({invoices:_,...r})=>r)
 function backupData(){const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(db,null,2));a.download=`backup-optik-zada-${today().replace(/ /g,'-')}.json`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('Backup diunduh');}
 let _pendingRestore=null;
 function restoreData(input){
+  if(currentRole!=='admin'){toast('Hanya Admin yang dapat me-restore data','e');return;}
   const file=input.files[0];if(!file){return;}
   const reader=new FileReader();
   reader.onload=e=>{
@@ -2597,10 +2610,10 @@ async function _doMigrateToV2(){const btn=document.getElementById('migrate-btn')
 function exportCSV(){if(!salesInvs().length){toast('Tidak ada data','w');return;}const _esel=document.getElementById('report-period');const _eper=_esel?_esel.value:'all';const _einv=_eper==='all'?salesInvs():salesInvs().filter(x=>monthKeyOf(x)===_eper);if(!_einv.length){toast('Tidak ada data pada periode ini','w');return;}const rows=[['No','Tanggal','Tgl Siap Ambil','Customer','HP','Tipe','R Sph','R Cyl','R Axis','L Sph','L Cyl','L Axis','PD','Add','Dm.A(L)','Dm.B(T)','DBL','Ket. Faset','TP Kanan (OD)','TP Kiri (OS)','Items','Subtotal','Diskon','Total','Status','Pembayaran','DP','Sisa']];_einv.forEach(inv2=>{const rx=inv2.rx||{};rows.push([inv2.no,inv2.tanggal,inv2.tglSiap?fmtDate(inv2.tglSiap):'',inv2.customer,inv2.hp||'',inv2.tipe||'',rx.rs||'',rx.rc||'',rx.ra||'',rx.ls||'',rx.lc||'',rx.la||'',rx.pd||'',rx.add||'',rx.dma||'',rx.dmb||'',rx.dbl||'',rx.faset||'',rx.tpR||rx.tp||'',rx.tpL||'',[...inv2.items.frame,...inv2.items.lensa,...inv2.items.softlens,...(inv2.items.aksesoris||[])].filter(x=>x.nama).map(x=>x.nama+(x.qty>1?' x'+x.qty:'')).join(' | '),inv2.sub,inv2.disc||0,inv2.tot,inv2.payStatus,inv2.pay,inv2.dpAmount||'',inv2.sisa||'']);});const _csv='sep=,\n'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');const _blob=new Blob(['\uFEFF'+_csv],{type:'text/csv;charset=utf-8'});const _url=URL.createObjectURL(_blob);const a=document.createElement('a');a.href=_url;a.download=`optik-zada-${_eper==='all'?today().replace(/ /g,'-'):_eper}.csv`;a.style.display='none';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(_url),5000);toast(`CSV diekspor${_eper==='all'?'':' ('+_eper+')'}`);}
 
 
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// SECTION 21 \u00B7 CASHFLOW MODULE
+// ════════════════════════════════════════════════
+// SECTION 21 · CASHFLOW MODULE
 // Pengeluaran operasional, profit bersih, tutup buku
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// ════════════════════════════════════════════════
 const EXPENSE_CATS={
   listrik:       {label:'Biaya Listrik Toko',     icon:'ti-bolt'},
   wifi:          {label:'Biaya WiFi',             icon:'ti-wifi'},
@@ -2787,11 +2800,11 @@ function exportCashflowPDF(monthKey){
   w.document.close();
 }
 
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
-// SECTION 22 \u00B7 FITUR TAMBAHAN
+// ════════════════════════════════════════════════
+// SECTION 22 · FITUR TAMBAHAN
 // WA 1-click, Riwayat Rx, DP Badge Sidebar
 // Siap Ambil Alert, Grafik Bulanan, Thermal Print
-// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+// ════════════════════════════════════════════════
 
 function btnWA(invId){
   const inv=db.invoices.find(x=>x.id===invId);
@@ -3006,7 +3019,7 @@ function renderMonthlyChart(){
 }
 
 // ════════════════════════════════════════════════
-// SECTION 22 · MODAL BREAKDOWN KAS & PROFIT
+// SECTION 22B · MODAL BREAKDOWN KAS & PROFIT
 // ════════════════════════════════════════════════
 
 function _getFilteredInv(source){
