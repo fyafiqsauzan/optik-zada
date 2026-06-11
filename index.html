@@ -505,7 +505,7 @@ body,html{background:#fff!important}}
       <div style="background:var(--gold);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ti ti-sparkles" style="color:#000;font-size:17px"></i></div>
       <div style="flex:1">
         <div style="font-size:15px;font-weight:700">Release Notes &amp; Panduan</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.49 Beta</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">Optik Zada Management System · v8.9.50 Beta</div>
       </div>
       <button onclick="closeReleaseNotes(false)" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px 6px" title="Tutup"><i class="ti ti-x"></i></button>
     </div>
@@ -523,8 +523,18 @@ body,html{background:#fff!important}}
         </div>
       </div>
 
-      <!-- New in v8.9.49 -->
+      <!-- New in v8.9.50 -->
       <div style="background:var(--card);border:1.5px solid var(--gold);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.50</span>
+          <span style="font-size:13px;font-weight:700">Keamanan Server — Firestore Rules Granular</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-shield-lock" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Aturan Firestore kini membatasi <strong>hapus invoice</strong> hanya untuk Admin &amp; Keluarga di level server (bukan hanya UI). Karyawan yang mencoba memanggil delete langsung ke Firestore akan ditolak.</span></div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px"><i class="ti ti-user-shield" style="color:var(--gold);font-size:14px;flex-shrink:0;margin-top:2px"></i><span>Field <code>createdBy</code> pada invoice kini <strong>immutable</strong> — tidak ada role yang bisa mengubah siapa yang membuat invoice setelah tersimpan (anti-impersonation).</span></div>
+      </div>
+
+      <!-- New in v8.9.49 -->
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;align-items:center;gap:8px">
           <span style="background:var(--gold);color:#000;font-size:10px;font-weight:700;border-radius:4px;padding:2px 8px">v8.9.49</span>
           <span style="font-size:13px;font-weight:700">Peringatan Stok Saat Input Invoice</span>
@@ -1544,8 +1554,8 @@ function logout(){
   const _ae=document.getElementById('auth-email');const _ap=document.getElementById('auth-pass');if(_ae)_ae.value='';if(_ap)_ap.value='';const _aer=document.getElementById('auth-err');if(_aer)_aer.style.display='none';
 }
 
-const _RN_VERSION='8.9.49';
-const APP_VERSION='8.9.49';
+const _RN_VERSION='8.9.50';
+const APP_VERSION='8.9.50';
 (function(){const el=document.getElementById('topbar-ver');if(el)el.textContent='v'+APP_VERSION;})();
 let _unsubVersionWatcher=null;
 function _semverGt(a,b){const pa=String(a).split('.').map(Number);const pb=String(b).split('.').map(Number);for(let i=0;i<Math.max(pa.length,pb.length);i++){const na=pa[i]||0,nb=pb[i]||0;if(na>nb)return true;if(na<nb)return false;}return false;}

@@ -74,7 +74,7 @@
 | **v8.9.47** | ✅ Dirilis | Security: guard semua `_do*` mutators (delCustomer, delInvoice, clearTransactions, resetAll, migrate, supplier); kartu Export admin-only; header CSV Dm.A/B dibenerin; stat Kas Masuk/Profit → admin-strict |
 | **v8.9.48** | ✅ Dirilis | Polish UI/UX: topbar ver sync dinamis; badge role invoice pakai label UI (Staff/Keluarga/Admin); typo "progressif"→"progresif"; WA label DM.A/B → Dm.A (Lebar)/Dm.B (Tinggi); item-row mobile fix; tooltip title= pada semua tombol icon-only |
 | **v8.9.49** | ✅ Dirilis | Warning stok saat simpan invoice: block jika stok habis (= 0), warn jika qty > stok; notif stok ≤ 2 kini untuk semua kategori (eks-C6/D1) |
-| **v8.9.50** | 🔨 Next | Firestore rules granular — karyawan tidak bisa delete invoice, tidak bisa ubah `createdBy` (eks-C4/D2) |
+| **v8.9.50** | ✅ Dirilis | Firestore rules granular: hapus invoice = admin/keluarga only di level server; `createdBy` immutable di update (anti-impersonation) — perlu deploy manual ke Firebase Console (eks-C4/D2) |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
@@ -274,7 +274,7 @@
 | 9–10 Juni | v8.9.47 ✅ | Security: guard semua `_do*` mutators + Export admin-only + stat Kas/Profit admin-strict | ✅ Selesai |
 | 10 Juni | v8.9.48 ✅ | Polish UI/UX: topbar ver sync; badge role invoice; typo; WA label; mobile fix; tooltip icon-only | ✅ Selesai |
 | 10 Juni | v8.9.49 ✅ | Warning stok saat simpan invoice: block stok habis, warn qty > stok, notif ≤ 2 semua kategori | ✅ Selesai |
-| 11–12 Juni | v8.9.50 | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) | 🔴 P1 |
+| 10 Juni | v8.9.50 ✅ | Firestore Security Rules granular (karyawan: no delete, no edit `createdBy`) — deploy manual ke Console | ✅ Selesai |
 | 12–13 Juni | — | Merge semua dev → main, regression test end-to-end | — |
 | 14–17 Juni | v8.9 RC | Tidak ada fitur baru — hanya hotfix bug kritis yang ditemukan saat testing | ✅ RC |
 
