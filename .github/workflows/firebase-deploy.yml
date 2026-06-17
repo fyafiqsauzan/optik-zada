@@ -64,6 +64,8 @@ jobs:
         run: |
           mkdir -p public
           cp index.html public/index.html
+          cp manifest.json public/manifest.json
+          cp sw.js public/sw.js
           if [ -d assets ]; then cp -r assets public/; fi
 
       - name: Deploy to Firebase Hosting (dev)
@@ -121,6 +123,8 @@ jobs:
         run: |
           mkdir -p public
           cp index.html public/index.html
+          cp manifest.json public/manifest.json
+          cp sw.js public/sw.js
           if [ -d assets ]; then cp -r assets public/; fi
 
       - name: Deploy to Firebase Hosting (prod — client)
