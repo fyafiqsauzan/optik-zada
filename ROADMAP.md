@@ -76,6 +76,7 @@
 | **v8.9.49** | ✅ Dirilis | Warning stok saat simpan invoice: block jika stok habis (= 0), warn jika qty > stok; notif stok ≤ 2 kini untuk semua kategori (eks-C6/D1) |
 | **v8.9.50** | ✅ Dirilis | Firestore rules granular: hapus invoice = admin/keluarga only di level server; `createdBy` immutable di update (anti-impersonation) — perlu deploy manual ke Firebase Console (eks-C4/D2) |
 | **v8.9.51** | ✅ Dirilis | Template WA supplier bisa dikustom dari Pengaturan (placeholder `{supplier}`, `{customer}`, `{rx_block}`, dst — eks-C2); fix modal Profit per Kategori untuk skenario profit negatif (warna merah, bar magnitude, tanda `−` proper) |
+| **v8.9.52** | ✅ Dirilis | Badge "Siap Diambil" di tabel Riwayat (emas=sudah waktunya, abu=masih jadwal); tombol notif WA siap diambil `btnWASiap()` di tabel + modal detail; Quick Invoice dari halaman Customer (auto-fill nama/HP/alamat); Top 5 Terlaris tampilkan omzet (Rp) di samping qty; Catatan Internal per customer (simpan di modal Riwayat, preview singkat di tabel) |
 | **v8.9 RC** | 📋 Planned | Regression test end-to-end, tidak ada fitur baru |
 | **v9.0** | 🚀 Target | Production launch — 20 Juni 2026 |
 
